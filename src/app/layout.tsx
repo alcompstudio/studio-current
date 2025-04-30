@@ -21,7 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning> {/* Add suppressHydrationWarning for theme persistence */}
+    // Ensure no whitespace or comments are direct children of <html> before <body>
+    <html lang="en" suppressHydrationWarning>
       {/* Apply the font variable to the body */}
       <body className={`${inter.variable} antialiased`}>
         {children}
