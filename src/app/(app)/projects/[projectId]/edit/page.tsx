@@ -16,8 +16,8 @@ export default function ProjectEditPage() {
     // Although useParams returns a sync object in client components,
     // using React.use aligns with Next.js's future direction for accessing params.
     // --- Removed React.use as it causes issues in Client Components ---
-    const params = useParams<{ projectId: string }>();
-    const projectId = params?.projectId;
+    const params = useParams(); // Remove generic type
+    const projectId = params?.projectId as string | undefined; // Use type assertion
 
     // TODO: Fetch actual project data based on projectId
     // const [project, setProject] = useState<Project | null>(null);
