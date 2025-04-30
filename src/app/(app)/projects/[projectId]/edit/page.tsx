@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation'; // Import useRouter
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label"; // Import Label
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Import Select components
 import type { Project } from "@/lib/types"; // Assuming Project type exists
 import { mockProjects } from '../../mockProjects'; // Corrected import path
+import { useToast } from "@/hooks/use-toast"; // Import useToast
 
 // Define project statuses and currencies
 const projectStatuses = ["Planning", "In Progress", "On Hold", "Completed", "Archived"] as const;
@@ -42,12 +43,10 @@ const projectFormSchema = z.object({
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
 export default function ProjectEditPage() {
-    // Although useParams returns a sync object in client components,
-    // using React.use aligns with Next.js's future direction for accessing params.
-    // However, React.use with a resolved promise for useParams seems incorrect and caused issues.
-    // Stick to the standard useParams usage for now.
     const params = useParams<{ projectId: string }>();
     const projectId = params?.projectId;
+    const router = useRouter(); // Initialize useRouter
+    const { toast } = useToast(); // Initialize useToast
 
     // Fetch project data (using mock data for now)
     const [project, setProject] = React.useState<Project | null>(null);
@@ -69,6 +68,7 @@ export default function ProjectEditPage() {
     useEffect(() => {
         if (projectId) {
             // Simulate fetching project data
+            // Find the project from the potentially modified mockProjects array
             const foundProject = mockProjects.find(p => p.id === projectId);
             if (foundProject) {
                 setProject(foundProject);
@@ -80,28 +80,83 @@ export default function ProjectEditPage() {
                     currency: foundProject.currency as ProjectFormValues['currency'], // Assert type
                     budget: foundProject.budget,
                 });
+            } else {
+                 // Handle case where project ID exists but project not found in mock data
+                 console.error(`Project with ID ${projectId} not found in mock data.`);
+                 toast({
+                     title: "Error",
+                     description: `Project with ID ${projectId} not found.`,
+                     variant: "destructive",
+                 });
+                 // Optionally redirect to projects list
+                 router.replace('/projects');
             }
             setIsLoading(false);
         } else {
             // Handle the case where projectId is not available
             setIsLoading(false);
             console.error("Project ID is missing.");
-             // Optionally redirect or show an error message
+             toast({
+                 title: "Error",
+                 description: "Project ID is missing from the URL.",
+                 variant: "destructive",
+             });
+            // Redirect to projects list
+            router.replace('/projects');
         }
-    }, [projectId, form]); // Add form to dependency array
+    }, [projectId, form, router, toast]); // Add router and toast to dependency array
 
     const onSubmit = (data: ProjectFormValues) => {
-        console.log("Saving changes for project:", projectId, data);
-        // TODO: Add actual API call to save changes
-        // Example: updateProject(projectId, data).then(...)
+        if (!projectId || !project) {
+             toast({
+                title: "Error Saving",
+                description: "Cannot save changes. Project ID or data is missing.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        console.log("Attempting to save changes for project:", projectId, data);
+
+        // Find the index of the project in the mock array
+        const projectIndex = mockProjects.findIndex(p => p.id === projectId);
+
+        if (projectIndex !== -1) {
+            // Update the project in the mock array (in-memory update)
+            mockProjects[projectIndex] = {
+                ...mockProjects[projectIndex], // Keep existing properties like id, clientName, etc.
+                ...data, // Update with form data
+                updatedAt: new Date(), // Update the updatedAt timestamp
+            };
+
+            console.log("Updated mockProjects:", mockProjects);
+
+            toast({
+                title: "Project Updated",
+                description: `Changes for "${data.name}" have been saved (mock).`,
+            });
+
+            // Redirect back to the project detail page
+            router.push(`/projects/${projectId}`);
+            // Optional: router.refresh() if you need to force a server data refetch on the detail page,
+            // but for mock data, a simple push is often sufficient.
+
+        } else {
+             toast({
+                title: "Error Saving",
+                description: `Could not find project with ID ${projectId} to update.`,
+                variant: "destructive",
+            });
+        }
     };
 
     if (isLoading) {
-        return <div>Loading project details...</div>;
+        return <div className="flex min-h-screen items-center justify-center">Loading project details...</div>;
     }
 
     if (!project) {
-        return <div>Project not found or ID missing.</div>;
+        // Message already shown in useEffect, this is a fallback
+        return <div className="flex min-h-screen items-center justify-center">Project not found or ID missing. Redirecting...</div>;
     }
 
     return (
@@ -114,10 +169,11 @@ export default function ProjectEditPage() {
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </Link>
-                    <h2 className="text-2xl font-bold tracking-tight">Edit Project: {project.name}</h2>
+                    {/* Ensure project.name is displayed correctly */}
+                    <h2 className="text-2xl font-bold tracking-tight">Edit Project: {form.watch('name') || project.name}</h2>
                 </div>
-                 <Button type="submit" form="project-edit-form"> {/* Trigger form submission */}
-                    <Save className="mr-2 h-4 w-4" /> Save Changes
+                 <Button type="submit" form="project-edit-form" disabled={form.formState.isSubmitting}> {/* Disable button while submitting */}
+                    {form.formState.isSubmitting ? 'Saving...' : <><Save className="mr-2 h-4 w-4" /> Save Changes</>}
                  </Button>
             </div>
 
@@ -159,6 +215,7 @@ export default function ProjectEditPage() {
                                                 placeholder="Describe the project..."
                                                 className="min-h-[100px]" // Set min height
                                                 {...field}
+                                                value={field.value ?? ''} // Ensure value is never null/undefined for textarea
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -173,7 +230,7 @@ export default function ProjectEditPage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Status</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value}> {/* Use value prop */}
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select status" />
@@ -198,7 +255,7 @@ export default function ProjectEditPage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Currency</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value}> {/* Use value prop */}
                                                 <FormControl>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select currency" />
@@ -229,9 +286,13 @@ export default function ProjectEditPage() {
                                                      placeholder="Enter budget amount"
                                                      step="0.01" // Allow decimals
                                                      {...field}
-                                                     // Handle empty string case for optional number
+                                                     // Handle controlled component value for number input
                                                      value={field.value ?? ''}
-                                                     onChange={e => field.onChange(e.target.value === '' ? undefined : e.target.value)}
+                                                     onChange={e => {
+                                                        const value = e.target.value;
+                                                        // Allow empty string for optional, otherwise parse as float
+                                                        field.onChange(value === '' ? undefined : parseFloat(value));
+                                                      }}
                                                   />
                                              </FormControl>
                                              <FormMessage />
