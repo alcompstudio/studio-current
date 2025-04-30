@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"; // Import ChevronRight
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -180,5 +180,3 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
     </aside>
   );
 }
-
-    

@@ -137,8 +137,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const userInitial = authUser.email ? authUser.email.charAt(0).toUpperCase() : '?';
 
-  // Calculate dynamic right padding for main content area based on communication panel state
-  const rightPaddingClass = isCommPanelExpanded ? 'pr-80' : 'pr-[70px]';
+  // Calculate dynamic right padding/margin for main content area based on communication panel state
+  const rightMarginClass = isCommPanelExpanded ? 'mr-80' : 'mr-[70px]';
 
   return (
     <SidebarProvider defaultOpen>
@@ -283,14 +283,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-h-screen">
          {/* Pass user info to Header */}
          <Header userEmail={authUser.email} userRole={authUser.role} />
-          {/* Adjusted padding for main content based on sidebar and communication panel state */}
+          {/* Adjusted margin/padding for main content based on sidebar and communication panel state */}
           <SidebarInset
             className={cn(
               "flex-1 overflow-auto p-8 md:p-8 transition-all duration-300",
               // Left margin based on left sidebar state
               "group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px]",
-              // Right padding based on communication panel state
-              rightPaddingClass
+              // Right margin based on communication panel state
+              rightMarginClass
             )}
           >
              {children}
@@ -305,5 +305,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
