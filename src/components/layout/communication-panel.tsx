@@ -3,21 +3,19 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity as ActivityIcon, Search, UserPlus as UserPlusIcon, DollarSign as DollarSignIcon, CheckCircle as CheckCircleIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-// Define icons before usage
-const CheckCircle = CheckCircleIcon; // Use Lucide icon
-const UserPlus = UserPlusIcon; // Use Lucide icon
-const DollarSign = DollarSignIcon; // Use Lucide icon
+interface CommunicationPanelProps {
+  isExpanded: boolean;
+  setIsExpanded: (isExpanded: boolean) => void;
+}
 
-export function CommunicationPanel() {
-  const [isCommunicationExpanded, setIsCommunicationExpanded] = React.useState(false); // Default to collapsed
+export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationPanelProps) {
 
   // Mock data - replace with actual data fetching
   const notifications = [
@@ -35,34 +33,37 @@ export function CommunicationPanel() {
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle, iconColor: "text-emerald-500", bgColor: "bg-emerald-100"}, // Use defined CheckCircle
-     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, iconColor: "text-blue-500", bgColor: "bg-blue-100"}, // Use defined UserPlus
-     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, iconColor: "text-amber-500", bgColor: "bg-amber-100"}, // Bell is imported from lucide-react directly
-     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, iconColor: "text-primary", bgColor: "bg-sidebar-accent"}, // Use defined DollarSign
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle, iconColor: "text-emerald-500", bgColor: "bg-emerald-100"},
+     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, iconColor: "text-blue-500", bgColor: "bg-blue-100"},
+     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, iconColor: "text-amber-500", bgColor: "bg-amber-100"},
+     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, iconColor: "text-primary", bgColor: "bg-sidebar-accent"},
   ];
 
+  const handleIconClick = () => {
+    setIsExpanded(true); // Always expand when an icon is clicked
+  };
 
   return (
-    <aside className={`fixed right-0 top-0 bottom-0 ${isCommunicationExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300`}>
+    <aside className={`fixed right-0 top-0 bottom-0 ${isExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300`}>
        {/* Header */}
         <div className="h-[70px] border-b border-border flex items-center px-6 justify-between">
-          {isCommunicationExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
+          {isExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsCommunicationExpanded(!isCommunicationExpanded)}
+            onClick={() => setIsExpanded(!isExpanded)} // Toggle state
             className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
           >
-            {isCommunicationExpanded ? (
-              <ChevronRight className="h-5 w-5" />
+            {isExpanded ? (
+              <ChevronRight className="h-5 w-5" /> // Icon to collapse
             ) : (
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5" /> // Icon to expand
             )}
           </Button>
         </div>
 
        {/* Content Area */}
-       {isCommunicationExpanded ? (
+       {isExpanded ? (
           <Tabs defaultValue="messages" className="flex flex-col flex-1">
              {/* Tabs */}
              <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0">
@@ -149,13 +150,28 @@ export function CommunicationPanel() {
        ) : (
            // Collapsed view - just show icons
             <div className="flex-1 flex flex-col items-center pt-4 space-y-6">
-                <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-sidebar-accent text-primary">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-10 h-10 rounded-full bg-sidebar-accent text-primary"
+                    onClick={handleIconClick} // Expand on click
+                >
                     <MessageSquare className="h-5 w-5" />
                 </Button>
-                 <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    onClick={handleIconClick} // Expand on click
+                 >
                      <Bell className="h-5 w-5" />
                  </Button>
-                 <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    onClick={handleIconClick} // Expand on click
+                 >
                     <ActivityIcon className="h-5 w-5" />
                  </Button>
             </div>
@@ -163,3 +179,5 @@ export function CommunicationPanel() {
     </aside>
   );
 }
+
+    

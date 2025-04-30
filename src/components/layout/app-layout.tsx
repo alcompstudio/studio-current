@@ -15,17 +15,16 @@ import {
   SidebarMenuButton,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Header } from "@/components/layout/header";
 import { CommunicationPanel } from "@/components/layout/communication-panel";
-import { Home, Briefcase, Settings, Users, DollarSign, Bell, MessageSquare, Search as SearchIcon, FileText, ChevronLeft, ChevronRight } from "lucide-react"; // Renamed Search icon import, added Chevrons
+import { Home, Briefcase, Settings, Users, DollarSign, FileText, Search as SearchIcon, LogOut, ChevronLeft, ChevronRight } from "lucide-react"; // Removed Bell, MessageSquare, used LogOut
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import type { UserRole } from "@/lib/types"; // Use type import
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 interface AuthUser {
   email: string;
@@ -37,6 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false); // State for comm panel
 
   React.useEffect(() => {
     // Check auth status from localStorage on mount
@@ -91,13 +91,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     // Define navigation groups
     const mainGroup = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
-      { href: "/projects", label: "Projects", icon: Briefcase },
-      { href: "/orders", label: "Orders", icon: FileText },
+      { href: "/projects", label: "Projects", icon: Briefcase, roles: ["Заказчик", "Администратор", "Модератор"] }, // Client/Admin/Mod
+      { href: "/orders", label: "Orders", icon: FileText, roles: ["Заказчик", "Администратор", "Модератор"] }, // Client/Admin/Mod
       // Add Tasks if applicable based on role
     ];
 
     const userGroup = [
-      { href: "/users", label: "Manage Users", icon: Users, roles: ["Администратор", "Модератор"] }, // Example for admin/moderator only
+      { href: "/users", label: "Manage Users", icon: Users, roles: ["Администратор", "Модератор"] }, // Admin/Mod only
       { href: "/find-orders", label: "Find Orders", icon: SearchIcon, roles: ["Исполнитель"]}, // Freelancer only
       { href: "/my-bids", label: "My Bids", icon: DollarSign, roles: ["Исполнитель"]}, // Freelancer only
       { href: "/my-tasks", label: "My Tasks", icon: Briefcase, roles: ["Исполнитель"]}, // Freelancer only
@@ -105,7 +105,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     const financeGroup = [
        { href: "/finance", label: "Finance", icon: DollarSign, roles: ["Заказчик", "Исполнитель"] },
-       { href: "/finance-admin", label: "Platform Finance", icon: DollarSign, roles: ["Администратор", "Модератор"] },
+       { href: "/finance-admin", label: "Platform Finance", icon: DollarSign, roles: ["Администратор"] }, // Admin only
     ];
 
     const settingsGroup = [
@@ -136,8 +136,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const userInitial = authUser.email ? authUser.email.charAt(0).toUpperCase() : '?';
 
+  // Calculate dynamic padding for main content area
+  const rightPadding = isCommPanelExpanded ? 'lg:pr-80' : 'lg:pr-[70px]';
+
   return (
     <SidebarProvider defaultOpen>
+      {/* Left Sidebar */}
       <Sidebar>
         <SidebarHeader className="h-[70px] items-center gap-2 px-6 border-b bg-sidebar-primary">
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
@@ -158,7 +162,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             <Link href={item.href} passHref legacyBehavior>
                             <SidebarMenuButton
                                 asChild
-                                isActive={pathname.startsWith(item.href) && item.href !== '/' || pathname === item.href}
+                                isActive={pathname.startsWith(item.href) && (item.href === '/' ? pathname === '/' : true)} // Adjusted isActive logic
                                 tooltip={item.label}
                                 variant="default" // Use default variant for styling
                                 className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
@@ -257,7 +261,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Avatar>
             <div>
                <p className="text-sm font-light">{authUser.email}</p>
-               <p className="text-xs text-muted-foreground">{authUser.role}</p>
+               <p className="text-xs text-muted">{authUser.role}</p> {/* Use text-muted for role */}
             </div>
         </SidebarFooter>
         <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center">
@@ -266,25 +270,37 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Avatar>
         </SidebarFooter>
         {/* Custom Toggle Button */}
-        <SidebarTrigger asChild>
+         <SidebarTrigger asChild>
              <button className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-md border border-border text-muted-foreground hover:text-primary cursor-pointer z-30">
                  <ChevronLeft className="h-5 w-5 group-data-[state=collapsed]:hidden" />
                  <ChevronRight className="h-5 w-5 group-data-[state=expanded]:hidden" />
              </button>
          </SidebarTrigger>
       </Sidebar>
+
+      {/* Main Content Area */}
       <div className="flex flex-col flex-1 min-h-screen">
          {/* Pass user info to Header */}
          <Header userEmail={authUser.email} userRole={authUser.role} />
           {/* Adjusted padding for main content based on sidebar and communication panel state */}
-          {/* Use lg:pr-[calc(19rem)] for expanded communication panel, lg:pr-[70px] for collapsed */}
           <SidebarInset
-            className={`flex-1 overflow-auto p-8 md:p-8 transition-all duration-300 group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px] lg:pr-[70px]`} // Default to collapsed padding
-          >
+             className={cn(
+               "flex-1 overflow-auto p-8 md:p-8 transition-all duration-300",
+               "group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px]", // Left margin based on left sidebar
+               rightPadding // Apply dynamic right padding
+             )}
+           >
              {children}
            </SidebarInset>
       </div>
-      <CommunicationPanel />
+
+      {/* Communication Panel */}
+      <CommunicationPanel
+        isExpanded={isCommPanelExpanded}
+        setIsExpanded={setIsCommPanelExpanded}
+      />
     </SidebarProvider>
   );
 }
+
+    
