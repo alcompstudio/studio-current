@@ -46,13 +46,18 @@ const getStatusIcon = (status: string) => {
     }
 };
 
+// Define props type including searchParams
+interface ProjectDetailPageProps {
+    params: { projectId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+}
 
-export default function ProjectDetailPage() {
+export default function ProjectDetailPage({ params, searchParams }: ProjectDetailPageProps) {
     // Although useParams returns a sync object in client components,
     // using React.use aligns with Next.js's future direction for accessing params.
     // --- Removed React.use as it causes issues in Client Components ---
-    const params = useParams(); // Remove generic type
-    const projectId = params?.projectId as string | undefined; // Use type assertion
+    // const params = useParams(); // Remove generic type
+    const projectId = params?.projectId; // Use prop directly
 
 
     // TODO: Fetch actual project data based on projectId
