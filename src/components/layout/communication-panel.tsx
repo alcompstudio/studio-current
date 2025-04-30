@@ -3,13 +3,13 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity, Search, UserPlus as UserPlusIcon, DollarSign as DollarSignIcon, CheckCircle as CheckCircleIcon } from "lucide-react"; // Added Activity, Search and specific icons
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, UserPlus as UserPlusIcon, DollarSign as DollarSignIcon, CheckCircle as CheckCircleIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input"; // Added Input
-import { Button } from "@/components/ui/button"; // Added Button
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // Added Avatar
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 // Define icons before usage
 const CheckCircle = CheckCircleIcon; // Use Lucide icon
@@ -17,7 +17,7 @@ const UserPlus = UserPlusIcon; // Use Lucide icon
 const DollarSign = DollarSignIcon; // Use Lucide icon
 
 export function CommunicationPanel() {
-  const [isCommunicationExpanded, setIsCommunicationExpanded] = React.useState(true); // Default to expanded as per example
+  const [isCommunicationExpanded, setIsCommunicationExpanded] = React.useState(false); // Default to collapsed
 
   // Mock data - replace with actual data fetching
   const notifications = [
@@ -27,18 +27,18 @@ export function CommunicationPanel() {
   ];
 
   const messages = [
-     { id: 1, sender: "Alex Chen", initials: "AC", preview: "Hi John, I've reviewed the project timeline and have some questions...", time: "10:42 AM", unread: true, active: false },
-     { id: 2, sender: "Sarah Johnson", initials: "SJ", preview: "The new designs are ready for review. Let me know what you think!", time: "9:15 AM", unread: true, active: true }, // Example active state
-     { id: 3, sender: "TechStart Team", initials: "TS", preview: "We need to schedule a call to discuss the next phase of the project...", time: "Yesterday", unread: false, active: false },
-     { id: 4, sender: "Michael Park", initials: "MP", preview: "Thanks for the update. I'll review the documents and get back to you...", time: "Yesterday", unread: false, active: false },
-     { id: 5, sender: "GreenLife", initials: "GL", preview: "We're very happy with the initial concepts. When can we expect...", time: "Monday", unread: false, active: false },
+     { id: 1, sender: "Alex Chen", initials: "AC", preview: "Hi John, I've reviewed the project timeline and have some questions...", time: "10:42 AM", unread: true, active: false, avatarBg: "bg-sidebar-accent", avatarText: "text-primary" },
+     { id: 2, sender: "Sarah Johnson", initials: "SJ", preview: "The new designs are ready for review. Let me know what you think!", time: "9:15 AM", unread: true, active: true, avatarBg: "bg-emerald-100", avatarText: "text-emerald-800" },
+     { id: 3, sender: "TechStart Team", initials: "TS", preview: "We need to schedule a call to discuss the next phase of the project...", time: "Yesterday", unread: false, active: false, avatarBg: "bg-blue-100", avatarText: "text-blue-800" },
+     { id: 4, sender: "Michael Park", initials: "MP", preview: "Thanks for the update. I'll review the documents and get back to you...", time: "Yesterday", unread: false, active: false, avatarBg: "bg-amber-100", avatarText: "text-amber-800" },
+     { id: 5, sender: "GreenLife", initials: "GL", preview: "We're very happy with the initial concepts. When can we expect...", time: "Monday", unread: false, active: false, avatarBg: "bg-purple-100", avatarText: "text-purple-800" },
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle }, // Use defined CheckCircle
-     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus }, // Use defined UserPlus
-     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell }, // Bell is imported from lucide-react directly
-     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign }, // Use defined DollarSign
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle, iconColor: "text-emerald-500", bgColor: "bg-emerald-100"}, // Use defined CheckCircle
+     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, iconColor: "text-blue-500", bgColor: "bg-blue-100"}, // Use defined UserPlus
+     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, iconColor: "text-amber-500", bgColor: "bg-amber-100"}, // Bell is imported from lucide-react directly
+     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, iconColor: "text-primary", bgColor: "bg-sidebar-accent"}, // Use defined DollarSign
   ];
 
 
@@ -47,25 +47,23 @@ export function CommunicationPanel() {
        {/* Header */}
         <div className="h-[70px] border-b border-border flex items-center px-6 justify-between">
           {isCommunicationExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsCommunicationExpanded(!isCommunicationExpanded)}
-            className="text-muted-foreground hover:text-primary cursor-pointer"
+            className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
           >
             {isCommunicationExpanded ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-              </svg>
+              <ChevronRight className="h-5 w-5" />
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-              </svg>
+              <ChevronLeft className="h-5 w-5" />
             )}
-          </button>
+          </Button>
         </div>
 
        {/* Content Area */}
        {isCommunicationExpanded ? (
-          <Tabs defaultValue="messages" className="flex flex-col h-full">
+          <Tabs defaultValue="messages" className="flex flex-col flex-1">
              {/* Tabs */}
              <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0">
                 <TabsTrigger value="messages" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Messages</TabsTrigger>
@@ -90,10 +88,10 @@ export function CommunicationPanel() {
                 <TabsContent value="messages" className="mt-0">
                     {messages.length > 0 ? (
                     messages.map((message) => (
-                        <div key={message.id} className={`border-b border-border p-4 hover:bg-accent cursor-pointer ${message.active ? 'bg-sidebar-accent' : ''}`}> {/* Adjusted hover and active background */}
+                        <div key={message.id} className={`border-b border-border p-4 hover:bg-accent cursor-pointer ${message.active ? 'bg-sidebar-accent' : ''}`}>
                         <div className="flex items-start">
                             <Avatar className="w-10 h-10 mr-3 flex-shrink-0">
-                                <AvatarFallback className={`text-sm ${message.active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>{message.initials}</AvatarFallback> {/* Example dynamic bg based on active */}
+                                 <AvatarFallback className={`text-sm ${message.avatarBg} ${message.avatarText}`}>{message.initials}</AvatarFallback>
                             </Avatar>
                             <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center mb-1">
@@ -128,12 +126,12 @@ export function CommunicationPanel() {
                     )}
                 </TabsContent>
 
-                <TabsContent value="activity" className="mt-0 p-6">
+                 <TabsContent value="activity" className="mt-0 p-6">
                      <div className="relative">
                         <div className="absolute top-0 bottom-0 left-4 w-px bg-border"></div>
                         {activities.map((activity) => (
                             <div key={activity.id} className="relative flex items-start mb-6">
-                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center z-10 mr-4">
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor} ${activity.iconColor} flex items-center justify-center z-10 mr-4`}>
                                     <activity.icon className="h-4 w-4"/>
                                 </div>
                                 <div>
@@ -151,14 +149,14 @@ export function CommunicationPanel() {
        ) : (
            // Collapsed view - just show icons
             <div className="flex-1 flex flex-col items-center pt-4 space-y-6">
-                <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-sidebar-accent text-primary"> {/* Adjusted active button style */}
+                <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-sidebar-accent text-primary">
                     <MessageSquare className="h-5 w-5" />
                 </Button>
                  <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
                      <Bell className="h-5 w-5" />
                  </Button>
                  <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
-                    <Activity className="h-5 w-5" />
+                    <ActivityIcon className="h-5 w-5" />
                  </Button>
             </div>
        )}

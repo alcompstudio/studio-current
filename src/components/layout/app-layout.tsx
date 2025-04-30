@@ -140,12 +140,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen>
       <Sidebar>
         <SidebarHeader className="h-[70px] items-center gap-2 px-6 border-b bg-sidebar-primary">
-          {/* Adjusted Logo/AppName */}
-           {/* Use span with different styles for Task and Verse */}
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
             Task<span className="text-accent">Verse</span>
            </h1>
-            {/* Icon/Short name when collapsed */}
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
              T<span className="text-accent">V</span>
            </h1>
@@ -279,8 +276,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col flex-1 min-h-screen">
          {/* Pass user info to Header */}
          <Header userEmail={authUser.email} userRole={authUser.role} />
-          {/* Adjusted padding for main content based on sidebar state */}
-          <SidebarInset className="flex-1 overflow-auto p-8 md:p-8 group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px] lg:pr-[19rem]">
+          {/* Adjusted padding for main content based on sidebar and communication panel state */}
+          {/* Use lg:pr-[calc(19rem)] for expanded communication panel, lg:pr-[70px] for collapsed */}
+          <SidebarInset
+            className={`flex-1 overflow-auto p-8 md:p-8 transition-all duration-300 group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px] lg:pr-[70px]`} // Default to collapsed padding
+          >
              {children}
            </SidebarInset>
       </div>
