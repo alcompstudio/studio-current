@@ -149,7 +149,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             Freelan<span className="text-accent">Center</span> {/* Updated text and color */}
            </h1>
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
-             FC
+             F<span className="text-accent">C</span> {/* Updated 'C' to accent color */}
            </h1>
         </SidebarHeader>
         <SidebarContent className="p-0">
@@ -305,5 +305,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
 
     
