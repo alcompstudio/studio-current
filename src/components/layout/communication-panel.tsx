@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"; // Use CheckCircle2
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -33,10 +33,10 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle, iconColor: "text-emerald-500", bgColor: "bg-emerald-100"},
-     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, iconColor: "text-blue-500", bgColor: "bg-blue-100"},
-     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, iconColor: "text-amber-500", bgColor: "bg-amber-100"},
-     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, iconColor: "text-primary", bgColor: "bg-sidebar-accent"},
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2 }, // Use CheckCircle2
+     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus },
+     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell },
+     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign },
   ];
 
   const handleIconClick = () => {
@@ -48,6 +48,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
        {/* Header */}
         <div className="h-[70px] border-b border-border flex items-center px-6 justify-between">
           {isExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
+          {/* Toggle Button: Shows ChevronRight (to collapse) when expanded, ChevronLeft (to expand) when collapsed */}
           <Button
             variant="ghost"
             size="icon"
@@ -132,7 +133,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                         <div className="absolute top-0 bottom-0 left-4 w-px bg-border"></div>
                         {activities.map((activity) => (
                             <div key={activity.id} className="relative flex items-start mb-6">
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor} ${activity.iconColor} flex items-center justify-center z-10 mr-4`}>
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor || 'bg-muted'} ${activity.iconColor || 'text-muted-foreground'} flex items-center justify-center z-10 mr-4`}>
                                     <activity.icon className="h-4 w-4"/>
                                 </div>
                                 <div>
@@ -153,7 +154,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-sidebar-accent text-primary"
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
                     onClick={handleIconClick} // Expand on click
                 >
                     <MessageSquare className="h-5 w-5" />
@@ -161,7 +162,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
                     onClick={handleIconClick} // Expand on click
                  >
                      <Bell className="h-5 w-5" />
@@ -169,7 +170,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
                     onClick={handleIconClick} // Expand on click
                  >
                     <ActivityIcon className="h-5 w-5" />
@@ -179,5 +180,3 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
     </aside>
   );
 }
-
-    

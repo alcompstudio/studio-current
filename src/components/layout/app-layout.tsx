@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "@/components/layout/header";
 import { CommunicationPanel } from "@/components/layout/communication-panel";
-import { Home, Briefcase, Settings, Users, DollarSign, FileText, Search as SearchIcon, LogOut, ChevronLeft, ChevronRight } from "lucide-react"; // Removed Bell, MessageSquare, used LogOut
+import { Home, Briefcase, Settings, Users, DollarSign, FileText, Search as SearchIcon, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -36,7 +36,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false); // State for comm panel
+  // Default communication panel to collapsed (width 70px)
+  const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false);
 
   React.useEffect(() => {
     // Check auth status from localStorage on mount
@@ -136,8 +137,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const userInitial = authUser.email ? authUser.email.charAt(0).toUpperCase() : '?';
 
-  // Calculate dynamic padding for main content area
-  const rightPadding = isCommPanelExpanded ? 'lg:pr-80' : 'lg:pr-[70px]';
+  // Calculate dynamic right padding for main content area based on communication panel state
+  const rightPaddingClass = isCommPanelExpanded ? 'pr-80' : 'pr-[70px]';
 
   return (
     <SidebarProvider defaultOpen>
@@ -284,12 +285,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
          <Header userEmail={authUser.email} userRole={authUser.role} />
           {/* Adjusted padding for main content based on sidebar and communication panel state */}
           <SidebarInset
-             className={cn(
-               "flex-1 overflow-auto p-8 md:p-8 transition-all duration-300",
-               "group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px]", // Left margin based on left sidebar
-               rightPadding // Apply dynamic right padding
-             )}
-           >
+            className={cn(
+              "flex-1 overflow-auto p-8 md:p-8 transition-all duration-300",
+              // Left margin based on left sidebar state
+              "group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px]",
+              // Right padding based on communication panel state
+              rightPaddingClass
+            )}
+          >
              {children}
            </SidebarInset>
       </div>
@@ -302,5 +305,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
