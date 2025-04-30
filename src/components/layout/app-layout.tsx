@@ -146,7 +146,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="h-[70px] items-center justify-center gap-2 px-6 border-b bg-sidebar-primary">
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
-            FreelanCentr
+            Freelan<span className="text-accent">Center</span> {/* Updated text and color */}
            </h1>
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
              FC
@@ -305,3 +305,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
