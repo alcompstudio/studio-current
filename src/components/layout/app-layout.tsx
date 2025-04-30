@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "@/components/layout/header";
 import { CommunicationPanel } from "@/components/layout/communication-panel";
-import { Home, Briefcase, Settings, Users, DollarSign, Bell, MessageSquare, Search as SearchIcon, FileText } from "lucide-react"; // Renamed Search icon import
+import { Home, Briefcase, Settings, Users, DollarSign, Bell, MessageSquare, Search as SearchIcon, FileText, ChevronLeft, ChevronRight } from "lucide-react"; // Renamed Search icon import, added Chevrons
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -88,48 +88,39 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const getNavItems = (role: UserRole | undefined) => {
     if (!role) return [];
 
-    const commonItems = [
-      { href: "/dashboard", label: "Dashboard", icon: Home }, // Ensure dashboard is first/default
-      { href: "/settings", label: "Settings", icon: Settings },
-    ];
-
-    const clientItems = [
+    // Define navigation groups
+    const mainGroup = [
+      { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/projects", label: "Projects", icon: Briefcase },
-      { href: "/orders", label: "Orders", icon: FileText }, // Changed icon for Orders
-      { href: "/finance", label: "Finance", icon: DollarSign },
+      { href: "/orders", label: "Orders", icon: FileText },
+      // Add Tasks if applicable based on role
     ];
 
-    const freelancerItems = [
-      { href: "/find-orders", label: "Find Orders", icon: SearchIcon }, // Use imported SearchIcon
-      { href: "/my-bids", label: "My Bids", icon: DollarSign }, // Consider a different icon if needed
-      { href: "/my-tasks", label: "My Tasks", icon: Briefcase }, // Changed icon for Tasks
-      { href: "/finance", label: "Finance", icon: DollarSign },
+    const userGroup = [
+      { href: "/users", label: "Manage Users", icon: Users, roles: ["Администратор", "Модератор"] }, // Example for admin/moderator only
+      { href: "/find-orders", label: "Find Orders", icon: SearchIcon, roles: ["Исполнитель"]}, // Freelancer only
+      { href: "/my-bids", label: "My Bids", icon: DollarSign, roles: ["Исполнитель"]}, // Freelancer only
+      { href: "/my-tasks", label: "My Tasks", icon: Briefcase, roles: ["Исполнитель"]}, // Freelancer only
     ];
 
-    const adminItems = [
-      // Maybe merge/refine these for admins
-       { href: "/projects", label: "All Projects", icon: Briefcase },
-       { href: "/orders", label: "All Orders", icon: FileText },
-       { href: "/users", label: "Manage Users", icon: Users },
-       { href: "/finance-admin", label: "Platform Finance", icon: DollarSign },
+    const financeGroup = [
+       { href: "/finance", label: "Finance", icon: DollarSign, roles: ["Заказчик", "Исполнитель"] },
+       { href: "/finance-admin", label: "Platform Finance", icon: DollarSign, roles: ["Администратор", "Модератор"] },
     ];
 
-    let specificItems: typeof commonItems = [];
-    switch (role) {
-      case "Заказчик":
-        specificItems = clientItems;
-        break;
-      case "Исполнитель":
-        specificItems = freelancerItems;
-        break;
-      case "Администратор":
-      case "Модератор": // Combine Admin and Moderator nav for now
-        // Show a combined view or prioritize admin sections
-        specificItems = adminItems; // Simple approach: show only admin items for admins/mods
-        break;
-    }
-    // Ensure dashboard is always present and potentially other commons
-    return [...commonItems, ...specificItems.filter(item => !commonItems.some(c => c.href === item.href))];
+    const settingsGroup = [
+       { href: "/settings", label: "Settings", icon: Settings },
+    ];
+
+    // Filter items based on role
+    const filterByRole = (items: any[]) => items.filter(item => !item.roles || item.roles.includes(role));
+
+    return {
+        main: filterByRole(mainGroup),
+        users: filterByRole(userGroup),
+        finance: filterByRole(financeGroup),
+        settings: filterByRole(settingsGroup),
+    };
   };
 
   const navItems = getNavItems(authUser?.role);
@@ -148,54 +139,148 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen>
       <Sidebar>
-        <SidebarHeader className="items-center gap-2 p-4 border-b">
-           {/* Placeholder for Logo/AppName */}
-          <h1 className="text-xl font-semibold text-primary">TaskVerse</h1>
+        <SidebarHeader className="h-[70px] items-center gap-2 px-6 border-b bg-sidebar-primary">
+          {/* Adjusted Logo/AppName */}
+           {/* Use span with different styles for Task and Verse */}
+           <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
+            Task<span className="text-accent">Verse</span>
+           </h1>
+            {/* Icon/Short name when collapsed */}
+           <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
+             T<span className="text-accent">V</span>
+           </h1>
         </SidebarHeader>
         <SidebarContent className="p-0">
           <ScrollArea className="h-full">
-            <SidebarGroup className="p-2">
-              <SidebarGroupLabel>Navigation</SidebarGroupLabel>
-              <SidebarMenu>
-                {navItems.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <Link href={item.href} passHref legacyBehavior>
-                      <SidebarMenuButton
-                        asChild
-                        // More robust active state check: exact match for '/' and prefix match otherwise
-                        isActive={item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)}
-                        tooltip={item.label}
-                      >
-                        <a>
-                          <item.icon />
-                          <span>{item.label}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroup>
-             {/* Add more groups if needed, e.g., for specific project navigation */}
+            {navItems.main.length > 0 && (
+                <SidebarGroup className="px-4 py-6 mb-0">
+                    <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden">Main</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {navItems.main.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href} passHref legacyBehavior>
+                            <SidebarMenuButton
+                                asChild
+                                isActive={pathname.startsWith(item.href) && item.href !== '/' || pathname === item.href}
+                                tooltip={item.label}
+                                variant="default" // Use default variant for styling
+                                className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+                            >
+                                <a>
+                                <item.icon />
+                                <span className="group-data-[state=expanded]:inline hidden">{item.label}</span>
+                                </a>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+            )}
+            {navItems.users.length > 0 && (
+                 <SidebarGroup className="px-4 py-6 mb-0">
+                    <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden">Users</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {navItems.users.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href} passHref legacyBehavior>
+                             <SidebarMenuButton
+                                asChild
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                                variant="default"
+                                className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+                            >
+                                <a>
+                                <item.icon />
+                                <span className="group-data-[state=expanded]:inline hidden">{item.label}</span>
+                                </a>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+            )}
+            {navItems.finance.length > 0 && (
+                 <SidebarGroup className="px-4 py-6 mb-0">
+                    <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden">Finance</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {navItems.finance.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href} passHref legacyBehavior>
+                            <SidebarMenuButton
+                                asChild
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                                variant="default"
+                                className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+                            >
+                                <a>
+                                <item.icon />
+                                <span className="group-data-[state=expanded]:inline hidden">{item.label}</span>
+                                </a>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+            )}
+             {navItems.settings.length > 0 && (
+                 <SidebarGroup className="px-4 py-6 mb-0">
+                    <SidebarGroupLabel className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden">Settings</SidebarGroupLabel>
+                    <SidebarMenu>
+                        {navItems.settings.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href} passHref legacyBehavior>
+                            <SidebarMenuButton
+                                asChild
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                                variant="default"
+                                className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
+                            >
+                                <a>
+                                <item.icon />
+                                <span className="group-data-[state=expanded]:inline hidden">{item.label}</span>
+                                </a>
+                            </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarGroup>
+             )}
           </ScrollArea>
         </SidebarContent>
-        <SidebarFooter className="p-4 border-t">
-          <div className="flex items-center gap-2">
-             <Avatar className="h-8 w-8">
-                 {/* Add AvatarImage if available */}
-                 <AvatarFallback>{userInitial}</AvatarFallback>
+        <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=expanded]:flex hidden items-center gap-2">
+            <Avatar className="h-10 w-10">
+                 <AvatarFallback className="bg-white/20 text-sidebar-primary-foreground">{userInitial}</AvatarFallback>
             </Avatar>
-            <div className="flex flex-col overflow-hidden">
-               <span className="text-sm font-medium truncate">{authUser.role}</span>
-               <span className="text-xs text-muted-foreground truncate" title={authUser.email}>{authUser.email}</span>
+            <div>
+               <p className="text-sm font-light">{authUser.email}</p>
+               <p className="text-xs text-muted-foreground">{authUser.role}</p>
             </div>
-          </div>
         </SidebarFooter>
+        <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center">
+            <Avatar className="h-10 w-10">
+                <AvatarFallback className="bg-white/20 text-sidebar-primary-foreground">{userInitial}</AvatarFallback>
+            </Avatar>
+        </SidebarFooter>
+        {/* Custom Toggle Button */}
+        <SidebarTrigger asChild>
+             <button className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-md border border-border text-muted-foreground hover:text-primary cursor-pointer z-30">
+                 <ChevronLeft className="h-5 w-5 group-data-[state=collapsed]:hidden" />
+                 <ChevronRight className="h-5 w-5 group-data-[state=expanded]:hidden" />
+             </button>
+         </SidebarTrigger>
       </Sidebar>
       <div className="flex flex-col flex-1 min-h-screen">
          {/* Pass user info to Header */}
          <Header userEmail={authUser.email} userRole={authUser.role} />
-          <SidebarInset className="flex-1 overflow-auto p-4 md:p-6 lg:pr-[19rem] "> {/* Adjust right padding for communication panel */}
+          {/* Adjusted padding for main content based on sidebar state */}
+          <SidebarInset className="flex-1 overflow-auto p-8 md:p-8 group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px] lg:pr-[19rem]">
              {children}
            </SidebarInset>
       </div>

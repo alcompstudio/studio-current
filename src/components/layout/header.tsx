@@ -2,10 +2,9 @@
 "use client";
 
 import * as React from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bell, Search, Settings, LogOut, PanelLeftOpen } from "lucide-react"; // Updated icon import
+import { Bell, Search, Settings, LogOut } from "lucide-react"; // Removed PanelLeftOpen
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,44 +60,36 @@ export function Header({ userEmail, userRole }: HeaderProps) {
   const pageTitle = routeTitles[pathname] || 'TaskVerse'; // Default title
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:h-auto sm:px-6 py-2">
-       {/* Mobile Sidebar Trigger */}
-       <div className="md:hidden">
-         <SidebarTrigger asChild>
-           <Button size="icon" variant="outline">
-             <PanelLeftOpen /> {/* Icon passed as child */}
-             <span className="sr-only">Toggle Sidebar</span> {/* Hidden text passed as child */}
-           </Button>
-         </SidebarTrigger>
-       </div>
+    <header className="sticky top-0 z-30 flex h-[70px] items-center gap-4 border-b border-border bg-card px-8"> {/* Adjusted height, bg, border, padding */}
+       {/* Mobile Sidebar Trigger is now part of the Sidebar component */}
 
       {/* Page Title */}
       <div className="flex-1">
-        <h1 className="text-lg font-semibold hidden md:block">{pageTitle}</h1>
+        <h1 className="text-xl font-light text-foreground">{pageTitle}</h1> {/* Adjusted font weight */}
       </div>
 
       {/* Search Bar */}
-      <div className="relative ml-auto flex-1 md:grow-0"> {/* Adjusted positioning */}
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className="relative ml-auto hidden md:block"> {/* Hide on mobile */}
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" /> {/* Adjusted icon size and position */}
         <Input
           type="search"
           placeholder="Search..."
-          className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]" /* Adjusted width */
+          className="w-full rounded-md bg-muted border-border py-2 pl-10 pr-4 text-sm focus:ring-primary focus:border-primary lg:w-[300px]" /* Adjusted styles */
         />
       </div>
 
       {/* User Actions */}
-      <div className="flex items-center gap-2 md:gap-4"> {/* Reduced gap slightly */}
-        <Button variant="ghost" size="icon" className="rounded-full shrink-0"> {/* Added shrink-0 */}
-          <Bell className="h-5 w-5" />
+      <div className="flex items-center gap-4"> {/* Adjusted gap */}
+        <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+          <Bell className="h-6 w-6" />
           <span className="sr-only">Toggle notifications</span>
-           {/* Optional: Add a badge for unread notifications */}
-           {/* <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-background" /> */}
         </Button>
+
+        {/* Removed Calendar and explicit Search button from header */}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full shrink-0"> {/* Added shrink-0 */}
+            <Button variant="ghost" size="icon" className="rounded-full shrink-0">
                <Avatar className="h-8 w-8">
                  {/* Use placeholder image or fallback */}
                  {/* <AvatarImage src="/placeholder-user.jpg" alt={userEmail} /> */}
@@ -109,13 +100,12 @@ export function Header({ userEmail, userRole }: HeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>{userRole}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push('/settings')}> {/* Navigate to settings */}
+            <DropdownMenuItem onClick={() => router.push('/settings')}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            {/* Add more user-specific actions here */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}> {/* Add logout functionality */}
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>
