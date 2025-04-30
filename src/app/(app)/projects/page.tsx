@@ -47,9 +47,11 @@ export default function ProjectsPage() {
        <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-tight">Projects</h2>
          {userRole === "Заказчик" && ( // Show button only for Заказчик (Client)
-            <Button>
-               <PlusCircle className="mr-2 h-4 w-4" /> Create New Project
-            </Button>
+             <Link href="/projects/new" passHref>
+                <Button>
+                   <PlusCircle className="mr-2 h-4 w-4" /> Create New Project
+                </Button>
+            </Link>
          )}
        </div>
        <Card>
