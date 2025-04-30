@@ -48,10 +48,10 @@ const getStatusIcon = (status: string) => {
 
 
 export default function ProjectDetailPage() {
-    // Use React.use to unwrap the params object
     // Although useParams returns a sync object in client components,
     // using React.use aligns with Next.js's future direction for accessing params.
-    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
+    // --- Removed React.use as it causes issues in Client Components ---
+    const params = useParams<{ projectId: string }>();
     const projectId = params?.projectId;
 
 
