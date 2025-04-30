@@ -79,9 +79,10 @@ export default function ProjectDetailPage() {
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
                         <Button variant="outline" asChild>
-                            <a>
+                            {/* Remove the explicit <a> tag here */}
+                            <span>
                                 <Edit className="mr-2 h-4 w-4" /> Edit Project
-                            </a>
+                            </span>
                         </Button>
                     </Link>
                 )}
