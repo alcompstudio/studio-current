@@ -25,6 +25,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import type { UserRole } from "@/lib/types"; // Use type import
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button"; // Import Button
+import { useToast } from "@/hooks/use-toast"; // Import useToast
 
 interface AuthUser {
   email: string;
@@ -34,6 +36,7 @@ interface AuthUser {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { toast } = useToast(); // Initialize useToast
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   // Default communication panel to collapsed (width 70px)
@@ -84,6 +87,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('storage', handleStorageChange);
 
   }, [router]);
+
+  const handleLogout = () => {
+    // Clear authentication state (localStorage in this case)
+    localStorage.removeItem('authUser');
+    // Show toast message
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+    // Redirect to auth page
+    router.push('/auth');
+    // Optional: Refresh to ensure layout updates if state isn't fully reactive
+    // router.refresh();
+  };
 
 
   const getNavItems = (role: UserRole | undefined) => {
@@ -144,7 +161,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen>
       {/* Left Sidebar */}
       <Sidebar>
-        <SidebarHeader className="h-[70px] items-center justify-center gap-2 px-6 border-b bg-sidebar-primary">
+        <SidebarHeader className="h-[70px] items-center justify-center gap-2 px-6 border-b border-sidebar-border bg-sidebar-primary">
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
             Freelan<span className="text-accent">Center</span> {/* Updated text and color */}
            </h1>
@@ -256,14 +273,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
              )}
           </ScrollArea>
         </SidebarContent>
-        <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=expanded]:flex hidden items-center gap-2">
-            <Avatar className="h-10 w-10">
+        <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=expanded]:flex hidden items-center justify-between gap-2">
+           <div className="flex items-center gap-2 flex-grow min-w-0"> {/* Added flex-grow and min-w-0 */}
+             <Avatar className="h-10 w-10 shrink-0"> {/* Added shrink-0 */}
                  <AvatarFallback className="bg-white/20 text-sidebar-primary-foreground">{userInitial}</AvatarFallback>
-            </Avatar>
-            <div>
-               <p className="text-sm font-light">{authUser.email}</p>
+             </Avatar>
+             <div className="flex-grow min-w-0"> {/* Added flex-grow and min-w-0 */}
+               <p className="text-sm font-light truncate">{authUser.email}</p> {/* Added truncate */}
                <p className="text-xs text-muted-foreground">{authUser.role}</p> {/* Use text-muted-foreground */}
-            </div>
+             </div>
+           </div>
+           <Button
+              variant="ghost"
+              size="icon"
+              className="text-sidebar-primary-foreground hover:bg-white/10 shrink-0" // Added shrink-0
+              onClick={handleLogout}
+              aria-label="Logout"
+           >
+             <LogOut className="h-5 w-5" />
+           </Button>
         </SidebarFooter>
         <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center">
             <Avatar className="h-10 w-10">
@@ -305,7 +333,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
-
-    
