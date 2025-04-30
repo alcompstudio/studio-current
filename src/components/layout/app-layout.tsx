@@ -144,12 +144,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen>
       {/* Left Sidebar */}
       <Sidebar>
-        <SidebarHeader className="h-[70px] items-center gap-2 px-6 border-b bg-sidebar-primary">
+        <SidebarHeader className="h-[70px] items-center justify-center gap-2 px-6 border-b bg-sidebar-primary">
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
-            Task<span className="text-accent">Verse</span>
+            FreelanCentr
            </h1>
            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
-             T<span className="text-accent">V</span>
+             FC
            </h1>
         </SidebarHeader>
         <SidebarContent className="p-0">
