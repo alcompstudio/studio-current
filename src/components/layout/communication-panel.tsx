@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"; // Use CheckCircle2
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2, bgColor: "bg-emerald-100", iconColor: "text-emerald-500" }, // Replace CheckCircle with CheckCircle2
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2, bgColor: "bg-emerald-100", iconColor: "text-emerald-500" },
      { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
      { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, bgColor: "bg-amber-100", iconColor: "text-amber-500" },
      { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, bgColor: "bg-sidebar-accent", iconColor: "text-primary" },
@@ -180,3 +180,5 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
     </aside>
   );
 }
+
+    

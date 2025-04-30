@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "@/components/layout/header";
 import { CommunicationPanel } from "@/components/layout/communication-panel";
-import { Home, Briefcase, Settings, Users, DollarSign, FileText, Search as SearchIcon, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, Briefcase, Settings, Users, DollarSign, FileText, Search as SearchIcon, LogOut, ChevronLeft, ChevronRight, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -94,7 +94,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/projects", label: "Projects", icon: Briefcase, roles: ["Заказчик", "Администратор", "Модератор"] }, // Client/Admin/Mod
       { href: "/orders", label: "Orders", icon: FileText, roles: ["Заказчик", "Администратор", "Модератор"] }, // Client/Admin/Mod
-      // Add Tasks if applicable based on role
+      { href: "/tasks", label: "Tasks", icon: ClipboardList, roles: ["Заказчик", "Администратор", "Модератор", "Исполнитель"] }, // Example: Add Tasks page
     ];
 
     const userGroup = [
@@ -163,7 +163,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             <Link href={item.href} passHref legacyBehavior>
                             <SidebarMenuButton
                                 asChild
-                                isActive={pathname.startsWith(item.href) && (item.href === '/' ? pathname === '/' : true)} // Adjusted isActive logic
+                                isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === '/dashboard' : true)} // Corrected isActive logic
                                 tooltip={item.label}
                                 variant="default" // Use default variant for styling
                                 className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
@@ -262,7 +262,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Avatar>
             <div>
                <p className="text-sm font-light">{authUser.email}</p>
-               <p className="text-xs text-muted">{authUser.role}</p> {/* Use text-muted for role */}
+               <p className="text-xs text-muted-foreground">{authUser.role}</p> {/* Use text-muted-foreground */}
             </div>
         </SidebarFooter>
         <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center">
@@ -305,3 +305,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
