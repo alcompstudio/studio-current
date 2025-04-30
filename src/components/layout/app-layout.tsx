@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -18,58 +19,131 @@ import {
 } from "@/components/ui/sidebar";
 import { Header } from "@/components/layout/header";
 import { CommunicationPanel } from "@/components/layout/communication-panel";
-import { Home, Briefcase, Settings, Users, DollarSign, Bell, MessageSquare } from "lucide-react";
+import { Home, Briefcase, Settings, Users, DollarSign, Bell, MessageSquare, Search as SearchIcon, FileText } from "lucide-react"; // Renamed Search icon import
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import type { UserRole } from "@/lib/types"; // Use type import
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+
+interface AuthUser {
+  email: string;
+  role: UserRole;
+}
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  // Mock roles for demonstration - replace with actual auth context
-  const userRole = "Заказчик"; // or "Исполнитель", "Администратор"
+  React.useEffect(() => {
+    // Check auth status from localStorage on mount
+    const storedUser = localStorage.getItem('authUser');
+    if (storedUser) {
+      try {
+        const user: AuthUser = JSON.parse(storedUser);
+        if (user && user.email && user.role) {
+          setAuthUser(user);
+        } else {
+          // Invalid user data, redirect to auth
+          localStorage.removeItem('authUser');
+          router.replace('/auth');
+        }
+      } catch (error) {
+        console.error("Error parsing authUser from localStorage", error);
+        localStorage.removeItem('authUser');
+        router.replace('/auth');
+      }
+    } else {
+      // Not authenticated, redirect to auth
+      router.replace('/auth');
+    }
+    setIsLoading(false);
 
-  const getNavItems = (role: string) => {
+    // Listen for storage changes to update layout if needed (e.g., logout)
+    const handleStorageChange = (event: StorageEvent) => {
+        if (event.key === 'authUser') {
+            if (event.newValue) {
+                try {
+                    const updatedUser: AuthUser = JSON.parse(event.newValue);
+                    setAuthUser(updatedUser);
+                } catch {
+                    setAuthUser(null);
+                    router.replace('/auth');
+                }
+            } else {
+                setAuthUser(null);
+                router.replace('/auth');
+            }
+        }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+
+  }, [router]);
+
+
+  const getNavItems = (role: UserRole | undefined) => {
+    if (!role) return [];
+
     const commonItems = [
-      { href: "/", label: "Dashboard", icon: Home },
+      { href: "/dashboard", label: "Dashboard", icon: Home }, // Ensure dashboard is first/default
       { href: "/settings", label: "Settings", icon: Settings },
     ];
 
     const clientItems = [
       { href: "/projects", label: "Projects", icon: Briefcase },
-      { href: "/orders", label: "Orders", icon: Briefcase }, // Simplified for now
+      { href: "/orders", label: "Orders", icon: FileText }, // Changed icon for Orders
       { href: "/finance", label: "Finance", icon: DollarSign },
     ];
 
     const freelancerItems = [
-      { href: "/find-orders", label: "Find Orders", icon: Briefcase },
-      { href: "/my-bids", label: "My Bids", icon: DollarSign },
-      { href: "/my-tasks", label: "My Tasks", icon: Briefcase },
+      { href: "/find-orders", label: "Find Orders", icon: SearchIcon }, // Use imported SearchIcon
+      { href: "/my-bids", label: "My Bids", icon: DollarSign }, // Consider a different icon if needed
+      { href: "/my-tasks", label: "My Tasks", icon: Briefcase }, // Changed icon for Tasks
       { href: "/finance", label: "Finance", icon: DollarSign },
     ];
 
     const adminItems = [
+      // Maybe merge/refine these for admins
        { href: "/projects", label: "All Projects", icon: Briefcase },
-       { href: "/orders", label: "All Orders", icon: Briefcase },
+       { href: "/orders", label: "All Orders", icon: FileText },
        { href: "/users", label: "Manage Users", icon: Users },
        { href: "/finance-admin", label: "Platform Finance", icon: DollarSign },
     ];
 
+    let specificItems: typeof commonItems = [];
     switch (role) {
       case "Заказчик":
-        return [...commonItems, ...clientItems];
+        specificItems = clientItems;
+        break;
       case "Исполнитель":
-        return [...commonItems, ...freelancerItems];
+        specificItems = freelancerItems;
+        break;
       case "Администратор":
-      case "Модератор":
-        return [...commonItems, ...clientItems, ...freelancerItems, ...adminItems]; // Admins see everything
-      default:
-        return commonItems;
+      case "Модератор": // Combine Admin and Moderator nav for now
+        // Show a combined view or prioritize admin sections
+        specificItems = adminItems; // Simple approach: show only admin items for admins/mods
+        break;
     }
+    // Ensure dashboard is always present and potentially other commons
+    return [...commonItems, ...specificItems.filter(item => !commonItems.some(c => c.href === item.href))];
   };
 
-  const navItems = getNavItems(userRole);
+  const navItems = getNavItems(authUser?.role);
+
+  if (isLoading) {
+     return <div className="flex min-h-screen items-center justify-center">Loading Layout...</div>;
+  }
+
+  if (!authUser) {
+     // Should have been redirected, but as a fallback, render nothing or a message
+     return null;
+  }
+
+  const userInitial = authUser.email ? authUser.email.charAt(0).toUpperCase() : '?';
 
   return (
     <SidebarProvider defaultOpen>
@@ -88,7 +162,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <Link href={item.href} passHref legacyBehavior>
                       <SidebarMenuButton
                         asChild
-                        isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))}
+                        // More robust active state check: exact match for '/' and prefix match otherwise
+                        isActive={item.href === '/' ? pathname === '/' : pathname.startsWith(item.href)}
                         tooltip={item.label}
                       >
                         <a>
@@ -105,21 +180,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </ScrollArea>
         </SidebarContent>
         <SidebarFooter className="p-4 border-t">
-          {/* User Profile Area - Placeholder */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-              {userRole.charAt(0)}
-            </div>
-            <div className="flex flex-col">
-               <span className="text-sm font-medium">{userRole}</span>
-               <span className="text-xs text-muted-foreground">user@example.com</span>
+             <Avatar className="h-8 w-8">
+                 {/* Add AvatarImage if available */}
+                 <AvatarFallback>{userInitial}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col overflow-hidden">
+               <span className="text-sm font-medium truncate">{authUser.role}</span>
+               <span className="text-xs text-muted-foreground truncate" title={authUser.email}>{authUser.email}</span>
             </div>
           </div>
         </SidebarFooter>
       </Sidebar>
       <div className="flex flex-col flex-1 min-h-screen">
-         <Header />
-          <SidebarInset className="flex-1 overflow-auto p-4 md:p-6">
+         {/* Pass user info to Header */}
+         <Header userEmail={authUser.email} userRole={authUser.role} />
+          <SidebarInset className="flex-1 overflow-auto p-4 md:p-6 lg:pr-[19rem] "> {/* Adjust right padding for communication panel */}
              {children}
            </SidebarInset>
       </div>
