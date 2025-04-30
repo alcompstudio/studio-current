@@ -66,7 +66,8 @@ export function Header({ userEmail, userRole }: HeaderProps) {
        <div className="md:hidden">
          <SidebarTrigger asChild>
            <Button size="icon" variant="outline">
-             <PanelLeftOpen /> {/* Updated Icon */}
+             <PanelLeftOpen /> {/* Icon passed as child */}
+             <span className="sr-only">Toggle Sidebar</span> {/* Hidden text passed as child */}
            </Button>
          </SidebarTrigger>
        </div>
