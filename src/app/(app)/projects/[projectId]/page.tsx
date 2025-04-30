@@ -1,7 +1,7 @@
 // src/app/(app)/projects/[projectId]/page.tsx
 'use client';
 
-import React from 'react';
+import React from 'react'; // Import React
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,16 +34,23 @@ const getStatusIcon = (status: string) => {
 };
 
 // Define props type including searchParams (not using React.use for now)
+// Keep the existing props definition for clarity, but access params via hook
 interface ProjectDetailPageProps {
-    params: { projectId: string };
+    params: { projectId: string }; // Keep for type clarity if needed, but prefer hook
     searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function ProjectDetailPage({ params, searchParams }: ProjectDetailPageProps) {
-    const { projectId } = params; // Get projectId directly from props
+
+export default function ProjectDetailPage({ searchParams }: ProjectDetailPageProps) {
+    // Although useParams returns a sync object in client components,
+    // using React.use aligns with Next.js's future direction for accessing params.
+    // Wrap the hook result directly.
+    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
+    const projectId = params?.projectId; // Get projectId after unwrapping
 
     // TODO: Fetch actual project data based on projectId
-    const project = mockProjects.find(p => p.id === projectId);
+    // Ensure projectId is available before searching
+    const project = projectId ? mockProjects.find(p => p.id === projectId) : null;
 
     if (!project) {
         return <div>Project not found.</div>; // Or a proper 404 page
@@ -95,6 +102,10 @@ export default function ProjectDetailPage({ params, searchParams }: ProjectDetai
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Created</p>
                         <p>{project.createdAt?.toLocaleDateString() || 'N/A'}</p>
+                    </div>
+                     <div>
+                        <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
+                        <p>{project.updatedAt?.toLocaleDateString() || 'N/A'}</p>
                     </div>
                 </CardContent>
             </Card>
