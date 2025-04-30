@@ -1,6 +1,7 @@
 // src/app/(app)/projects/[projectId]/page.tsx
 'use client';
 
+import React from 'react'; // Ensure React is imported
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,9 @@ const getStatusIcon = (status: string) => {
 
 
 export default function ProjectDetailPage() {
-    const params = useParams<{ projectId: string }>();
+    // Use React.use even though useParams typically returns a sync object in client components.
+    // This is an attempt to satisfy the specific error message about enumeration.
+    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
     const projectId = params?.projectId;
 
     // TODO: Fetch actual project data based on projectId
@@ -79,8 +82,7 @@ export default function ProjectDetailPage() {
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
                         <Button variant="outline" asChild>
-                            {/* Remove the explicit <a> tag here */}
-                            <span>
+                             <span>
                                 <Edit className="mr-2 h-4 w-4" /> Edit Project
                             </span>
                         </Button>
