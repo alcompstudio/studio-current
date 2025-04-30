@@ -48,9 +48,12 @@ const getStatusIcon = (status: string) => {
 
 
 export default function ProjectDetailPage() {
-    // Directly use useParams as it's synchronous in Client Components
-    const params = useParams<{ projectId: string }>();
+    // Use React.use to unwrap the params object
+    // Although useParams returns a sync object in client components,
+    // using React.use aligns with Next.js's future direction for accessing params.
+    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
     const projectId = params?.projectId;
+
 
     // TODO: Fetch actual project data based on projectId
     const project = mockProjects.find(p => p.id === projectId);
@@ -173,18 +176,3 @@ export default function ProjectDetailPage() {
         </div>
     );
 }
-
-
-// Add missing Project type definition if not already globally available
-// interface Project {
-//   id: string;
-//   name: string;
-//   description?: string;
-//   status: string;
-//   clientName?: string; // Assuming clientName is part of the fetched data
-//   clientId: string;
-//   budget?: number;
-//   currency: string;
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }

@@ -13,8 +13,10 @@ import { useParams } from 'next/navigation';
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function ProjectEditPage() {
-    // Directly use useParams as it's synchronous in Client Components
-    const params = useParams<{ projectId: string }>();
+    // Use React.use to unwrap the params object
+    // Although useParams returns a sync object in client components,
+    // using React.use aligns with Next.js's future direction for accessing params.
+    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
     const projectId = params?.projectId;
 
     // TODO: Fetch actual project data based on projectId
