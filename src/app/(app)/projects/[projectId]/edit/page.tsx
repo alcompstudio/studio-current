@@ -21,9 +21,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label"; // Import Label
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Import Select components
 import type { Project } from "@/lib/types"; // Assuming Project type exists
-import { mockProjects } from '../mockProjects'; // Import mock data
+import { mockProjects } from '../../mockProjects'; // Corrected import path
 
 // Define project statuses and currencies
 const projectStatuses = ["Planning", "In Progress", "On Hold", "Completed", "Archived"] as const;
@@ -40,14 +41,13 @@ const projectFormSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
-// Define props type including searchParams (not using React.use for now)
-interface ProjectEditPageProps {
-    params: { projectId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default function ProjectEditPage({ params, searchParams }: ProjectEditPageProps) {
-    const { projectId } = params; // Get projectId directly from props
+export default function ProjectEditPage() {
+    // Although useParams returns a sync object in client components,
+    // using React.use aligns with Next.js's future direction for accessing params.
+    // However, React.use with a resolved promise for useParams seems incorrect and caused issues.
+    // Stick to the standard useParams usage for now.
+    const params = useParams<{ projectId: string }>();
+    const projectId = params?.projectId;
 
     // Fetch project data (using mock data for now)
     const [project, setProject] = React.useState<Project | null>(null);
@@ -67,20 +67,27 @@ export default function ProjectEditPage({ params, searchParams }: ProjectEditPag
     });
 
     useEffect(() => {
-        // Simulate fetching project data
-        const foundProject = mockProjects.find(p => p.id === projectId);
-        if (foundProject) {
-            setProject(foundProject);
-            // Reset form with fetched data
-            form.reset({
-                name: foundProject.name,
-                description: foundProject.description || "",
-                status: foundProject.status as ProjectFormValues['status'], // Assert type
-                currency: foundProject.currency as ProjectFormValues['currency'], // Assert type
-                budget: foundProject.budget,
-            });
+        if (projectId) {
+            // Simulate fetching project data
+            const foundProject = mockProjects.find(p => p.id === projectId);
+            if (foundProject) {
+                setProject(foundProject);
+                // Reset form with fetched data
+                form.reset({
+                    name: foundProject.name,
+                    description: foundProject.description || "",
+                    status: foundProject.status as ProjectFormValues['status'], // Assert type
+                    currency: foundProject.currency as ProjectFormValues['currency'], // Assert type
+                    budget: foundProject.budget,
+                });
+            }
+            setIsLoading(false);
+        } else {
+            // Handle the case where projectId is not available
+            setIsLoading(false);
+            console.error("Project ID is missing.");
+             // Optionally redirect or show an error message
         }
-        setIsLoading(false);
     }, [projectId, form]); // Add form to dependency array
 
     const onSubmit = (data: ProjectFormValues) => {
@@ -94,7 +101,7 @@ export default function ProjectEditPage({ params, searchParams }: ProjectEditPag
     }
 
     if (!project) {
-        return <div>Project not found.</div>;
+        return <div>Project not found or ID missing.</div>;
     }
 
     return (
@@ -210,27 +217,27 @@ export default function ProjectEditPage({ params, searchParams }: ProjectEditPag
                                     )}
                                 />
 
-                                <FormField
-                                    control={form.control}
-                                    name="budget"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Budget</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="Enter budget amount"
-                                                    step="0.01" // Allow decimals
-                                                    {...field}
-                                                    // Handle empty string case for optional number
-                                                    value={field.value ?? ''}
-                                                    onChange={e => field.onChange(e.target.value === '' ? undefined : e.target.value)}
-                                                 />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                 <FormField
+                                     control={form.control}
+                                     name="budget"
+                                     render={({ field }) => (
+                                         <FormItem>
+                                             <FormLabel>Budget</FormLabel>
+                                             <FormControl>
+                                                 <Input
+                                                     type="number"
+                                                     placeholder="Enter budget amount"
+                                                     step="0.01" // Allow decimals
+                                                     {...field}
+                                                     // Handle empty string case for optional number
+                                                     value={field.value ?? ''}
+                                                     onChange={e => field.onChange(e.target.value === '' ? undefined : e.target.value)}
+                                                  />
+                                             </FormControl>
+                                             <FormMessage />
+                                         </FormItem>
+                                     )}
+                                 />
                              </div>
                             {/* Read-only field for Client Name */}
                              <div>
