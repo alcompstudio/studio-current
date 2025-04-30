@@ -1,3 +1,4 @@
+
 // Basic User Role Definition
 export type UserRole = "Заказчик" | "Исполнитель" | "Администратор" | "Модератор";
 
@@ -39,17 +40,20 @@ export interface Project extends BaseEntity {
   clientName?: string; // Optional: Denormalized client name for display
   status: string; // e.g., "Active", "Completed", "Archived" - Define specific statuses later
   currency: string; // e.g., "USD", "EUR", "RUB"
-  totalBudget?: number; // Optional: Calculated total budget
+  budget?: number; // Optional: Provided budget
+  totalBudget?: number; // Optional: Calculated total budget from orders/etaps
   freelancerIds?: string[]; // List of approved Исполнитель IDs for the project
 }
 
 // Order Interface (Заказ)
 export interface Order extends BaseEntity {
   projectId: string;
+  projectName?: string; // Optional: Denormalized project name for display
   status: OrderStatus;
   etaps?: Etap[];
   workPositions?: WorkPosition[]; // Рабочие Позиции directly linked initially
   totalCalculatedPrice?: number; // Calculated based on options
+  currency: string; // Currency inherited or set for the order
 }
 
 // Etap Interface (Этап Заказа)
