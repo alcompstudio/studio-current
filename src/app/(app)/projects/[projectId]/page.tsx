@@ -48,9 +48,8 @@ const getStatusIcon = (status: string) => {
 
 
 export default function ProjectDetailPage() {
-    // Use React.use even though useParams typically returns a sync object in client components.
-    // This is an attempt to satisfy the specific error message about enumeration.
-    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
+    // Directly use useParams as it's synchronous in Client Components
+    const params = useParams<{ projectId: string }>();
     const projectId = params?.projectId;
 
     // TODO: Fetch actual project data based on projectId
@@ -81,10 +80,9 @@ export default function ProjectDetailPage() {
                 </div>
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
-                        <Button variant="outline" asChild>
-                             <span>
-                                <Edit className="mr-2 h-4 w-4" /> Edit Project
-                            </span>
+                         {/* Use Link directly, no nested <a> needed with Button asChild */}
+                        <Button variant="outline">
+                            <Edit className="mr-2 h-4 w-4" /> Edit Project
                         </Button>
                     </Link>
                 )}

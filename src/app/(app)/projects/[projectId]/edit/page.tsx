@@ -13,9 +13,8 @@ import { useParams } from 'next/navigation';
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function ProjectEditPage() {
-    // Use React.use even though useParams typically returns a sync object in client components.
-    // This is an attempt to satisfy the specific error message about enumeration.
-    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
+    // Directly use useParams as it's synchronous in Client Components
+    const params = useParams<{ projectId: string }>();
     const projectId = params?.projectId;
 
     // TODO: Fetch actual project data based on projectId
