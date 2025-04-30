@@ -1,15 +1,16 @@
 // src/app/(app)/projects/[projectId]/page.tsx
 'use client';
 
-import React from 'react'; // Import React
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
-import type { Project } from "@/lib/types"; // Assuming Project type exists
-import { mockProjects } from '../mockProjects'; // Import mock data
+import type { Project } from "@/lib/types";
+import { mockProjects } from '../mockProjects';
+import { useToast } from "@/hooks/use-toast"; // Import useToast
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -33,27 +34,48 @@ const getStatusIcon = (status: string) => {
     }
 };
 
-// Define props type including searchParams (not using React.use for now)
-// Keep the existing props definition for clarity, but access params via hook
-interface ProjectDetailPageProps {
-    params: { projectId: string }; // Keep for type clarity if needed, but prefer hook
-    searchParams: { [key: string]: string | string[] | undefined };
-}
+// No need for ProjectDetailPageProps definition in Client Component using hooks
 
+export default function ProjectDetailPage() {
+    const params = useParams<{ projectId: string }>();
+    const projectId = params?.projectId; // Get projectId directly from hook
 
-export default function ProjectDetailPage({ searchParams }: ProjectDetailPageProps) {
-    // Although useParams returns a sync object in client components,
-    // using React.use aligns with Next.js's future direction for accessing params.
-    // Wrap the hook result directly.
-    const params = React.use(Promise.resolve(useParams<{ projectId: string }>()));
-    const projectId = params?.projectId; // Get projectId after unwrapping
+    // Need state to re-render when mock data changes (after edit)
+    const [projectData, setProjectData] = React.useState<Project | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const { toast } = useToast();
 
-    // TODO: Fetch actual project data based on projectId
-    // Ensure projectId is available before searching
-    const project = projectId ? mockProjects.find(p => p.id === projectId) : null;
+    React.useEffect(() => {
+        if (projectId) {
+            // Simulate fetching data
+            const foundProject = mockProjects.find(p => p.id === projectId);
+            if (foundProject) {
+                setProjectData(foundProject);
+            } else {
+                toast({
+                     title: "Error",
+                     description: `Project with ID ${projectId} not found.`,
+                     variant: "destructive",
+                 });
+                // Optionally redirect or show not found message
+            }
+            setIsLoading(false);
+        } else {
+            setIsLoading(false);
+            toast({
+                 title: "Error",
+                 description: "Project ID is missing.",
+                 variant: "destructive",
+             });
+        }
+    }, [projectId, toast]); // Re-run if projectId changes
 
-    if (!project) {
-        return <div>Project not found.</div>; // Or a proper 404 page
+    if (isLoading) {
+        return <div className="flex min-h-screen items-center justify-center">Loading project...</div>;
+    }
+
+    if (!projectData) {
+        return <div className="flex min-h-screen items-center justify-center">Project not found or ID missing.</div>; // Or a proper 404 component
     }
 
     // Mock user role for conditional rendering
@@ -69,17 +91,17 @@ export default function ProjectDetailPage({ searchParams }: ProjectDetailPagePro
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </Link>
-                    <h2 className="text-2xl font-bold tracking-tight">{project.name}</h2>
-                     <Badge variant={getStatusVariant(project.status)} className="flex items-center text-sm">
-                         {getStatusIcon(project.status)}
-                         {project.status}
+                    <h2 className="text-2xl font-bold tracking-tight">{projectData.name}</h2>
+                     <Badge variant={getStatusVariant(projectData.status)} className="flex items-center text-sm">
+                         {getStatusIcon(projectData.status)}
+                         {projectData.status}
                     </Badge>
                 </div>
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
                          <Button variant="outline">
                             <Edit className="mr-2 h-4 w-4" /> Edit Project
-                        </Button>
+                         </Button>
                     </Link>
                 )}
             </div>
@@ -88,24 +110,24 @@ export default function ProjectDetailPage({ searchParams }: ProjectDetailPagePro
             <Card>
                 <CardHeader>
                     <CardTitle>Project Overview</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
+                    <CardDescription>{projectData.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Client</p>
-                        <p>{project.clientName || 'N/A'}</p>
+                        <p>{projectData.clientName || 'N/A'}</p>
                     </div>
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Budget</p>
-                        <p>{project.currency} {project.budget?.toLocaleString() || 'N/A'}</p>
+                        <p>{projectData.currency} {projectData.budget?.toLocaleString() || 'N/A'}</p>
                     </div>
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Created</p>
-                        <p>{project.createdAt?.toLocaleDateString() || 'N/A'}</p>
+                        <p>{projectData.createdAt?.toLocaleDateString() || 'N/A'}</p>
                     </div>
                      <div>
                         <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
-                        <p>{project.updatedAt?.toLocaleDateString() || 'N/A'}</p>
+                        <p>{projectData.updatedAt?.toLocaleDateString() || 'N/A'}</p>
                     </div>
                 </CardContent>
             </Card>
