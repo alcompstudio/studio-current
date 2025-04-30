@@ -1,14 +1,20 @@
+
 "use client";
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity, Search } from "lucide-react"; // Added Activity, Search
+import { Bell, MessageSquare, Activity, Search, UserPlus as UserPlusIcon, DollarSign as DollarSignIcon, CheckCircle as CheckCircleIcon } from "lucide-react"; // Added Activity, Search and specific icons
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input"; // Added Input
 import { Button } from "@/components/ui/button"; // Added Button
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // Added Avatar
+
+// Define icons before usage
+const CheckCircle = CheckCircleIcon; // Use Lucide icon
+const UserPlus = UserPlusIcon; // Use Lucide icon
+const DollarSign = DollarSignIcon; // Use Lucide icon
 
 export function CommunicationPanel() {
   const [isCommunicationExpanded, setIsCommunicationExpanded] = React.useState(true); // Default to expanded as per example
@@ -29,16 +35,11 @@ export function CommunicationPanel() {
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle }, // Replace CheckCircle with appropriate lucide icon if available, otherwise inline SVG or keep text
-     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus },
-     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell },
-     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign },
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle }, // Use defined CheckCircle
+     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus }, // Use defined UserPlus
+     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell }, // Bell is imported from lucide-react directly
+     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign }, // Use defined DollarSign
   ];
-
-  // Placeholder icons, replace with actual Lucide icons or SVGs
-  const CheckCircle = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-  const UserPlus = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
-  const DollarSign = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
 
 
   return (
@@ -133,7 +134,7 @@ export function CommunicationPanel() {
                         {activities.map((activity) => (
                             <div key={activity.id} className="relative flex items-start mb-6">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-accent-foreground flex items-center justify-center z-10 mr-4">
-                                    <activity.icon />
+                                    <activity.icon className="h-4 w-4"/>
                                 </div>
                                 <div>
                                     <p className="text-sm font-light text-foreground">

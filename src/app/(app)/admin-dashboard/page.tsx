@@ -1,3 +1,4 @@
+
 // src/app/(app)/admin-dashboard/page.tsx
 'use client';
 import { useGoogleFont } from '@/utils/fonts'; // Corrected import path
@@ -6,26 +7,26 @@ import {
   Home,
   Briefcase,
   FileText,
-  ClipboardList, // Changed from generic Search icon
+  ClipboardList,
   Users,
   DollarSign,
-  FileBarChart2, // Changed from generic FileText
-  CreditCard, // Changed from generic DollarSign
+  FileBarChart2,
+  CreditCard,
   Settings,
-  Database, // Changed from generic Settings icon
+  Database,
   Bell,
-  Calendar, // Added Calendar
+  Calendar,
   Search,
   ChevronLeft,
   ChevronRight,
-  Monitor, // Changed from generic SVG
-  Smartphone, // Changed from generic SVG
-  Palette, // Changed from generic SVG
-  ShieldCheck, // Changed from generic SVG
-  CheckCircle, // Added CheckCircle
-  UserPlus, // Added UserPlus
-  MessageSquare, // Added MessageSquare
-  Activity as ActivityIcon, // Renamed to avoid conflict with component
+  Monitor,
+  Smartphone,
+  Palette,
+  ShieldCheck,
+  CheckCircle,
+  UserPlus,
+  MessageSquare,
+  Activity as ActivityIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
