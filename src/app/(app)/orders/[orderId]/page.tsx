@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks } from "lucide-react";
+import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit } from "lucide-react"; // Import Edit icon
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import type { Order } from "@/lib/types";
@@ -84,9 +84,13 @@ export default function OrderDetailPage() {
                          {orderData.status}
                     </Badge>
                 </div>
-                {/* Add Order-specific actions if needed (e.g., Edit Order, Manage Bids) */}
+                {/* Change Manage Order to Edit Order */}
                  {userRole === "Заказчик" && (
-                    <Button variant="outline">Manage Order</Button>
+                    <Link href={`/orders/${orderId}/edit`} passHref>
+                         <Button variant="outline">
+                            <Edit className="mr-2 h-4 w-4" /> Edit Order
+                         </Button>
+                    </Link>
                  )}
                  {userRole === "Исполнитель" && orderData.status === "Сбор ставок" && (
                     <Button>Place Bid</Button>
