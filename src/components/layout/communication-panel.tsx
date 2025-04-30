@@ -33,10 +33,10 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2 }, // Use CheckCircle2
-     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus },
-     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell },
-     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign },
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2, bgColor: "bg-emerald-100", iconColor: "text-emerald-500" }, // Replace CheckCircle with CheckCircle2
+     { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
+     { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, bgColor: "bg-amber-100", iconColor: "text-amber-500" },
+     { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, bgColor: "bg-sidebar-accent", iconColor: "text-primary" },
   ];
 
   const handleIconClick = () => {
