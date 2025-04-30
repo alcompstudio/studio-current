@@ -77,9 +77,13 @@ export default function ProjectDetailPage() {
                     </Badge>
                 </div>
                 {userRole === "Заказчик" && ( // Show edit button for Client
-                    <Button variant="outline">
-                        <Edit className="mr-2 h-4 w-4" /> Edit Project
-                    </Button>
+                    <Link href={`/projects/${projectId}/edit`} passHref>
+                        <Button variant="outline" asChild>
+                            <a>
+                                <Edit className="mr-2 h-4 w-4" /> Edit Project
+                            </a>
+                        </Button>
+                    </Link>
                 )}
             </div>
 
@@ -171,15 +175,15 @@ export default function ProjectDetailPage() {
 
 
 // Add missing Project type definition if not already globally available
-interface Project {
-  id: string;
-  name: string;
-  description?: string;
-  status: string;
-  clientName?: string; // Assuming clientName is part of the fetched data
-  clientId: string;
-  budget?: number;
-  currency: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+// interface Project {
+//   id: string;
+//   name: string;
+//   description?: string;
+//   status: string;
+//   clientName?: string; // Assuming clientName is part of the fetched data
+//   clientId: string;
+//   budget?: number;
+//   currency: string;
+//   createdAt?: Date;
+//   updatedAt?: Date;
+// }
