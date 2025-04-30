@@ -22,6 +22,9 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
     { id: 1, title: "New Bid Received", description: "John Doe placed a bid on 'Website Redesign'.", time: "5m ago" },
     { id: 2, title: "Task Approved", description: "Your task 'Logo Design - Iteration 1' was approved.", time: "1h ago" },
     { id: 3, title: "Payment Received", description: "Received payment for Project 'Content Writing'.", time: "1d ago" },
+    { id: 4, title: "New Message", description: "Sarah Johnson sent you a message regarding 'Mobile App'.", time: "2d ago" },
+    { id: 5, title: "Project Update", description: "Client Acme Inc. requested changes on 'Website Redesign'.", time: "2d ago" },
+    { id: 6, title: "Invoice Paid", description: "Invoice #INV-0123 for TechStart has been paid.", time: "3d ago" },
   ];
 
   const messages = [
@@ -30,6 +33,9 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
      { id: 3, sender: "TechStart Team", initials: "TS", preview: "We need to schedule a call to discuss the next phase of the project...", time: "Yesterday", unread: false, active: false, avatarBg: "bg-blue-100", avatarText: "text-blue-800" },
      { id: 4, sender: "Michael Park", initials: "MP", preview: "Thanks for the update. I'll review the documents and get back to you...", time: "Yesterday", unread: false, active: false, avatarBg: "bg-amber-100", avatarText: "text-amber-800" },
      { id: 5, sender: "GreenLife", initials: "GL", preview: "We're very happy with the initial concepts. When can we expect...", time: "Monday", unread: false, active: false, avatarBg: "bg-purple-100", avatarText: "text-purple-800" },
+     { id: 6, sender: "Support Team", initials: "ST", preview: "Your support ticket #12345 has been updated.", time: "Monday", unread: false, active: false, avatarBg: "bg-muted", avatarText: "text-muted-foreground" },
+     { id: 7, sender: "Jane Doe", initials: "JD", preview: "Can we discuss the budget for the new marketing campaign?", time: "Tuesday", unread: false, active: false, avatarBg: "bg-red-100", avatarText: "text-red-800" },
+     { id: 8, sender: "Marketing Dept", initials: "MD", preview: "Reminder: Monthly marketing meeting tomorrow at 10 AM.", time: "Tuesday", unread: false, active: false, avatarBg: "bg-indigo-100", avatarText: "text-indigo-800" },
   ];
 
   const activities = [ // Mock activities
@@ -37,7 +43,9 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
      { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
      { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, bgColor: "bg-amber-100", iconColor: "text-amber-500" },
      { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, bgColor: "bg-sidebar-accent", iconColor: "text-primary" },
+     { id: 5, user: "Acme Inc.", action: "posted a new Order: 'Logo Update'", time: "3 days ago", icon: UserPlus, bgColor: "bg-purple-100", iconColor: "text-purple-500" }, // Example additional activity
   ];
+
 
   const handleIconClick = () => {
     setIsExpanded(true); // Always expand when an icon is clicked
@@ -46,13 +54,11 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   return (
     // Adjusted positioning: top-[70px] to place below header, height calc
     <aside className={`fixed right-0 top-[70px] bottom-0 ${isExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300 h-[calc(100vh-70px)]`}>
-       {/* Header no longer needed inside the panel itself as it's positioned below the main header */}
-
        {/* Content Area */}
        {isExpanded ? (
-          <Tabs defaultValue="messages" className="flex flex-col flex-1">
+          <Tabs defaultValue="messages" className="flex flex-col flex-1 overflow-hidden"> {/* Ensure Tabs fills height and hides overflow */}
             {/* Toggle Button moved to top right, inside the panel */}
-             <div className="h-[60px] border-b border-border flex items-center px-6 justify-between">
+             <div className="h-[60px] border-b border-border flex items-center px-6 justify-between flex-shrink-0"> {/* Prevent shrinking */}
                  <h3 className="text-lg font-light text-foreground">Communications</h3>
                  <Button
                     variant="ghost"
@@ -60,20 +66,20 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                     onClick={() => setIsExpanded(!isExpanded)} // Toggle state
                     className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
                  >
-                     {/* Show ChevronRight (to collapse) when expanded */}
+                    {/* Show ChevronRight (to collapse) when expanded */}
                     <ChevronRight className="h-5 w-5" />
                  </Button>
              </div>
 
              {/* Tabs */}
-             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0">
+             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0 flex-shrink-0"> {/* Prevent shrinking */}
                 <TabsTrigger value="messages" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Messages</TabsTrigger>
                 <TabsTrigger value="notifications" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Notifications</TabsTrigger>
                 <TabsTrigger value="activity" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Activity</TabsTrigger>
              </TabsList>
 
             {/* Search */}
-             <div className="p-4 border-b border-border">
+             <div className="p-4 border-b border-border flex-shrink-0"> {/* Prevent shrinking */}
                <div className="relative">
                  <Input
                    type="text"
@@ -84,8 +90,8 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                </div>
              </div>
 
-            {/* Tab Content */}
-             <ScrollArea className="flex-1">
+            {/* Tab Content wrapped in ScrollArea */}
+             <ScrollArea className="flex-1"> {/* Allow ScrollArea to take remaining space */}
                 <TabsContent value="messages" className="mt-0">
                     {messages.length > 0 ? (
                     messages.map((message) => (
@@ -110,7 +116,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
                 </TabsContent>
 
                 <TabsContent value="notifications" className="mt-0 p-4 space-y-4">
-                    <h3 className="text-lg font-semibold">Recent Notifications</h3>
+                    {/* <h3 className="text-lg font-semibold">Recent Notifications</h3> */}
                     {notifications.length > 0 ? (
                     notifications.map((notification, index) => (
                         <React.Fragment key={notification.id}>
