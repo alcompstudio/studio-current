@@ -3,7 +3,7 @@
 
 import * as React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, MessageSquare, Activity as ActivityIcon, Search, CheckCircle2, UserPlus, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"; // Import ChevronRight
+import { Bell, MessageSquare, Activity as ActivityIcon, Search, UserPlus, DollarSign, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"; // Import ChevronRight and CheckCircle
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,7 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   ];
 
   const activities = [ // Mock activities
-     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle2, bgColor: "bg-emerald-100", iconColor: "text-emerald-500" },
+     { id: 1, user: "Website Redesign", action: "project has been completed", time: "2 hours ago", icon: CheckCircle, bgColor: "bg-emerald-100", iconColor: "text-emerald-500" }, // Use CheckCircle directly
      { id: 2, user: "Sarah Johnson", action: "joined the team as a UI Designer", time: "5 hours ago", icon: UserPlus, bgColor: "bg-blue-100", iconColor: "text-blue-500" },
      { id: 3, user: "Mobile App", action: "project deadline has been extended", time: "Yesterday", icon: Bell, bgColor: "bg-amber-100", iconColor: "text-amber-500" },
      { id: 4, user: "$12,500", action: "payment received from TechStart", time: "2 days ago", icon: DollarSign, bgColor: "bg-sidebar-accent", iconColor: "text-primary" },
@@ -44,28 +44,27 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
   };
 
   return (
-    <aside className={`fixed right-0 top-0 bottom-0 ${isExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300`}>
-       {/* Header */}
-        <div className="h-[70px] border-b border-border flex items-center px-6 justify-between">
-          {isExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
-          {/* Toggle Button: Shows ChevronRight (to collapse) when expanded, ChevronLeft (to expand) when collapsed */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsExpanded(!isExpanded)} // Toggle state
-            className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
-          >
-            {isExpanded ? (
-              <ChevronRight className="h-5 w-5" /> // Icon to collapse
-            ) : (
-              <ChevronLeft className="h-5 w-5" /> // Icon to expand
-            )}
-          </Button>
-        </div>
+    // Adjusted positioning: top-[70px] to place below header, height calc
+    <aside className={`fixed right-0 top-[70px] bottom-0 ${isExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300 h-[calc(100vh-70px)]`}>
+       {/* Header no longer needed inside the panel itself as it's positioned below the main header */}
 
        {/* Content Area */}
        {isExpanded ? (
           <Tabs defaultValue="messages" className="flex flex-col flex-1">
+            {/* Toggle Button moved to top right, inside the panel */}
+             <div className="h-[60px] border-b border-border flex items-center px-6 justify-between">
+                 <h3 className="text-lg font-light text-foreground">Communications</h3>
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsExpanded(!isExpanded)} // Toggle state
+                    className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
+                 >
+                     {/* Show ChevronRight (to collapse) when expanded */}
+                    <ChevronRight className="h-5 w-5" />
+                 </Button>
+             </div>
+
              {/* Tabs */}
              <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0">
                 <TabsTrigger value="messages" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Messages</TabsTrigger>
@@ -149,29 +148,40 @@ export function CommunicationPanel({ isExpanded, setIsExpanded }: CommunicationP
              </ScrollArea>
           </Tabs>
        ) : (
-           // Collapsed view - just show icons
+           // Collapsed view - show icons and expand button
             <div className="flex-1 flex flex-col items-center pt-4 space-y-6">
+                 {/* Expand Button at the top */}
+                 <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsExpanded(true)} // Expand on click
+                    className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1 mb-4" // Added margin bottom
+                 >
+                    <ChevronLeft className="h-5 w-5" />
+                 </Button>
+
+                {/* Tab Icons */}
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
-                    onClick={handleIconClick} // Expand on click
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    onClick={handleIconClick}
                 >
                     <MessageSquare className="h-5 w-5" />
                 </Button>
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
-                    onClick={handleIconClick} // Expand on click
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    onClick={handleIconClick}
                  >
                      <Bell className="h-5 w-5" />
                  </Button>
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary" // Consistent styling
-                    onClick={handleIconClick} // Expand on click
+                    className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
+                    onClick={handleIconClick}
                  >
                     <ActivityIcon className="h-5 w-5" />
                  </Button>
