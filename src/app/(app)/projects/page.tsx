@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Briefcase, CheckCircle, Clock } from "lucide-react"; // Added icons
 import { Badge } from "@/components/ui/badge"; // Import Badge
+import Link from "next/link"; // Import Link
 
 // Mock project data
 const mockProjects = [
@@ -86,7 +87,9 @@ export default function ProjectsPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
-                   <Button variant="outline" size="sm">View Details</Button>
+                   <Link href={`/projects/${project.id}`} passHref>
+                     <Button variant="outline" size="sm">View Details</Button>
+                   </Link>
                   {/* TODO: Add progress bar or other relevant info */}
                 </CardContent>
               </Card>

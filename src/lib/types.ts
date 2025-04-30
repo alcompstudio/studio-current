@@ -36,6 +36,7 @@ export interface UserProfile {
 // Project Interface
 export interface Project extends BaseEntity {
   clientId: string; // Link to Заказчик User ID
+  clientName?: string; // Optional: Denormalized client name for display
   status: string; // e.g., "Active", "Completed", "Archived" - Define specific statuses later
   currency: string; // e.g., "USD", "EUR", "RUB"
   totalBudget?: number; // Optional: Calculated total budget
