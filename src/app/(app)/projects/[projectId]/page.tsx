@@ -1,7 +1,7 @@
 // src/app/(app)/projects/[projectId]/page.tsx
 'use client';
 
-import React from 'react'; // Ensure React is imported
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,20 +9,7 @@ import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, Ch
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import type { Project } from "@/lib/types"; // Assuming Project type exists
-
-// Mock project data (same as in projects/page.tsx)
-const mockProjects: Project[] = [
-  { id: "proj_1", name: "E-commerce Platform Revamp", description: "Complete overhaul of the existing online store.", status: "In Progress", clientName: "RetailCo", budget: 15000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_1" },
-  { id: "proj_2", name: "Mobile Banking App", description: "Develop a native mobile app for iOS and Android.", status: "Planning", clientName: "FinTech Solutions", budget: 25000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_2" },
-  { id: "proj_3", name: "Content Marketing Strategy", description: "Create a 6-month content plan and initial articles.", status: "Completed", clientName: "Startup Hub", budget: 5000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_3" },
-  { id: "proj_4", name: "Cloud Migration Assessment", description: "Analyze current infrastructure and propose cloud solutions.", status: "In Progress", clientName: "Enterprise Corp", budget: 8000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_4" },
-  { id: "proj_5", name: "Social Media Campaign", description: "Run a targeted ad campaign on Facebook and Instagram.", status: "On Hold", clientName: "Local Cafe", budget: 2000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_5" },
-  { id: "proj_6", name: "Internal HR Portal", description: "Build a web portal for employee management.", status: "In Progress", clientName: "Manufacturing Inc.", budget: 18000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_6" },
-  { id: "proj_7", name: "Data Analytics Dashboard", description: "Visualize sales data using Power BI.", status: "Completed", clientName: "SalesBoost", budget: 6000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_7" },
-  { id: "proj_8", name: "Brand Identity Design", description: "Develop a new logo, color palette, and brand guidelines.", status: "Planning", clientName: "New Venture", budget: 4500, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_8" },
-  { id: "proj_9", name: "SEO Optimization Project", description: "Improve search engine rankings for the company website.", status: "In Progress", clientName: "Service Pro", budget: 7000, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_9" },
-  { id: "proj_10", name: "API Integration", description: "Connect third-party CRM with internal systems.", status: "On Hold", clientName: "Tech Innovate", budget: 9500, currency: "USD", createdAt: new Date(), updatedAt: new Date(), clientId: "client_10" },
-];
+import { mockProjects } from '../mockProjects'; // Import mock data
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -46,19 +33,14 @@ const getStatusIcon = (status: string) => {
     }
 };
 
-// Define props type including searchParams
+// Define props type including searchParams (not using React.use for now)
 interface ProjectDetailPageProps {
     params: { projectId: string };
     searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export default function ProjectDetailPage({ params, searchParams }: ProjectDetailPageProps) {
-    // Although useParams returns a sync object in client components,
-    // using React.use aligns with Next.js's future direction for accessing params.
-    // --- Removed React.use as it causes issues in Client Components ---
-    // const params = useParams(); // Remove generic type
-    const projectId = params?.projectId; // Use prop directly
-
+    const { projectId } = params; // Get projectId directly from props
 
     // TODO: Fetch actual project data based on projectId
     const project = mockProjects.find(p => p.id === projectId);
@@ -88,8 +70,7 @@ export default function ProjectDetailPage({ params, searchParams }: ProjectDetai
                 </div>
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
-                         {/* Use Link directly, no nested <a> needed with Button asChild */}
-                        <Button variant="outline">
+                         <Button variant="outline">
                             <Edit className="mr-2 h-4 w-4" /> Edit Project
                         </Button>
                     </Link>

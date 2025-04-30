@@ -1,22 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Briefcase, CheckCircle, Clock } from "lucide-react"; // Added icons
-import { Badge } from "@/components/ui/badge"; // Import Badge
-import Link from "next/link"; // Import Link
-
-// Mock project data
-const mockProjects = [
-  { id: "proj_1", name: "E-commerce Platform Revamp", description: "Complete overhaul of the existing online store.", status: "In Progress", clientName: "RetailCo", budget: 15000, currency: "USD" },
-  { id: "proj_2", name: "Mobile Banking App", description: "Develop a native mobile app for iOS and Android.", status: "Planning", clientName: "FinTech Solutions", budget: 25000, currency: "USD" },
-  { id: "proj_3", name: "Content Marketing Strategy", description: "Create a 6-month content plan and initial articles.", status: "Completed", clientName: "Startup Hub", budget: 5000, currency: "USD" },
-  { id: "proj_4", name: "Cloud Migration Assessment", description: "Analyze current infrastructure and propose cloud solutions.", status: "In Progress", clientName: "Enterprise Corp", budget: 8000, currency: "USD" },
-  { id: "proj_5", name: "Social Media Campaign", description: "Run a targeted ad campaign on Facebook and Instagram.", status: "On Hold", clientName: "Local Cafe", budget: 2000, currency: "USD" },
-  { id: "proj_6", name: "Internal HR Portal", description: "Build a web portal for employee management.", status: "In Progress", clientName: "Manufacturing Inc.", budget: 18000, currency: "USD" },
-  { id: "proj_7", name: "Data Analytics Dashboard", description: "Visualize sales data using Power BI.", status: "Completed", clientName: "SalesBoost", budget: 6000, currency: "USD" },
-  { id: "proj_8", name: "Brand Identity Design", description: "Develop a new logo, color palette, and brand guidelines.", status: "Planning", clientName: "New Venture", budget: 4500, currency: "USD" },
-  { id: "proj_9", name: "SEO Optimization Project", description: "Improve search engine rankings for the company website.", status: "In Progress", clientName: "Service Pro", budget: 7000, currency: "USD" },
-  { id: "proj_10", name: "API Integration", description: "Connect third-party CRM with internal systems.", status: "On Hold", clientName: "Tech Innovate", budget: 9500, currency: "USD" },
-];
+import { PlusCircle, Briefcase, CheckCircle, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { mockProjects } from './mockProjects'; // Import mock data
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -42,9 +29,9 @@ const getStatusIcon = (status: string) => {
         case "Completed":
             return <CheckCircle className="mr-1 h-3 w-3" />;
         case "Planning":
-            return <Briefcase className="mr-1 h-3 w-3" />; // Use Briefcase for Planning/On Hold
+            return <Briefcase className="mr-1 h-3 w-3" />;
         case "On Hold":
-             return <Clock className="mr-1 h-3 w-3 text-destructive-foreground" />; // Use clock with destructive text color
+             return <Clock className="mr-1 h-3 w-3 text-destructive-foreground" />;
         default:
             return null;
     }
@@ -59,7 +46,6 @@ export default function ProjectsPage() {
     <div className="flex flex-col gap-6">
        <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-tight">Projects</h2>
-        {/* Add role check if needed */}
          {userRole === "Заказчик" && ( // Show button only for Заказчик (Client)
             <Button>
                <PlusCircle className="mr-2 h-4 w-4" /> Create New Project
@@ -90,7 +76,6 @@ export default function ProjectsPage() {
                    <Link href={`/projects/${project.id}`} passHref>
                      <Button variant="outline" size="sm">View Details</Button>
                    </Link>
-                  {/* TODO: Add progress bar or other relevant info */}
                 </CardContent>
               </Card>
             ))
