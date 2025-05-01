@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -28,7 +29,7 @@ const AccordionTrigger = React.forwardRef<
     asChild?: boolean;
   }
 >(({ className, children, asChild = false, ...props }, ref) => {
-   const Comp = asChild ? AccordionPrimitive.Trigger : "button";
+   const Comp = asChild ? Slot : "button"; // Use Slot from @radix-ui/react-slot
    return (
     <AccordionPrimitive.Header className="flex">
       {/* Use Comp which defaults to button, but can be AccordionPrimitive.Trigger if asChild is true */}

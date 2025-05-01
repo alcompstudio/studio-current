@@ -331,12 +331,16 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        <div className="flex items-center justify-between w-full px-4 py-2"> {/* Wrapper for trigger and button */}
+                                        {/* Wrapper for trigger and button, no padding here */}
+                                        <div className="flex items-center justify-between w-full">
                                             {/* AccordionTrigger wraps only the clickable area for toggle */}
                                             <AccordionTrigger
                                                 className={cn(
                                                     "flex-1 flex items-center justify-between font-semibold text-left",
-                                                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline rounded-t-md cursor-pointer p-2" // Adjusted padding
+                                                    // Apply hover styles and cursor
+                                                     "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
+                                                     // Adjust padding to match sidebar items (h-10 implies py-2 if no border)
+                                                     "p-2"
                                                 )}
                                             >
                                                 <div className="flex-1 flex items-center justify-between mr-2"> {/* Inner div for name and badges */}
@@ -357,8 +361,11 @@ export default function OrderDetailPage() {
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
-                                                    onClick={() => handleEditClick(etap.id)} // Directly trigger edit
-                                                    className="h-6 w-6 p-1 ml-2 flex-shrink-0" // Added margin and shrink
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // Prevent AccordionTrigger from firing
+                                                        handleEditClick(etap.id);
+                                                    }}
+                                                    className="h-6 w-6 p-1 ml-2 mr-2 flex-shrink-0" // Added margin and shrink
                                                     disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
                                                 >
                                                     <Pencil className="h-4 w-4" />
@@ -487,4 +494,3 @@ export default function OrderDetailPage() {
         </div>
     );
 }
-
