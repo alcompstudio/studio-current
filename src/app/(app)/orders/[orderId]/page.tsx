@@ -33,12 +33,10 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
-    // Use React.use to unwrap the Promise-like object from useParams
-    // Although useParams returns a sync object in client components,
-    // using React.use aligns with Next.js's future direction for accessing params.
-    // Wrap the hook result directly.
-    const params = React.use(Promise.resolve(useParams<{ orderId: string }>()));
-    const orderId = params?.orderId; // Get projectId after unwrapping
+    // Use useParams directly in Client Components.
+    // No need for React.use wrapper as it's synchronous here.
+    const params = useParams<{ orderId: string }>();
+    const orderId = params?.orderId; // Get orderId directly
 
 
     const [orderData, setOrderData] = React.useState<Order | null>(null);
@@ -447,35 +445,34 @@ export default function OrderDetailPage() {
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
                                         <div className="flex items-center w-full pr-2">
-                                             {/* This div wraps the trigger content and the edit button */}
+                                            {/* Accordion Trigger - Wraps the clickable area */}
                                              <AccordionTrigger
-                                                className={cn(
-                                                    "flex-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer rounded-md p-2", // Style the trigger area
-                                                    {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing
-                                                )}
+                                                 className={cn(
+                                                    "flex-1 flex items-center justify-between font-semibold text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer p-2 rounded-md", // Base trigger styles
+                                                     {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing
+                                                 )}
+                                                 // Removed asChild as button is outside now
                                              >
                                                 {/* Content inside the trigger */}
-                                                <div className="flex items-center justify-between w-full">
-                                                    <span className="font-semibold">{etap.name}</span>
-                                                    <div className="flex items-center gap-2 flex-shrink-0">
-                                                        <Badge variant="secondary" className="text-xs">
-                                                            {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                        </Badge>
-                                                        <Badge variant="outline">
-                                                            {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                        </Badge>
-                                                         {/* Chevron Down Icon is added automatically by AccordionTrigger */}
-                                                    </div>
+                                                <span className="flex-1 mr-2">{etap.name}</span>
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <Badge variant="secondary" className="text-xs">
+                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                    </Badge>
+                                                    <Badge variant="outline">
+                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                    </Badge>
+                                                    {/* Chevron Down Icon is added automatically by AccordionTrigger */}
                                                 </div>
                                              </AccordionTrigger>
 
-                                            {/* Edit Button placed outside the trigger */}
+                                            {/* Edit Button placed next to the trigger */}
                                             {userRole === "Заказчик" && (
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={(e) => {
-                                                        e.stopPropagation(); // Prevent accordion toggle
+                                                        // e.stopPropagation(); // Stop propagation if it causes issues, but might not be needed now
                                                         handleEditEtapClick(etap.id);
                                                     }}
                                                     className="h-6 w-6 p-1 ml-2 flex-shrink-0 text-muted-foreground hover:text-primary"
@@ -499,11 +496,14 @@ export default function OrderDetailPage() {
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-4">
+                                                    {/* Left Column: Description */}
                                                     <div>
                                                         <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Description</h4>
                                                         <p className="text-sm text-foreground">{etap.description || "No description."}</p>
                                                     </div>
-                                                    <div>
+
+                                                     {/* Right Column: Options */}
+                                                     <div>
                                                         <div className="flex justify-between items-center mb-2">
                                                              <h4 className="text-sm font-semibold text-muted-foreground">Options</h4>
                                                               {userRole === "Заказчик" && (
@@ -536,6 +536,7 @@ export default function OrderDetailPage() {
                                                             </div>
                                                         )}
 
+                                                        {/* Option List */}
                                                         {etap.options && etap.options.length > 0 ? (
                                                             <ul className="space-y-3">
                                                                 {etap.options.map((option: EtapOption) => (
