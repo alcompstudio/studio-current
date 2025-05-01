@@ -39,10 +39,11 @@ export default function OrderDetailPage() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [isAddingEtap, setIsAddingEtap] = React.useState(false);
     const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null);
-    const [addingOptionToEtapId, setAddingOptionToEtapId] = React.useState<string | null>(null);
+    const [addingOptionToEtapId, setAddingOptionToEtapId] = React.useState<string | null>(null); // Can be Etap ID or 'new'
     const [editingOptionId, setEditingOptionId] = React.useState<string | null>(null);
     const [editingOptionEtapId, setEditingOptionEtapId] = React.useState<string | null>(null); // Store etapId for the option being edited
     const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]);
+    const [newEtapOptions, setNewEtapOptions] = React.useState<EtapOption[]>([]); // State for options of the new etap
     const { toast } = useToast();
 
     React.useEffect(() => {
@@ -50,8 +51,6 @@ export default function OrderDetailPage() {
              const foundOrder = mockOrders.find(o => o.id === orderId);
              if (foundOrder) {
                  setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
-                 // Initialize accordion state if needed (e.g., open all by default)
-                 // setOpenAccordionItems((foundOrder.etaps || []).map(e => e.id));
              } else {
                  toast({
                      title: "Error",
@@ -71,42 +70,59 @@ export default function OrderDetailPage() {
      }, [orderId, toast, isLoading]);
 
 
-     const handleEtapAdded = (newEtap: Etap) => {
+     const handleEtapAdded = (newEtapData: Omit<Etap, 'id' | 'createdAt' | 'updatedAt' | 'options'>) => {
         if (orderData) {
+            if (newEtapOptions.length === 0) {
+                toast({
+                    title: "Validation Error",
+                    description: "A stage must have at least one option before saving.",
+                    variant: "destructive",
+                });
+                return; // Prevent adding stage without options
+            }
+
+            const newEtapId = `${orderId}_etap_${Date.now()}`; // Simple unique ID
+            // Recalculate price based on temporary options
+            const calculatedPrice = newEtapOptions
+                .filter(opt => opt.isCalculable && opt.includedInPrice)
+                .reduce((sum, opt) => sum + (opt.calculatedPlanPrice || 0), 0);
+
+             const newEtap: Etap = {
+                ...newEtapData,
+                id: newEtapId,
+                orderId: orderData.id,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                options: newEtapOptions.map(opt => ({ ...opt, etapId: newEtapId })), // Assign etapId to options
+                estimatedPrice: parseFloat(calculatedPrice.toFixed(2)),
+                sequence: (orderData.etaps?.length || 0) + 1, // Basic sequence
+             };
+
              const updatedEtaps = [...(orderData.etaps || []), newEtap];
              const updatedOrderData = {
                 ...orderData,
                 etaps: updatedEtaps,
                 updatedAt: new Date(),
+                // Recalculate total order price
+                totalCalculatedPrice: updatedEtaps.reduce((sum, etap) => sum + (etap.estimatedPrice || 0), 0)
             };
 
             setOrderData(updatedOrderData);
 
+            // Update mock data
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
-                 if (!mockOrders[orderIndex].etaps) {
-                     mockOrders[orderIndex].etaps = [];
-                 }
-                 const currentEtaps = mockOrders[orderIndex].etaps || [];
-                 if (!currentEtaps.some(e => e.id === newEtap.id)) {
-                    mockOrders[orderIndex].etaps = [...currentEtaps, newEtap];
-                    mockOrders[orderIndex].updatedAt = new Date();
-
-                     toast({
-                        title: "Stage Added",
-                        description: `New stage "${newEtap.name}" added. Please add at least one option to it.`, // Updated reminder
-                    });
-                 } else {
-                     toast({
-                        title: "Warning",
-                        description: `Stage with ID ${newEtap.id} might already exist.`,
-                        variant: "destructive"
-                     });
-                 }
-             }
+                 mockOrders[orderIndex] = updatedOrderData;
+                 toast({
+                    title: "Stage Added",
+                    description: `New stage "${newEtap.name}" added with ${newEtapOptions.length} option(s).`,
+                 });
+            }
 
             setOpenAccordionItems(prev => [...prev, newEtap.id]);
             setIsAddingEtap(false); // Close the add etap form itself
+            setNewEtapOptions([]); // Clear temporary options
+            setAddingOptionToEtapId(null); // Close add option form if open for 'new'
 
         } else {
              toast({
@@ -115,6 +131,7 @@ export default function OrderDetailPage() {
                  variant: "destructive",
             });
             setIsAddingEtap(false);
+            setNewEtapOptions([]);
         }
     };
 
@@ -137,20 +154,17 @@ export default function OrderDetailPage() {
                 ...orderData,
                 etaps: updatedEtaps,
                 updatedAt: new Date(),
+                // Recalculate total order price
+                totalCalculatedPrice: updatedEtaps.reduce((sum, etap) => sum + (etap.estimatedPrice || 0), 0)
             };
 
             setOrderData(updatedOrderData);
 
+            // Update mock data
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
-                const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === updatedEtap.id);
-                if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
-                    const currentEtaps = mockOrders[orderIndex].etaps || [];
-                    currentEtaps[etapIndex] = updatedEtap;
-                    mockOrders[orderIndex].etaps = [...currentEtaps];
-                    mockOrders[orderIndex].updatedAt = new Date();
-                }
-             }
+                 mockOrders[orderIndex] = updatedOrderData;
+            }
 
             toast({
                 title: "Stage Updated",
@@ -166,6 +180,30 @@ export default function OrderDetailPage() {
             });
              setEditingEtapId(null); // Close edit form even on error
         }
+    };
+
+    // Handler for adding options to the *new* stage being created
+    const handleNewEtapOptionAdded = (newOptionData: Omit<EtapOption, 'id' | 'etapId' | 'createdAt' | 'updatedAt'>) => {
+        const newOptionId = `new_option_${Date.now()}`; // Temporary unique ID
+        let calculatedPlanPrice: number | undefined = undefined;
+        if (newOptionData.isCalculable && newOptionData.planUnits && newOptionData.unitDivider && newOptionData.pricePerUnit !== undefined) {
+            calculatedPlanPrice = parseFloat(((newOptionData.planUnits / newOptionData.unitDivider) * newOptionData.pricePerUnit).toFixed(2));
+        }
+
+        const newOption: EtapOption = {
+            ...newOptionData,
+            id: newOptionId,
+            etapId: 'new', // Placeholder ID, will be replaced when stage is saved
+            calculatedPlanPrice: calculatedPlanPrice,
+            createdAt: new Date(), // Or maybe omit until saved?
+            updatedAt: new Date(),
+        };
+        setNewEtapOptions(prev => [...prev, newOption]);
+        setAddingOptionToEtapId(null); // Close add option form
+        toast({
+            title: "Option Added (Temporary)",
+            description: `Option "${newOption.name}" added to the new stage. Save the stage to finalize.`,
+        });
     };
 
      const handleOptionAdded = (etapId: string, newOption: EtapOption) => {
@@ -209,27 +247,17 @@ export default function OrderDetailPage() {
 
             setOrderData(updatedOrderData);
 
+            // Update mock data
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
-                const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === etapId);
-                if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
-                     const currentOptions = mockOrders[orderIndex].etaps![etapIndex].options || [];
-                     if (!currentOptions.some(o => o.id === newOption.id)) {
-                        mockOrders[orderIndex].etaps![etapIndex].options = [...currentOptions, newOption];
-                        // Update etap price in mock data
-                        mockOrders[orderIndex].etaps![etapIndex].estimatedPrice = updatedEtaps[etapIndex].estimatedPrice;
-                        // Update total order price in mock data
-                         mockOrders[orderIndex].totalCalculatedPrice = updatedOrderData.totalCalculatedPrice;
-
-                        mockOrders[orderIndex].updatedAt = new Date();
-
-                        toast({
-                            title: "Option Added",
-                            description: `New option "${newOption.name}" added to stage.`, // Simplified message
-                        });
-                     }
-                }
+                 mockOrders[orderIndex] = updatedOrderData;
             }
+
+            toast({
+                title: "Option Added",
+                description: `New option "${newOption.name}" added to stage.`,
+            });
+
         } else {
             toast({
                 title: "Error",
@@ -273,21 +301,11 @@ export default function OrderDetailPage() {
 
              setOrderData(updatedOrderData);
 
+             // Update mock data
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
-             if (orderIndex !== -1) {
-                 const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === etapId);
-                 if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
-                     const optionIndex = (mockOrders[orderIndex].etaps![etapIndex].options || []).findIndex(o => o.id === updatedOption.id);
-                     if (optionIndex !== -1 && mockOrders[orderIndex].etaps![etapIndex].options) {
-                         mockOrders[orderIndex].etaps![etapIndex].options![optionIndex] = updatedOption;
-                         // Update etap price in mock data
-                        mockOrders[orderIndex].etaps![etapIndex].estimatedPrice = updatedEtaps[etapIndex].estimatedPrice;
-                         // Update total order price in mock data
-                         mockOrders[orderIndex].totalCalculatedPrice = updatedOrderData.totalCalculatedPrice;
-                         mockOrders[orderIndex].updatedAt = new Date();
-                     }
-                 }
-             }
+            if (orderIndex !== -1) {
+                mockOrders[orderIndex] = updatedOrderData;
+            }
 
             toast({
                 title: "Option Updated",
@@ -322,12 +340,14 @@ export default function OrderDetailPage() {
     const handleToggleAddForm = () => {
         setIsAddingEtap(!isAddingEtap);
         setEditingEtapId(null); // Ensure edit form is closed
+        setNewEtapOptions([]); // Clear temporary options when toggling add form
+        setAddingOptionToEtapId(null); // Close add option form if open for 'new'
     };
 
-     const handleToggleAddOptionForm = (etapId: string) => {
-        setAddingOptionToEtapId(prev => (prev === etapId ? null : etapId)); // Toggle add option form
+     const handleToggleAddOptionForm = (etapId: string | 'new') => { // Allow 'new' for the add stage form
+        setAddingOptionToEtapId(prev => (prev === etapId ? null : etapId));
         setEditingOptionId(null); // Close option edit form if open
-        if (!openAccordionItems.includes(etapId)) {
+        if (etapId !== 'new' && !openAccordionItems.includes(etapId)) {
             setOpenAccordionItems(prev => [...prev, etapId]);
         }
     };
@@ -463,15 +483,83 @@ export default function OrderDetailPage() {
                                             currency={orderData.currency}
                                             onEtapAdded={handleEtapAdded}
                                             onCancel={handleToggleAddForm}
-                                            // Disable save button if no options are implicitly present (new etap)
-                                            // This logic is now handled internally by AddEtapForm or via UI cues
+                                            // Disable save button based on temporary options state
+                                            isSaveDisabled={newEtapOptions.length === 0}
                                         />
                                      </div>
-                                      {/* Right Column: Placeholder for options */}
+                                      {/* Right Column: Temporary Options for New Stage */}
                                       <div>
-                                          <h4 className="text-sm font-semibold text-muted-foreground mb-2">Options</h4>
-                                          <p className="text-sm text-muted-foreground italic text-center py-4">Add options after saving the stage.</p>
-                                          {/* Intentionally no Add Option button here for the NEW stage form */}
+                                          <div className="flex justify-between items-center mb-2">
+                                              <h4 className="text-sm font-semibold text-muted-foreground">Options (for New Stage)</h4>
+                                              {userRole === "Заказчик" && (
+                                                  <Button
+                                                      size="sm"
+                                                      variant="ghost"
+                                                      onClick={() => handleToggleAddOptionForm('new')} // Use 'new' identifier
+                                                      disabled={!!editingOptionId}
+                                                      className="h-auto p-1 text-xs text-primary hover:text-primary"
+                                                  >
+                                                      {addingOptionToEtapId === 'new' ? (
+                                                         <><MinusCircle className="mr-1 h-3 w-3" /> Cancel Add Option</>
+                                                      ) : (
+                                                          <><PlusCircle className="mr-1 h-3 w-3" /> Add Option</>
+                                                      )}
+                                                  </Button>
+                                              )}
+                                          </div>
+                                          {addingOptionToEtapId === 'new' && (
+                                            <div className="mb-4 p-4 border rounded-md bg-card">
+                                                <h5 className="text-md font-semibold mb-3">Add New Option</h5>
+                                                <AddOptionForm
+                                                    etapId={'new'} // Pass 'new' identifier
+                                                    currency={orderData.currency}
+                                                    onOptionAdded={handleNewEtapOptionAdded} // Use specific handler for new stage options
+                                                    onCancel={handleCancelAddOption}
+                                                />
+                                            </div>
+                                          )}
+                                          {newEtapOptions.length > 0 ? (
+                                                <ul className="space-y-3">
+                                                    {newEtapOptions.map((option: EtapOption) => (
+                                                         <li key={option.id} className="text-sm border-l-2 pl-3 border-muted">
+                                                              {editingOptionId === option.id && editingOptionEtapId === 'new' ? (
+                                                                    // Edit form for temporary option (could be simplified or disabled)
+                                                                    <p className="text-xs text-muted-foreground italic">Editing temporary options is not fully supported yet.</p>
+                                                               ) : (
+                                                                     <>
+                                                                         <div className="flex justify-between items-start">
+                                                                              <span className="font-medium text-foreground flex-1 mr-2">{option.name}</span>
+                                                                              <div className="flex items-center gap-1 flex-shrink-0">
+                                                                                 <Badge
+                                                                                     variant={option.isCalculable ? "default" : "outline"}
+                                                                                     className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
+                                                                                 >
+                                                                                     {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
+                                                                                     {option.isCalculable ? 'Calculable' : 'Informational'}
+                                                                                     {!option.includedInPrice && ' (Not in Price)'}
+                                                                                 </Badge>
+                                                                                  {/* Optionally add delete button for temporary options */}
+                                                                              </div>
+                                                                         </div>
+                                                                         {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
+                                                                         {option.isCalculable && (
+                                                                             <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                                                                                 <span>Plan: {option.planUnits ?? 'N/A'} units</span>
+                                                                                 <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
+                                                                                 <span className="font-medium text-foreground">
+                                                                                     Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
+                                                                                 </span>
+                                                                             </div>
+                                                                         )}
+                                                                     </>
+                                                              )}
+                                                         </li>
+                                                    ))}
+                                                </ul>
+                                          ) : (
+                                              !(addingOptionToEtapId === 'new') &&
+                                              <p className="text-sm text-muted-foreground italic text-center py-4">Add at least one option to enable saving the stage.</p>
+                                          )}
                                       </div>
                                  </div>
                              </div>
@@ -480,17 +568,17 @@ export default function OrderDetailPage() {
                             <Accordion
                                 type="multiple"
                                 className="w-full"
-                                key={JSON.stringify(orderData.etaps)}
+                                key={JSON.stringify(orderData.etaps)} // Re-render accordion if etaps change fundamentally
                                 value={openAccordionItems}
                                 onValueChange={handleAccordionChange}
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border rounded-md mb-2 overflow-hidden">
                                           <AccordionTrigger
-                                               className={cn(
-                                                    "flex items-center justify-between w-full px-4 py-3 font-semibold text-left transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
-                                                    openAccordionItems.includes(etap.id) && "bg-muted rounded-b-none", // Style when open
-                                                )}
+                                                className={cn(
+                                                     "flex items-center justify-between w-full px-4 py-3 font-semibold text-left transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
+                                                     openAccordionItems.includes(etap.id) && "bg-muted rounded-b-none", // Style when open
+                                                 )}
                                             >
                                               {etap.name}
                                               {/* Chevron is automatically added by AccordionTrigger */}
@@ -524,7 +612,10 @@ export default function OrderDetailPage() {
                                                                      <Button
                                                                          size="icon"
                                                                          variant="ghost"
-                                                                         onClick={() => handleEditEtapClick(etap.id)}
+                                                                         onClick={(e) => {
+                                                                             e.stopPropagation(); // Prevent accordion toggle
+                                                                             handleEditEtapClick(etap.id);
+                                                                         }}
                                                                          className="h-6 w-6 p-1 text-muted-foreground hover:text-primary"
                                                                          disabled={isAddingEtap}
                                                                          aria-label="Edit Stage"
@@ -547,7 +638,10 @@ export default function OrderDetailPage() {
                                                               <Button
                                                                   size="sm"
                                                                   variant="ghost"
-                                                                  onClick={() => handleToggleAddOptionForm(etap.id)}
+                                                                  onClick={(e) => {
+                                                                    e.stopPropagation(); // Prevent accordion toggle if needed, though maybe not strictly necessary here
+                                                                    handleToggleAddOptionForm(etap.id);
+                                                                  }}
                                                                   disabled={!!editingOptionId} // Disable if editing another option
                                                                   className="h-auto p-1 text-xs text-primary hover:text-primary"
                                                               >

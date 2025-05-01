@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -39,9 +38,10 @@ const optionFormSchema = z.object({
 type OptionFormValues = z.infer<typeof optionFormSchema>;
 
 interface AddOptionFormProps {
-    etapId: string;
+    etapId: string; // Can be 'new' for the temporary stage
     currency: string;
-    onOptionAdded: (newOption: EtapOption) => void; // Callback to notify parent
+    // Update callback to accept partial data, parent will complete it
+    onOptionAdded: (newOptionData: Omit<EtapOption, 'id' | 'etapId' | 'createdAt' | 'updatedAt' | 'calculatedPlanPrice'>) => void;
     onCancel: () => void; // Callback to cancel/hide the form
 }
 
@@ -68,16 +68,8 @@ export default function AddOptionForm({ etapId, currency, onOptionAdded, onCance
     const onSubmit = (data: OptionFormValues) => {
         console.log("Attempting to add new option with data:", data);
 
-        const newOptionId = `${etapId}_option_${Date.now()}`; // Simple unique ID
-
-        let calculatedPlanPrice: number | undefined = undefined;
-        if (data.isCalculable && data.planUnits && data.unitDivider && data.pricePerUnit !== undefined) {
-            calculatedPlanPrice = parseFloat(((data.planUnits / data.unitDivider) * data.pricePerUnit).toFixed(2));
-        }
-
-        const newOption: EtapOption = {
-            id: newOptionId,
-            etapId: etapId,
+        // Pass partial data up to the parent handler
+        onOptionAdded({
             name: data.name,
             description: data.description || "",
             isCalculable: data.isCalculable,
@@ -85,18 +77,10 @@ export default function AddOptionForm({ etapId, currency, onOptionAdded, onCance
             planUnits: data.isCalculable ? data.planUnits : undefined,
             unitDivider: data.isCalculable ? data.unitDivider : undefined,
             pricePerUnit: data.isCalculable ? data.pricePerUnit : undefined,
-            calculatedPlanPrice: calculatedPlanPrice,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            // calculationFormula could be added here if needed
-        };
+        });
 
-        // --- Simulate successful addition ---
-        console.log("Generated new option:", newOption);
-        onOptionAdded(newOption); // Call parent callback
-        form.reset(); // Reset form
-        // Optionally show toast in parent component after state update
-        // --- End Simulation ---
+        form.reset(); // Reset form after passing data up
+        // Toast/closing logic handled in parent
     };
 
     return (
@@ -149,9 +133,10 @@ export default function AddOptionForm({ etapId, currency, onOptionAdded, onCance
                                 <Checkbox
                                     checked={field.value}
                                     onCheckedChange={(checked) => {
-                                        field.onChange(checked);
+                                        const isChecked = Boolean(checked); // Ensure boolean type
+                                        field.onChange(isChecked);
                                         // Reset calculable fields if unchecked
-                                        if (!checked) {
+                                        if (!isChecked) {
                                             form.reset({
                                                 ...form.getValues(), // keep other values
                                                 planUnits: undefined,
@@ -242,6 +227,7 @@ export default function AddOptionForm({ etapId, currency, onOptionAdded, onCance
                                          checked={field.value}
                                          onCheckedChange={field.onChange}
                                          // Calculable options are typically included by default
+                                         // Allow unchecking only if NOT calculable
                                          disabled={isCalculable}
                                      />
                                  </FormControl>
