@@ -326,7 +326,8 @@ export default function OrderDetailPage() {
                                             asChild
                                             className={cn("flex items-center justify-between w-full px-4 py-4 font-semibold text-left hover:bg-accent/50 hover:no-underline rounded-t-md")}
                                          >
-                                            <div> {/* Use a div instead of button for the trigger content */}
+                                            {/* Need a single child element for asChild */}
+                                            <div>
                                                 <div className="flex-1 flex items-center justify-between">
                                                     <span>{etap.name}</span> {/* Etap Name */}
                                                      <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges and Edit Button */}
