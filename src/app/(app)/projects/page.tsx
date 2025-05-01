@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Briefcase, CheckCircle, Clock } from "lucide-react";
@@ -44,6 +45,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="flex flex-col gap-6">
+       {/* Page Header */}
        <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-tight">Projects</h2>
          {userRole === "Заказчик" && ( // Show button only for Заказчик (Client)
@@ -54,12 +56,16 @@ export default function ProjectsPage() {
             </Link>
          )}
        </div>
-       <Card>
-        <CardHeader>
-          <CardTitle>Project List</CardTitle>
-          <CardDescription>Manage your ongoing and completed projects.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+
+       {/* Removed the wrapping Card */}
+        {/* Project List Header Info */}
+        <div className="mb-2">
+            <h3 className="text-lg font-semibold">Project List</h3>
+            <p className="text-sm text-muted-foreground">Manage your ongoing and completed projects.</p>
+        </div>
+
+       {/* Project List Content - Direct mapping */}
+       <div className="space-y-4">
           {mockProjects.length > 0 ? (
             mockProjects.map((project) => (
               <Card key={project.id} className="shadow-sm hover:shadow-md transition-shadow">
@@ -74,7 +80,7 @@ export default function ProjectsPage() {
                   <CardDescription>Client: {project.clientName} • Budget: {project.currency} {project.budget?.toLocaleString()}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{project.description}</p>
                    <Link href={`/projects/${project.id}`} passHref>
                      <Button variant="outline" size="sm">View Details</Button>
                    </Link>
@@ -82,10 +88,13 @@ export default function ProjectsPage() {
               </Card>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No projects created yet.</p>
+             <Card> {/* Optional: Wrap the 'not found' message in a card */}
+                <CardContent>
+                    <p className="text-sm text-muted-foreground py-4 text-center">No projects created yet.</p>
+                </CardContent>
+            </Card>
           )}
-        </CardContent>
-      </Card>
+        </div>
     </div>
   );
 }

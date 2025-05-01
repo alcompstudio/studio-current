@@ -13,6 +13,7 @@ export default function OrdersPage() {
 
     return (
         <div className="flex flex-col gap-6">
+            {/* Page Header */}
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
                 {userRole === "Заказчик" && (
@@ -28,52 +29,60 @@ export default function OrdersPage() {
                     </Button>
                 )}
             </div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Order List</CardTitle>
-                    <CardDescription>View and manage orders associated with your projects.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                     {mockOrders.length > 0 ? (
-                        mockOrders.map((order) => (
-                            <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow">
-                                <CardHeader>
-                                    <div className="flex justify-between items-start gap-2">
-                                        <div className="flex-1">
-                                            <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
-                                            <CardDescription>
-                                                Project: <Link href={`/projects/${order.projectId}`} className="text-primary hover:underline">{order.projectName}</Link>
-                                            </CardDescription>
-                                        </div>
-                                         <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
-                                            {order.status}
-                                        </Badge>
+
+            {/* Removed the wrapping Card */}
+            {/* Order List Header Info */}
+            <div className="mb-2"> {/* Optional: Add some margin below the description if needed */}
+                {/* These could be standalone elements or inside a less prominent container */}
+                <h3 className="text-lg font-semibold">Order List</h3>
+                <p className="text-sm text-muted-foreground">View and manage orders associated with your projects.</p>
+            </div>
+
+            {/* Order List Content - Direct mapping */}
+             <div className="space-y-4">
+                 {mockOrders.length > 0 ? (
+                    mockOrders.map((order) => (
+                        <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow">
+                            <CardHeader>
+                                <div className="flex justify-between items-start gap-2">
+                                    <div className="flex-1">
+                                        <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
+                                        <CardDescription>
+                                            Project: <Link href={`/projects/${order.projectId}`} className="text-primary hover:underline">{order.projectName}</Link>
+                                        </CardDescription>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p> {/* Use line-clamp */}
-                                    <div className="flex justify-between items-center">
-                                         <span className="text-sm font-semibold">
-                                            Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
-                                         </span>
-                                         {/* Link to the new order detail page */}
-                                         <Link href={`/orders/${order.id}`} passHref>
-                                            <Button variant="outline" size="sm">
-                                                <Eye className="mr-2 h-4 w-4" /> View Details
-                                            </Button>
-                                         </Link>
-                                    </div>
-                                     <p className="text-xs text-muted-foreground mt-2">
-                                        Created: {order.createdAt.toLocaleDateString()}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        ))
-                    ) : (
-                        <p className="text-sm text-muted-foreground">No orders found.</p>
-                    )}
-                </CardContent>
-            </Card>
+                                     <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
+                                        {order.status}
+                                    </Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p> {/* Use line-clamp */}
+                                <div className="flex justify-between items-center">
+                                     <span className="text-sm font-semibold">
+                                        Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
+                                     </span>
+                                     {/* Link to the new order detail page */}
+                                     <Link href={`/orders/${order.id}`} passHref>
+                                        <Button variant="outline" size="sm">
+                                            <Eye className="mr-2 h-4 w-4" /> View Details
+                                        </Button>
+                                     </Link>
+                                </div>
+                                 <p className="text-xs text-muted-foreground mt-2">
+                                    Created: {order.createdAt.toLocaleDateString()}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    ))
+                ) : (
+                    <Card> {/* Optional: Wrap the 'not found' message in a card for consistency */}
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground py-4 text-center">No orders found.</p>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
         </div>
     );
 }
