@@ -331,16 +331,16 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        {/* Wrapper for trigger and button, no padding here */}
+                                        {/* Wrapper for trigger and button */}
                                         <div className="flex items-center justify-between w-full">
-                                            {/* AccordionTrigger wraps only the clickable area for toggle */}
-                                            <AccordionTrigger
+                                            {/* AccordionTrigger wraps the main clickable area */}
+                                             <AccordionTrigger
                                                 className={cn(
                                                     "flex-1 flex items-center justify-between font-semibold text-left",
                                                     // Apply hover styles and cursor
-                                                     "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
-                                                     // Adjust padding to match sidebar items (h-10 implies py-2 if no border)
-                                                     "p-2"
+                                                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
+                                                    // Adjust padding
+                                                    "p-2"
                                                 )}
                                             >
                                                 <div className="flex-1 flex items-center justify-between mr-2"> {/* Inner div for name and badges */}
@@ -352,24 +352,24 @@ export default function OrderDetailPage() {
                                                         <Badge variant="outline">
                                                             {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
                                                         </Badge>
-                                                         {/* Chevron is now part of the default AccordionTrigger */}
+                                                        {/* Chevron is now part of the default AccordionTrigger */}
                                                     </div>
                                                 </div>
                                             </AccordionTrigger>
-                                            {/* Edit Button placed outside the trigger */}
+                                             {/* Edit Button placed outside the trigger */}
                                             {userRole === "Заказчик" && (
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={(e) => {
-                                                        e.stopPropagation(); // Prevent AccordionTrigger from firing
+                                                        e.stopPropagation(); // Prevent AccordionTrigger from firing unnecessarily
                                                         handleEditClick(etap.id);
                                                     }}
-                                                    className="h-6 w-6 p-1 ml-2 mr-2 flex-shrink-0" // Added margin and shrink
+                                                    className="h-6 w-6 p-1 ml-2 mr-2 flex-shrink-0 text-muted-foreground hover:text-primary" // Added hover style
                                                     disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                    aria-label="Edit Stage" // Added aria-label
                                                 >
                                                     <Pencil className="h-4 w-4" />
-                                                    <span className="sr-only">Edit Stage</span>
                                                 </Button>
                                             )}
                                         </div>

@@ -5,6 +5,7 @@
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
+import { Slot } from "@radix-ui/react-slot"; // Import Slot
 
 import { cn } from "@/lib/utils"
 
@@ -29,17 +30,17 @@ const AccordionTrigger = React.forwardRef<
     asChild?: boolean;
   }
 >(({ className, children, asChild = false, ...props }, ref) => {
-   const Comp = asChild ? Slot : "button"; // Use Slot from @radix-ui/react-slot
+   const Comp = asChild ? Slot : AccordionPrimitive.Trigger; // Use AccordionPrimitive.Trigger when not asChild
    return (
     <AccordionPrimitive.Header className="flex">
-      {/* Use Comp which defaults to button, but can be AccordionPrimitive.Trigger if asChild is true */}
+      {/* Use Comp which defaults to AccordionPrimitive.Trigger, but can be Slot if asChild is true */}
       <Comp
         ref={ref}
-        type={asChild ? undefined : "button"} // Explicitly set type="button" when rendering a button
+        // Removed explicit type="button"
         className={cn(
           "flex flex-1 items-center justify-between py-4 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
           // Default hover styles (similar to sidebar) and cursor-pointer
-          "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
+           "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer", // Added cursor-pointer
           className
         )}
         {...props}
@@ -71,3 +72,4 @@ const AccordionContent = React.forwardRef<
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+
