@@ -1,10 +1,11 @@
+
 'use client';
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle } from "lucide-react"; // Import Edit, Tag, Calculator, Info, PlusCircle, MinusCircle icons
+import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle, Pencil } from "lucide-react"; // Added Pencil icon
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import type { Order, Etap, EtapOption } from "@/lib/types"; // Import Etap and EtapOption types
@@ -12,7 +13,8 @@ import { mockOrders, getOrderStatusVariant } from '../mockOrders'; // Import moc
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
 import { Separator } from '@/components/ui/separator'; // Import Separator
-import AddEtapForm from '@/components/orders/add-etap-form'; // Import the form component
+import AddEtapForm from '@/components/orders/add-etap-form'; // Import the Add form component
+import EditEtapForm from '@/components/orders/edit-etap-form'; // Import the Edit form component
 
 // Helper function to get status icon
 const getStatusIcon = (status: string) => {
@@ -32,22 +34,18 @@ export default function OrderDetailPage() {
 
     // State holds the specific order being viewed. Initialize from mock data.
     const [orderData, setOrderData] = React.useState<Order | null>(() => {
-        // Initial state read directly from potentially mutated mock data
         if (orderId) {
              const foundOrder = mockOrders.find(o => o.id === orderId);
-             // Ensure etaps array is initialized even if empty
              return foundOrder ? { ...foundOrder, etaps: foundOrder.etaps || [] } : null;
         }
         return null;
     });
     const [isLoading, setIsLoading] = React.useState(!orderData); // Only loading if data wasn't found initially
-    const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline form visibility
+    const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline Add form visibility
+    const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null); // State for inline Edit form visibility
     const { toast } = useToast();
 
     React.useEffect(() => {
-        // This effect primarily handles the case where the orderId changes
-        // or if the initial find failed. It also handles re-fetching/finding
-        // if the data somehow becomes null later.
         if (!orderData && orderId && !isLoading) {
             console.log(`Effect: Order data null, trying to find order ${orderId}`);
             const foundOrder = mockOrders.find(o => o.id === orderId);
@@ -72,8 +70,6 @@ export default function OrderDetailPage() {
              });
              setIsLoading(false);
         }
-        // If orderData exists and matches orderId, don't do anything.
-        // This prevents infinite loops if mockOrders is mutated elsewhere incorrectly.
     }, [orderId, toast, orderData, isLoading]); // Dependencies include orderData and isLoading
 
 
@@ -91,21 +87,17 @@ export default function OrderDetailPage() {
             // Update local state for immediate UI feedback
             setOrderData(updatedOrderData);
 
-            // Update the mockOrders array (IN-PLACE MUTATION - BE CAREFUL)
+            // Update the mockOrders array (IN-PLACE MUTATION)
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
-                // Directly mutate the etaps array inside the mockOrders item
                  if (!mockOrders[orderIndex].etaps) {
                      mockOrders[orderIndex].etaps = [];
                  }
-                 mockOrders[orderIndex].etaps?.push(newEtap); // Add the new etap
-                 mockOrders[orderIndex].updatedAt = new Date(); // Update timestamp
+                 mockOrders[orderIndex].etaps?.push(newEtap);
+                 mockOrders[orderIndex].updatedAt = new Date();
                  console.log("Updated mockOrders array item with new etap:", mockOrders[orderIndex]);
              } else {
-                 console.warn(`Order ID ${orderId} not found in mockOrders during update.`);
-                 // If the order wasn't in the mock array for some reason, add it?
-                 // This might indicate a deeper issue.
-                 // mockOrders.push(updatedOrderData); // Avoid this if possible
+                 console.warn(`Order ID ${orderId} not found in mockOrders during add.`);
             }
 
             toast({
@@ -124,6 +116,67 @@ export default function OrderDetailPage() {
         setIsAddingEtap(false); // Close the inline form
     };
 
+    // Function to update local state AND mock data when an etap is updated
+    const handleEtapUpdated = (updatedEtap: Etap) => {
+        if (orderData) {
+             // Update the etap in the local state's etaps list
+            const updatedEtaps = (orderData.etaps || []).map(etap =>
+                etap.id === updatedEtap.id ? updatedEtap : etap
+            );
+            const updatedOrderData = {
+                ...orderData,
+                etaps: updatedEtaps,
+                updatedAt: new Date(), // Also update the order's updatedAt timestamp
+            };
+
+            // Update local state for immediate UI feedback
+            setOrderData(updatedOrderData);
+
+            // Update the mockOrders array (IN-PLACE MUTATION)
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId);
+            if (orderIndex !== -1) {
+                const etapIndex = mockOrders[orderIndex].etaps?.findIndex(e => e.id === updatedEtap.id);
+                if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
+                    mockOrders[orderIndex].etaps![etapIndex] = updatedEtap; // Update the specific etap
+                    mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
+                    console.log("Updated mockOrders array item with updated etap:", mockOrders[orderIndex]);
+                } else {
+                     console.warn(`Etap ID ${updatedEtap.id} not found in mockOrders order ${orderId} during update.`);
+                }
+             } else {
+                 console.warn(`Order ID ${orderId} not found in mockOrders during etap update.`);
+            }
+
+            toast({
+                title: "Stage Updated",
+                description: `Stage "${updatedEtap.name}" has been updated.`,
+            });
+
+        } else {
+             console.error("Cannot update etap: orderData is null.");
+             toast({
+                title: "Error",
+                description: "Could not update stage because order data is missing.",
+                 variant: "destructive",
+            });
+        }
+        setEditingEtapId(null); // Close the inline edit form
+    };
+
+    const handleEditClick = (event: React.MouseEvent, etapId: string) => {
+        event.stopPropagation(); // Prevent accordion toggle
+        setEditingEtapId(etapId);
+        setIsAddingEtap(false); // Close add form if open
+    };
+
+    const handleCancelEdit = () => {
+        setEditingEtapId(null);
+    };
+
+    const handleToggleAddForm = () => {
+        setIsAddingEtap(!isAddingEtap);
+        setEditingEtapId(null); // Close edit form if open
+    };
 
     if (isLoading) {
         return <div className="flex min-h-screen items-center justify-center">Loading order...</div>;
@@ -199,10 +252,10 @@ export default function OrderDetailPage() {
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Stages (Etaps)</CardTitle>
                          {userRole === "Заказчик" && (
-                            <Button size="sm" variant="outline" onClick={() => setIsAddingEtap(!isAddingEtap)}>
+                            <Button size="sm" variant="outline" onClick={handleToggleAddForm} disabled={!!editingEtapId}>
                                 {isAddingEtap ? (
                                     <>
-                                        <MinusCircle className="mr-2 h-4 w-4" /> Cancel
+                                        <MinusCircle className="mr-2 h-4 w-4" /> Cancel Add
                                     </>
                                 ) : (
                                      <>
@@ -215,23 +268,22 @@ export default function OrderDetailPage() {
                     <CardContent>
                         {/* Inline Add Etap Form */}
                         {isAddingEtap && (
-                            <div className="mb-6 p-4 border rounded-md bg-card"> {/* Use bg-card for lighter background */}
+                            <div className="mb-6 p-4 border rounded-md bg-card">
                                 <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
                                 <AddEtapForm
                                     orderId={orderData.id}
                                     currency={orderData.currency}
                                     onEtapAdded={handleEtapAdded}
-                                    onCancel={() => setIsAddingEtap(false)} // Pass cancel handler
+                                    onCancel={handleToggleAddForm} // Use toggle function
                                 />
                              </div>
                         )}
 
                          {/* Existing Etaps List */}
                          {orderData.etaps && orderData.etaps.length > 0 ? (
-                            <Accordion type="multiple" className="w-full">
+                            <Accordion type="multiple" className="w-full" key={orderData.etaps.map(e => e.id).join('-')}>
                                 {orderData.etaps.map((etap: Etap) => (
-                                     // Use a combination key to ensure uniqueness if IDs might clash momentarily
-                                     <AccordionItem value={etap.id} key={`${etap.id}-${etap.createdAt.getTime()}`}>
+                                     <AccordionItem value={etap.id} key={etap.id}>
                                         <AccordionTrigger className="hover:no-underline">
                                             <div className="flex justify-between items-center w-full pr-4">
                                                 <span className="font-semibold">{etap.name}</span>
@@ -242,49 +294,76 @@ export default function OrderDetailPage() {
                                                      <Badge variant="outline">
                                                         {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
                                                      </Badge>
+                                                     {userRole === "Заказчик" && (
+                                                         <Button
+                                                            size="icon"
+                                                            variant="ghost"
+                                                            onClick={(e) => handleEditClick(e, etap.id)}
+                                                            className="h-6 w-6 p-1"
+                                                            disabled={isAddingEtap || !!editingEtapId}
+                                                         >
+                                                             <Pencil className="h-4 w-4" />
+                                                             <span className="sr-only">Edit Stage</span>
+                                                         </Button>
+                                                     )}
                                                 </div>
                                             </div>
                                         </AccordionTrigger>
                                         <AccordionContent>
-                                            <p className="text-sm text-muted-foreground mb-4">{etap.description || "No description."}</p>
-                                            <h4 className="text-sm font-semibold mb-2">Options:</h4>
-                                            {etap.options && etap.options.length > 0 ? (
-                                                <ul className="space-y-3">
-                                                    {etap.options.map((option: EtapOption) => (
-                                                        <li key={option.id} className="text-sm border-l-2 pl-3 border-muted ml-2">
-                                                            <div className="flex justify-between items-start">
-                                                                <span className="font-medium text-foreground">{option.name}</span>
-                                                                 <Badge
-                                                                    variant={option.isCalculable ? "default" : "outline"}
-                                                                    className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
-                                                                 >
-                                                                    {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
-                                                                    {option.isCalculable ? 'Calculable' : 'Informational'}
-                                                                    {!option.includedInPrice && ' (Not in Price)'}
-                                                                 </Badge>
-                                                            </div>
-                                                            {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
-                                                            {option.isCalculable && (
-                                                                <div className="text-xs text-muted-foreground flex gap-4 mt-1">
-                                                                    <span>Plan: {option.planUnits ?? 'N/A'} units</span>
-                                                                    <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
-                                                                    <span className="font-medium text-foreground">
-                                                                        Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
-                                                                    </span>
-                                                                </div>
-                                                            )}
-                                                        </li>
-                                                    ))}
-                                                </ul>
+                                             {/* Inline Edit Etap Form */}
+                                            {editingEtapId === etap.id ? (
+                                                <div className="mb-4 p-4 border rounded-md bg-card">
+                                                    <h4 className="text-md font-semibold mb-3">Edit Stage: {etap.name}</h4>
+                                                    <EditEtapForm
+                                                        etap={etap}
+                                                        currency={orderData.currency}
+                                                        onEtapUpdated={handleEtapUpdated}
+                                                        onCancel={handleCancelEdit}
+                                                    />
+                                                </div>
                                             ) : (
-                                                <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
+                                                <>
+                                                    <p className="text-sm text-muted-foreground mb-4">{etap.description || "No description."}</p>
+                                                    <h4 className="text-sm font-semibold mb-2">Options:</h4>
+                                                    {etap.options && etap.options.length > 0 ? (
+                                                        <ul className="space-y-3">
+                                                            {etap.options.map((option: EtapOption) => (
+                                                                <li key={option.id} className="text-sm border-l-2 pl-3 border-muted ml-2">
+                                                                    <div className="flex justify-between items-start">
+                                                                        <span className="font-medium text-foreground">{option.name}</span>
+                                                                         <Badge
+                                                                            variant={option.isCalculable ? "default" : "outline"}
+                                                                            className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
+                                                                         >
+                                                                            {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
+                                                                            {option.isCalculable ? 'Calculable' : 'Informational'}
+                                                                            {!option.includedInPrice && ' (Not in Price)'}
+                                                                         </Badge>
+                                                                    </div>
+                                                                    {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
+                                                                    {option.isCalculable && (
+                                                                        <div className="text-xs text-muted-foreground flex gap-4 mt-1">
+                                                                            <span>Plan: {option.planUnits ?? 'N/A'} units</span>
+                                                                            <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
+                                                                            <span className="font-medium text-foreground">
+                                                                                Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
+                                                                            </span>
+                                                                        </div>
+                                                                    )}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    ) : (
+                                                        <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
+                                                    )}
+                                                </>
                                             )}
                                         </AccordionContent>
                                     </AccordionItem>
                                 ))}
                             </Accordion>
                          ) : (
-                            !isAddingEtap && <p className="text-sm text-muted-foreground">No stages defined for this order yet.</p>
+                            !(isAddingEtap || editingEtapId) && <p className="text-sm text-muted-foreground">No stages defined for this order yet.</p>
                          )}
                     </CardContent>
                 </Card>
