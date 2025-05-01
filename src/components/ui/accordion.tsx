@@ -15,8 +15,8 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    // Removed border-b from here
-    className={cn("", className)}
+    // Removed border-b from here, apply it on the item itself if needed globally, or individually
+    className={cn("", className)} // Keep base class empty or add specific structural classes
     {...props}
   />
 ))
@@ -25,7 +25,7 @@ AccordionItem.displayName = "AccordionItem"
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
-    asChild?: boolean; // Added asChild prop
+    asChild?: boolean; // Added asChild prop type
   }
 >(({ className, children, asChild = false, ...props }, ref) => {
   const Comp = asChild ? AccordionPrimitive.Trigger : "button"; // Use button by default
@@ -34,19 +34,22 @@ const AccordionTrigger = React.forwardRef<
       {/* Use Comp which defaults to button, but can be AccordionPrimitive.Trigger if asChild is true */}
       <Comp
         ref={ref}
+        type={asChild ? undefined : "button"} // Explicitly set type="button" when rendering a button
         className={cn(
           "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
           className
         )}
-        {...props} // Pass all props, including potential button props like type="button"
+        {...props} // Pass all props
       >
         {children}
-        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+        {!asChild && <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />}
+         {/* Conditionally render the chevron only if it's rendered as a button */}
       </Comp>
     </AccordionPrimitive.Header>
   );
 });
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
@@ -65,3 +68,4 @@ const AccordionContent = React.forwardRef<
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+
