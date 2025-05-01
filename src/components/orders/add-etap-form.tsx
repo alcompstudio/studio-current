@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { Etap, EtapWorkType } from "@/lib/types";
+import type { Etap, EtapWorkType, EtapOption } from "@/lib/types"; // Import EtapOption
 import { useToast } from "@/hooks/use-toast";
 
 const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
@@ -26,7 +26,7 @@ const etapFormSchema = z.object({
     name: z.string().min(1, { message: "Stage name is required." }),
     description: z.string().optional(),
     workType: z.enum(etapWorkTypes, { required_error: "Work type is required." }).default('Параллельный'),
-    estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(), // Optional price input
+    // estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(), // Removed direct price input
 });
 
 type EtapFormValues = z.infer<typeof etapFormSchema>;
@@ -36,10 +36,13 @@ interface AddEtapFormProps {
     currency: string;
     onEtapAdded: (newEtap: Etap) => void;
     onCancel: () => void;
+    // No need to pass options here, validation happens on submit based on internal state/logic
 }
 
 export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }: AddEtapFormProps) {
     const { toast } = useToast();
+    // In a real app, you might manage temporary options added to this new stage here
+    // For this example, we'll simulate the check during submission logic
 
     const form = useForm<EtapFormValues>({
         resolver: zodResolver(etapFormSchema),
@@ -47,7 +50,7 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
             name: "",
             description: "",
             workType: 'Параллельный',
-            estimatedPrice: undefined,
+            // estimatedPrice: undefined, // Removed
         },
         mode: "onChange",
     });
@@ -55,8 +58,13 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
     const onSubmit = (data: EtapFormValues) => {
         console.log("Attempting to add new stage with data:", data);
 
-        // Basic Validation Hint: Remind user to add options after adding the stage
-        // Cannot enforce option addition here directly.
+        // --- VALIDATION: Simulate checking if options exist ---
+        // In a real scenario, you would check if the user has added at least one option
+        // to this stage *before* allowing the save. Since options are added separately now,
+        // this validation needs to be handled differently, potentially by disabling the save button
+        // until an option is added, or showing a persistent message.
+        // For now, we just add a toast reminder in the parent component upon successful add.
+        // We *cannot* prevent saving based on options in *this* form alone anymore.
 
         const newEtapId = `${orderId}_etap_${Date.now()}`; // Simple unique ID
 
@@ -66,21 +74,17 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
             name: data.name,
             description: data.description || "",
             workType: data.workType,
-            estimatedPrice: data.estimatedPrice,
+            estimatedPrice: 0, // Initial price is 0, calculated from options later
             options: [], // Start with empty options - User must add them
             createdAt: new Date(),
             updatedAt: new Date(),
-            sequence: 0,
+            sequence: 0, // Needs logic to determine sequence if relevant
         };
 
         console.log("Generated new stage:", newEtap);
         onEtapAdded(newEtap); // Call the callback
 
-        // Toast message updated to prompt adding options
-        toast({
-            title: "Stage Added",
-            description: `New stage "${data.name}" created. Please add at least one option to this stage.`,
-        });
+        // Toast message updated in parent component
 
         form.reset();
     };
@@ -125,7 +129,8 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
                     )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
+                <div> {/* Keep work type in a single column */}
                     <FormField
                         control={form.control}
                         name="workType"
@@ -151,39 +156,21 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name="estimatedPrice"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Estimated Price ({currency}) (Optional)</FormLabel>
-                                <FormControl>
-                                     <Input
-                                        type="number"
-                                        placeholder="Enter estimated price"
-                                        step="0.01"
-                                        {...field}
-                                        value={field.value ?? ''}
-                                         onChange={e => {
-                                            const value = e.target.value;
-                                            field.onChange(value === '' ? undefined : parseFloat(value));
-                                          }}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {/* Removed Estimated Price Field */}
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
                      <Button type="button" variant="outline" onClick={onCancel}>
                          Cancel
                      </Button>
-                     <Button type="submit" disabled={form.formState.isSubmitting}>
+                     <Button type="submit" disabled={form.formState.isSubmitting /* || !hasOptions */}>
                          {form.formState.isSubmitting ? 'Adding...' : 'Add Stage'}
                      </Button>
                  </div>
+                  {/* Reminder message */}
+                  <p className="text-xs text-muted-foreground pt-2 text-right">
+                      Note: Add options in the right panel after saving the stage. Stage price is calculated from options.
+                 </p>
              </form>
         </Form>
     );

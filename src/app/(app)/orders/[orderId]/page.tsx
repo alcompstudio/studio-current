@@ -33,9 +33,9 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
+    // Use client-side hooks
     const params = useParams<{ orderId: string }>();
     const orderId = params?.orderId;
-
 
     const [orderData, setOrderData] = React.useState<Order | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -424,12 +424,22 @@ export default function OrderDetailPage() {
                         {isAddingEtap && (
                             <div className="mb-6 p-4 border rounded-md bg-card">
                                 <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
-                                <AddEtapForm
-                                    orderId={orderData.id}
-                                    currency={orderData.currency}
-                                    onEtapAdded={handleEtapAdded}
-                                    onCancel={handleToggleAddForm}
-                                />
+                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                     {/* Left Column: Add Etap Form */}
+                                     <div className="border-r pr-6 border-border">
+                                        <AddEtapForm
+                                            orderId={orderData.id}
+                                            currency={orderData.currency}
+                                            onEtapAdded={handleEtapAdded} // Validation handled in AddEtapForm now
+                                            onCancel={handleToggleAddForm}
+                                        />
+                                     </div>
+                                      {/* Right Column: Placeholder for options (none yet for new etap) */}
+                                      <div>
+                                          <h4 className="text-sm font-semibold text-muted-foreground mb-2">Options</h4>
+                                          <p className="text-sm text-muted-foreground italic text-center py-4">Add options after saving the stage.</p>
+                                      </div>
+                                 </div>
                              </div>
                         )}
                          {orderData.etaps && orderData.etaps.length > 0 ? (
@@ -442,8 +452,25 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border rounded-md mb-2 overflow-hidden">
-                                          <AccordionTrigger className="flex items-center w-full bg-muted hover:bg-accent/50 transition-colors hover:no-underline cursor-pointer px-4 py-3">
-                                                <span className="flex-1 font-semibold text-left mr-2">{etap.name}</span>
+                                          <AccordionTrigger
+                                              className={cn(
+                                                "flex items-center w-full bg-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors hover:no-underline cursor-pointer px-4 py-3",
+                                                openAccordionItems.includes(etap.id) && "rounded-b-none" // Remove bottom rounding if open
+                                              )}
+                                              asChild // Use asChild to allow custom content
+                                              onClick={(e) => {
+                                                  // Prevent accordion toggle if clicking the edit button
+                                                  const target = e.target as HTMLElement;
+                                                  if (target.closest('[data-edit-etap-button]')) {
+                                                      e.preventDefault(); // Stop propagation and default behavior
+                                                  }
+                                              }}
+                                            >
+                                              <div className="flex-1 flex items-center justify-between w-full">
+                                                  <span className="font-semibold text-left mr-2">{etap.name}</span>
+                                                  {/* Chevon icon for accordion toggle */}
+                                                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                                              </div>
                                           </AccordionTrigger>
                                         <AccordionContent className="border-t">
                                              {/* Two-column layout inside content */}
@@ -472,6 +499,7 @@ export default function OrderDetailPage() {
                                                                 </Badge>
                                                                  {userRole === "Заказчик" && (
                                                                      <Button
+                                                                         data-edit-etap-button // Add data attribute
                                                                          size="icon"
                                                                          variant="ghost"
                                                                          onClick={() => handleEditEtapClick(etap.id)}

@@ -26,7 +26,7 @@ const etapFormSchema = z.object({
     name: z.string().min(1, { message: "Stage name is required." }),
     description: z.string().optional(),
     workType: z.enum(etapWorkTypes, { required_error: "Work type is required." }),
-    estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(),
+    // estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(), // Removed direct price input
 });
 
 type EtapFormValues = z.infer<typeof etapFormSchema>;
@@ -47,7 +47,7 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
             name: etap.name || "",
             description: etap.description || "",
             workType: etap.workType || 'Параллельный',
-            estimatedPrice: etap.estimatedPrice,
+            // estimatedPrice: etap.estimatedPrice, // Removed
         },
         mode: "onChange",
     });
@@ -57,7 +57,7 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
             name: etap.name || "",
             description: etap.description || "",
             workType: etap.workType || 'Параллельный',
-            estimatedPrice: etap.estimatedPrice,
+            // estimatedPrice: etap.estimatedPrice, // Removed
         });
     }, [etap, form]);
 
@@ -75,13 +75,18 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
             return; // Prevent saving
         }
 
+        // Recalculate estimated price based on current options (important if options were edited separately)
+        const calculatedPrice = (etap.options || [])
+            .filter(opt => opt.isCalculable && opt.includedInPrice)
+            .reduce((sum, opt) => sum + (opt.calculatedPlanPrice || 0), 0);
+
 
         const updatedEtap: Etap = {
             ...etap,
             name: data.name,
             description: data.description || "",
             workType: data.workType,
-            estimatedPrice: data.estimatedPrice,
+            estimatedPrice: parseFloat(calculatedPrice.toFixed(2)), // Update price based on options
             updatedAt: new Date(),
         };
 
@@ -129,7 +134,8 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
                     )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
+                <div> {/* Keep work type in a single column */}
                     <FormField
                         control={form.control}
                         name="workType"
@@ -155,39 +161,21 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name="estimatedPrice"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Estimated Price ({currency}) (Optional)</FormLabel>
-                                <FormControl>
-                                     <Input
-                                        type="number"
-                                        placeholder="Enter estimated price"
-                                        step="0.01"
-                                        {...field}
-                                        value={field.value ?? ''}
-                                         onChange={e => {
-                                            const value = e.target.value;
-                                            field.onChange(value === '' ? undefined : parseFloat(value));
-                                          }}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                   {/* Removed Estimated Price Field */}
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
                      <Button type="button" variant="outline" onClick={onCancel}>
                          Cancel
                      </Button>
-                     <Button type="submit" disabled={form.formState.isSubmitting}>
+                     <Button type="submit" disabled={form.formState.isSubmitting || !etap.options || etap.options.length === 0}>
                          {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
                      </Button>
                  </div>
+                  {/* Reminder message */}
+                  <p className="text-xs text-muted-foreground pt-2 text-right">
+                      Note: Stage price is calculated from options in the right panel. Ensure at least one option exists.
+                 </p>
              </form>
         </Form>
     );
