@@ -27,6 +27,7 @@ import {
   UserPlus,
   MessageSquare,
   Activity as ActivityIcon,
+  Pencil, // Added Pencil icon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,9 @@ import { Progress } from "@/components/ui/progress"; // Import Progress
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs
 import { ScrollArea } from "@/components/ui/scroll-area"; // Import ScrollArea
 import { Separator } from "@/components/ui/separator"; // Import Separator
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"; // Import Card components
+import { cn } from "@/lib/utils"; // Import cn utility
+
 
 export default function AdminDashboardPage() {
   const fontFamily = useGoogleFont('Inter');
@@ -75,12 +79,13 @@ export default function AdminDashboardPage() {
       {/* Left sidebar - fixed */}
       <aside className={`fixed left-0 top-0 bottom-0 ${isNavExpanded ? 'w-64' : 'w-[70px]'} bg-sidebar-background border-r border-sidebar-border z-20 flex flex-col transition-all duration-300`}>
         {/* Logo area */}
-        <div className="h-[70px] flex items-center px-6 border-b border-sidebar-border bg-sidebar-primary">
-          {isNavExpanded ? (
-            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground">Task<span className="text-accent">Verse</span></h1>
-          ) : (
-            <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground">T<span className="text-accent">V</span></h1>
-          )}
+        <div className="h-[70px] flex items-center justify-center gap-2 px-6 border-b border-sidebar-border bg-sidebar-primary">
+           <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden">
+             Freelan<span className="text-accent">Center</span> {/* Updated text and color */}
+           </h1>
+           <h1 className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden">
+             F<span className="text-accent">C</span> {/* Updated 'C' to accent color */}
+           </h1>
         </div>
 
         {/* Navigation */}
@@ -174,7 +179,7 @@ export default function AdminDashboardPage() {
           variant="ghost"
           size="icon"
           onClick={() => setIsNavExpanded(!isNavExpanded)}
-          className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-md border border-border text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto"
+          className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-sm border border-border text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto" // Use shadow-sm
         >
           {isNavExpanded ? (
             <ChevronLeft className="h-5 w-5" />
@@ -185,7 +190,7 @@ export default function AdminDashboardPage() {
       </aside>
 
       {/* Main content */}
-      <div className={`flex-1 flex flex-col ${leftMargin} ${rightMargin} transition-all duration-300`}>
+      <div className={cn("flex-1 flex flex-col transition-all duration-300", leftMargin, rightMargin)}>
         {/* Header */}
         <header className="h-[70px] bg-card border-b border-border flex items-center justify-between px-8">
           <h2 className="text-xl font-light text-foreground">Dashboard</h2>
@@ -207,51 +212,60 @@ export default function AdminDashboardPage() {
         <ScrollArea className="flex-1 p-8">
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-card rounded-lg shadow-sm p-6 border border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-muted-foreground text-sm font-light">Total Projects</h3>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Projects</CardTitle>
                 <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded">+12.5%</span>
-              </div>
-              <p className="text-3xl font-light text-foreground mb-1">142</p>
-              <p className="text-sm text-muted-foreground">12 new this month</p>
-            </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-light text-foreground mb-1">142</p>
+                <p className="text-sm text-muted-foreground">12 new this month</p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-card rounded-lg shadow-sm p-6 border border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-muted-foreground text-sm font-light">Active Clients</h3>
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Clients</CardTitle>
                 <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded">+7.2%</span>
-              </div>
-              <p className="text-3xl font-light text-foreground mb-1">64</p>
-              <p className="text-sm text-muted-foreground">8 new this month</p>
-            </div>
+              </CardHeader>
+               <CardContent>
+                <p className="text-3xl font-light text-foreground mb-1">64</p>
+                <p className="text-sm text-muted-foreground">8 new this month</p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-card rounded-lg shadow-sm p-6 border border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-muted-foreground text-sm font-light">Total Revenue</h3>
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
                 <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded">+22.5%</span>
-              </div>
-              <p className="text-3xl font-light text-foreground mb-1">$86,589</p>
-              <p className="text-sm text-muted-foreground">$12,480 this month</p>
-            </div>
+              </CardHeader>
+               <CardContent>
+                <p className="text-3xl font-light text-foreground mb-1">$86,589</p>
+                <p className="text-sm text-muted-foreground">$12,480 this month</p>
+              </CardContent>
+            </Card>
 
-            <div className="bg-card rounded-lg shadow-sm p-6 border border-border">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-muted-foreground text-sm font-light">Pending Tasks</h3>
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Pending Tasks</CardTitle>
                 <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded">+3.8%</span>
-              </div>
-              <p className="text-3xl font-light text-foreground mb-1">24</p>
-              <p className="text-sm text-muted-foreground">6 due today</p>
-            </div>
+              </CardHeader>
+               <CardContent>
+                <p className="text-3xl font-light text-foreground mb-1">24</p>
+                <p className="text-sm text-muted-foreground">6 due today</p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Recent projects - Card layout */}
-          <div className="bg-card rounded-lg shadow-sm border border-border mb-8">
-            <div className="p-6 border-b border-border">
-              <h3 className="text-lg font-light text-foreground">Recent Projects</h3>
-            </div>
-            <div className="p-6 space-y-4">
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-lg font-light text-foreground">Recent Projects</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               {/* Project Card 1 */}
-              <div className="bg-muted border border-border rounded-lg p-6 hover:border-primary transition-colors">
+              <Card className="bg-muted hover:border-primary transition-colors">
+               <CardContent className="p-6">
                 <div className="flex items-start">
                   <div className="w-10 h-10 rounded bg-sidebar-accent text-primary flex items-center justify-center mr-4 flex-shrink-0">
                     <Monitor className="h-5 w-5" />
@@ -284,11 +298,13 @@ export default function AdminDashboardPage() {
                       <Progress value={65} className="h-2 [&>div]:bg-emerald-500" />
                     </div>
                   </div>
-                </div>
-              </div>
+                 </div>
+               </CardContent>
+              </Card>
 
               {/* Project Card 2 */}
-              <div className="bg-muted border border-border rounded-lg p-6 hover:border-primary transition-colors">
+             <Card className="bg-muted hover:border-primary transition-colors">
+                <CardContent className="p-6">
                 <div className="flex items-start">
                   <div className="w-10 h-10 rounded bg-blue-100 text-blue-800 flex items-center justify-center mr-4 flex-shrink-0">
                     <Smartphone className="h-5 w-5" />
@@ -321,11 +337,13 @@ export default function AdminDashboardPage() {
                        <Progress value={25} className="h-2 [&>div]:bg-amber-500" />
                     </div>
                   </div>
-                </div>
-              </div>
+                 </div>
+               </CardContent>
+              </Card>
 
               {/* Project Card 3 */}
-              <div className="bg-muted border border-border rounded-lg p-6 hover:border-primary transition-colors">
+             <Card className="bg-muted hover:border-primary transition-colors">
+                <CardContent className="p-6">
                 <div className="flex items-start">
                   <div className="w-10 h-10 rounded bg-purple-100 text-purple-800 flex items-center justify-center mr-4 flex-shrink-0">
                     <Palette className="h-5 w-5" />
@@ -358,11 +376,13 @@ export default function AdminDashboardPage() {
                       <Progress value={80} className="h-2 [&>div]:bg-emerald-500" />
                     </div>
                   </div>
-                </div>
-              </div>
+                 </div>
+               </CardContent>
+              </Card>
 
               {/* Project Card 4 */}
-              <div className="bg-muted border border-border rounded-lg p-6 hover:border-primary transition-colors">
+             <Card className="bg-muted hover:border-primary transition-colors">
+                <CardContent className="p-6">
                 <div className="flex items-start">
                   <div className="w-10 h-10 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center mr-4 flex-shrink-0">
                    <ShieldCheck className="h-5 w-5" />
@@ -395,19 +415,20 @@ export default function AdminDashboardPage() {
                        <Progress value={100} className="h-2 [&>div]:bg-blue-500" />
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                 </div>
+               </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
 
           {/* Activity and Tasks */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-card rounded-lg shadow-sm border border-border">
-              <div className="p-6 border-b border-border flex justify-between items-center">
-                <h3 className="text-lg font-light text-foreground">Recent Activity</h3>
+             <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-lg font-light text-foreground">Recent Activity</CardTitle>
                 <Button variant="link" className="text-sm text-primary hover:underline p-0 h-auto">View All</Button>
-              </div>
-              <div className="p-6">
+              </CardHeader>
+              <CardContent>
                 <div className="relative">
                   <div className="absolute top-0 bottom-0 left-4 w-px bg-border"></div>
                   {activities.map((activity) => (
@@ -424,15 +445,15 @@ export default function AdminDashboardPage() {
                      </div>
                    ))}
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="bg-card rounded-lg shadow-sm border border-border">
-              <div className="p-6 border-b border-border flex justify-between items-center">
-                <h3 className="text-lg font-light text-foreground">Upcoming Tasks</h3>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-lg font-light text-foreground">Upcoming Tasks</CardTitle>
                  <Button variant="link" className="text-sm text-primary hover:underline p-0 h-auto">View All</Button>
-              </div>
-              <div className="p-6">
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
                   {tasks.map((task) => (
                     <div key={task.id} className="flex items-center">
@@ -445,112 +466,17 @@ export default function AdminDashboardPage() {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </ScrollArea>
       </div>
 
       {/* Right sidebar - Communications */}
-      <aside className={`fixed right-0 top-0 bottom-0 ${isCommunicationExpanded ? 'w-80' : 'w-[70px]'} bg-card border-l border-border z-20 flex flex-col transition-all duration-300`}>
-        {/* Header */}
-        <div className="h-[70px] border-b border-border flex items-center px-6 justify-between">
-          {isCommunicationExpanded && <h3 className="text-lg font-light text-foreground">Communications</h3>}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsCommunicationExpanded(!isCommunicationExpanded)}
-            className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
-          >
-            {isCommunicationExpanded ? (
-              <ChevronRight className="h-5 w-5" />
-            ) : (
-              <ChevronLeft className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-
-        {/* Content Area */}
-       {isCommunicationExpanded ? (
-          <Tabs defaultValue="messages" className="flex flex-col flex-1">
-             <TabsList className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0">
-                <TabsTrigger value="messages" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Messages</TabsTrigger>
-                <TabsTrigger value="notifications" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Notifications</TabsTrigger>
-                <TabsTrigger value="activity" className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary">Activity</TabsTrigger>
-             </TabsList>
-
-             <div className="p-4 border-b border-border">
-               <div className="relative">
-                 <Input
-                   type="text"
-                   placeholder="Search messages..."
-                   className="w-full bg-muted border-border rounded-md py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary"
-                 />
-                 <Search className="h-5 w-5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-               </div>
-             </div>
-
-             <ScrollArea className="flex-1">
-                <TabsContent value="messages" className="mt-0">
-                    {messages.map((message) => (
-                        <div key={message.id} className={`border-b border-border p-4 hover:bg-accent cursor-pointer ${message.active ? 'bg-sidebar-accent' : ''}`}>
-                            <div className="flex items-start">
-                                <Avatar className="w-10 h-10 mr-3 flex-shrink-0">
-                                    <AvatarFallback className={`text-sm ${message.avatarBg} ${message.avatarText}`}>{message.initials}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-center mb-1">
-                                        <h4 className={`text-sm truncate ${message.unread ? 'font-medium text-foreground' : 'font-light text-foreground'}`}>{message.sender}</h4>
-                                        <span className="text-xs text-muted-foreground">{message.time}</span>
-                                    </div>
-                                    <p className={`text-sm truncate ${message.unread ? 'text-foreground' : 'text-muted-foreground'}`}>{message.preview}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </TabsContent>
-
-                <TabsContent value="notifications" className="mt-0 p-4 space-y-4">
-                     {/* Reuse notification rendering from previous step or implement here */}
-                    <p className="text-sm text-muted-foreground text-center py-8">No new notifications.</p>
-                 </TabsContent>
-
-                 <TabsContent value="activity" className="mt-0 p-6">
-                    <div className="relative">
-                        <div className="absolute top-0 bottom-0 left-4 w-px bg-border"></div>
-                        {activities.map((activity) => (
-                           <div key={activity.id} className="relative flex items-start mb-6">
-                               <div className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor} ${activity.iconColor} flex items-center justify-center z-10 mr-4`}>
-                                   <activity.icon className="h-4 w-4" />
-                               </div>
-                               <div>
-                                   <p className="text-sm font-light text-foreground">
-                                       <span className="font-medium">{activity.user}</span> {activity.action}
-                                   </p>
-                                   <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
-                               </div>
-                           </div>
-                       ))}
-                    </div>
-                 </TabsContent>
-             </ScrollArea>
-          </Tabs>
-       ) : (
-           // Collapsed view - just show icons
-            <div className="flex-1 flex flex-col items-center pt-4 space-y-6">
-                <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-sidebar-accent text-primary">
-                    <MessageSquare className="h-5 w-5" />
-                </Button>
-                 <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
-                     <Bell className="h-5 w-5" />
-                 </Button>
-                 <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary">
-                    <ActivityIcon className="h-5 w-5" />
-                 </Button>
-            </div>
-       )}
-      </aside>
+      <CommunicationPanel
+        isExpanded={isCommunicationExpanded}
+        setIsExpanded={setIsCommunicationExpanded}
+      />
     </div>
   )
 }
-
