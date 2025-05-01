@@ -1,18 +1,17 @@
-// src/app/(app)/projects/[projectId]/page.tsx
 'use client';
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock, Eye } from "lucide-react"; // Added Eye icon
+import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock, Eye } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from 'next/navigation'; // Use client-side hooks
-import type { Project, Order } from "@/lib/types"; // Import Order type
+import { useParams, useRouter } from 'next/navigation';
+import type { Project, Order } from "@/lib/types";
 import { mockProjects } from '../mockProjects';
-import { mockOrders, getOrderStatusVariant } from '../../orders/mockOrders'; // Import orders and variant helper
+import { mockOrders, getOrderStatusVariant } from '../../orders/mockOrders';
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils"; // Import cn for conditional classes
+import { cn } from "@/lib/utils";
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -37,19 +36,16 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function ProjectDetailPage() {
-    const router = useRouter(); // Use router for potential redirection or navigation
-    // Client Component: Use useParams hook
+    const router = useRouter();
     const params = useParams<{ projectId: string }>();
-    const projectId = params?.projectId; // Get projectId after unwrapping
+    const projectId = params?.projectId;
 
-    // Need state to re-render when mock data changes (after edit)
     const [projectData, setProjectData] = React.useState<Project | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const { toast } = useToast();
 
     React.useEffect(() => {
         if (projectId) {
-            // Simulate fetching data
             const foundProject = mockProjects.find(p => p.id === projectId);
             if (foundProject) {
                 setProjectData(foundProject);
@@ -59,7 +55,7 @@ export default function ProjectDetailPage() {
                      description: `Project with ID ${projectId} not found.`,
                      variant: "destructive",
                  });
-                 router.replace('/projects'); // Redirect if project not found
+                 router.replace('/projects');
             }
             setIsLoading(false);
         } else {
@@ -69,24 +65,20 @@ export default function ProjectDetailPage() {
                  description: "Project ID is missing.",
                  variant: "destructive",
              });
-             router.replace('/projects'); // Redirect if ID is missing
+             router.replace('/projects');
         }
-    }, [projectId, toast, router]); // Add router to dependency array
+    }, [projectId, toast, router]);
 
     if (isLoading) {
         return <div className="flex min-h-screen items-center justify-center">Loading project...</div>;
     }
 
     if (!projectData) {
-        // Message already shown in useEffect, this is a fallback
         return <div className="flex min-h-screen items-center justify-center">Project not found or ID missing. Redirecting...</div>;
     }
 
-    // Filter orders related to this project
     const relatedOrders = mockOrders.filter(order => order.projectId === projectId);
-
-    // Mock user role for conditional rendering
-    const userRole = "Заказчик"; // Replace with actual role check
+    const userRole = "Заказчик";
 
     return (
         <div className="flex flex-col gap-6">
@@ -104,7 +96,7 @@ export default function ProjectDetailPage() {
                          {projectData.status}
                     </Badge>
                 </div>
-                {userRole === "Заказчик" && ( // Show edit button for Client
+                {userRole === "Заказчик" && (
                     <Link href={`/projects/${projectId}/edit`} passHref>
                         <Button variant="outline">
                             <Edit className="mr-2 h-4 w-4" /> Edit Project
@@ -139,29 +131,28 @@ export default function ProjectDetailPage() {
                 </CardContent>
             </Card>
 
-            {/* Sections for related entities (Orders, Bids, etc.) */}
+            {/* Sections for related entities */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Orders Section - Spanning full width */}
-                <div className={cn("lg:col-span-2 space-y-4")}> {/* Changed Card to div and applied space-y */}
-                    <div className="flex items-center justify-between pb-2"> {/* Replicated CardHeader structure without CardHeader component */}
-                        <h3 className="text-lg font-semibold">Orders</h3> {/* Used h3 instead of CardTitle */}
+                {/* Orders Section - Spanning full width, no outer card */}
+                <div className={cn("lg:col-span-2 space-y-4")}>
+                    <div className="flex items-center justify-between pb-2">
+                        <h3 className="text-lg font-semibold">Orders</h3>
                         {userRole === "Заказчик" && (
-                            <Link href="/orders/new" passHref> {/* Link to create new order page */}
+                            <Link href="/orders/new" passHref>
                                 <Button size="sm">
                                     <PlusCircle className="mr-2 h-4 w-4" /> Create Order
                                 </Button>
                             </Link>
                         )}
                     </div>
-                    <div className={cn("pt-0 space-y-4")}> {/* Replicated CardContent padding (top is 0) and applied space-y */}
+                     <div className={cn("space-y-4")}> {/* Inner div for spacing */}
                          {relatedOrders.length > 0 ? (
                             relatedOrders.map((order: Order) => (
-                                <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Added border-none */}
-                                    <CardHeader className="pb-2"> {/* Reduced padding bottom */}
+                                <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none">
+                                    <CardHeader className="pb-2">
                                         <div className="flex justify-between items-start gap-2">
                                             <div className="flex-1">
                                                 <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
-                                                 {/* Removed project link as we are on the project page */}
                                             </div>
                                             <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
                                                 {order.status}
@@ -187,7 +178,7 @@ export default function ProjectDetailPage() {
                                 </Card>
                             ))
                         ) : (
-                             <Card className="shadow-sm border-none"> {/* Optional: Wrap 'not found' message */}
+                             <Card className="shadow-sm border-none">
                                 <CardContent>
                                     <p className="text-sm text-muted-foreground text-center py-4">No orders created for this project yet.</p>
                                 </CardContent>
@@ -209,7 +200,7 @@ export default function ProjectDetailPage() {
                 </Card>
 
                 {/* Work Assignments Section */}
-                <Card className="shadow-sm border-none"> {/* Adjusted colspan back to default */}
+                <Card className="shadow-sm border-none">
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Work Assignments</CardTitle>
                          {userRole === "Заказчик" && (
@@ -241,3 +232,4 @@ export default function ProjectDetailPage() {
         </div>
     );
 }
+```

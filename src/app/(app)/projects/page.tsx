@@ -5,6 +5,8 @@ import { PlusCircle, Briefcase, CheckCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { mockProjects } from './mockProjects'; // Import mock data
+import { cn } from "@/lib/utils"; // Import cn for conditional classes
+
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -57,7 +59,6 @@ export default function ProjectsPage() {
          )}
        </div>
 
-       {/* Removed the wrapping Card */}
         {/* Project List Header Info */}
         <div className="mb-2">
             <h3 className="text-lg font-semibold">Project List</h3>
@@ -68,8 +69,8 @@ export default function ProjectsPage() {
        <div className="space-y-4">
           {mockProjects.length > 0 ? (
             mockProjects.map((project) => (
-              <Card key={project.id} className="shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader>
+              <Card key={project.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Removed border */}
+                <CardHeader className="pb-2"> {/* Reduce padding bottom */}
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-lg font-semibold">{project.name}</CardTitle>
                     <Badge variant={getStatusVariant(project.status)} className="flex items-center">
@@ -88,7 +89,7 @@ export default function ProjectsPage() {
               </Card>
             ))
           ) : (
-             <Card> {/* Optional: Wrap the 'not found' message in a card */}
+             <Card className="shadow-sm border-none"> {/* Removed border */}
                 <CardContent>
                     <p className="text-sm text-muted-foreground py-4 text-center">No projects created yet.</p>
                 </CardContent>
@@ -98,3 +99,4 @@ export default function ProjectsPage() {
     </div>
   );
 }
+```

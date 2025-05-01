@@ -6,6 +6,8 @@ import { PlusCircle, Eye, Filter } from "lucide-react"; // Import Eye and Filter
 import type { Order } from "@/lib/types"; // Import Order type
 import Link from "next/link";
 import { mockOrders, getOrderStatusVariant } from './mockOrders'; // Import mock data and helper from the new file
+import { cn } from "@/lib/utils"; // Import cn for conditional classes
+
 
 export default function OrdersPage() {
     // TODO: Fetch and display orders based on user role and context
@@ -30,10 +32,8 @@ export default function OrdersPage() {
                 )}
             </div>
 
-            {/* Removed the wrapping Card */}
             {/* Order List Header Info */}
-            <div className="mb-2"> {/* Optional: Add some margin below the description if needed */}
-                {/* These could be standalone elements or inside a less prominent container */}
+            <div className="mb-2">
                 <h3 className="text-lg font-semibold">Order List</h3>
                 <p className="text-sm text-muted-foreground">View and manage orders associated with your projects.</p>
             </div>
@@ -42,8 +42,8 @@ export default function OrdersPage() {
              <div className="space-y-4">
                  {mockOrders.length > 0 ? (
                     mockOrders.map((order) => (
-                        <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow">
-                            <CardHeader>
+                        <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Removed border */}
+                            <CardHeader className="pb-2"> {/* Reduce padding */}
                                 <div className="flex justify-between items-start gap-2">
                                     <div className="flex-1">
                                         <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
@@ -76,7 +76,7 @@ export default function OrdersPage() {
                         </Card>
                     ))
                 ) : (
-                    <Card> {/* Optional: Wrap the 'not found' message in a card for consistency */}
+                    <Card className="shadow-sm border-none"> {/* Removed border */}
                         <CardContent>
                             <p className="text-sm text-muted-foreground py-4 text-center">No orders found.</p>
                         </CardContent>
@@ -86,3 +86,4 @@ export default function OrdersPage() {
         </div>
     );
 }
+
