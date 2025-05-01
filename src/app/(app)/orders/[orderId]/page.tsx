@@ -34,7 +34,7 @@ const getStatusIcon = (status: string) => {
 
 export default function OrderDetailPage() {
     // Use useParams directly in Client Components.
-    // No need for React.use wrapper as it's synchronous here.
+    // This is the standard way and avoids the async component error.
     const params = useParams<{ orderId: string }>();
     const orderId = params?.orderId; // Get orderId directly
 
@@ -53,6 +53,10 @@ export default function OrderDetailPage() {
              const foundOrder = mockOrders.find(o => o.id === orderId);
              if (foundOrder) {
                  setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
+                 // Initialize open items based on fetched data if needed, e.g., first item
+                 // if (foundOrder.etaps && foundOrder.etaps.length > 0) {
+                 //    setOpenAccordionItems([foundOrder.etaps[0].id]);
+                 // }
              } else {
                  toast({
                      title: "Error",
@@ -106,7 +110,7 @@ export default function OrderDetailPage() {
                  }
              }
 
-            setOpenAccordionItems(prev => [...prev, newEtap.id]);
+            setOpenAccordionItems(prev => [...prev, newEtap.id]); // Open the newly added etap
             setEditingEtapId(null);
             setAddingOptionToEtapId(null);
             setEditingOptionId(null); // Close option edit form
@@ -274,6 +278,7 @@ export default function OrderDetailPage() {
          setIsAddingEtap(false);
          setAddingOptionToEtapId(null);
          setEditingOptionId(null); // Close option edit form
+         // Ensure the accordion item is open when editing starts
          if (!openAccordionItems.includes(etapId)) {
              setOpenAccordionItems(prev => [...prev, etapId]);
          }
@@ -324,20 +329,24 @@ export default function OrderDetailPage() {
 
      const handleAccordionChange = (value: string[]) => {
         setOpenAccordionItems(value);
+        // Optionally close forms when accordion closes, if desired
         const closingItems = openAccordionItems.filter(item => !value.includes(item));
-        if (editingEtapId && closingItems.includes(editingEtapId)) {
-            setEditingEtapId(null);
+        if (closingItems.length > 0) {
+            const closingItemId = closingItems[0]; // Assuming only one closes at a time for this logic
+            if (editingEtapId === closingItemId) {
+                setEditingEtapId(null);
+            }
+            if (addingOptionToEtapId === closingItemId) {
+                setAddingOptionToEtapId(null);
+            }
+            // Find if any option being edited belongs to the closing accordion
+             const closingEtap = orderData?.etaps?.find(etap =>
+                 etap.id === closingItemId && etap.options?.some(opt => opt.id === editingOptionId)
+             );
+             if (closingEtap) {
+                 setEditingOptionId(null);
+             }
         }
-         if (addingOptionToEtapId && closingItems.includes(addingOptionToEtapId)) {
-             setAddingOptionToEtapId(null);
-         }
-         // Find if any option being edited belongs to a closing accordion
-         const closingEtapId = orderData?.etaps?.find(etap =>
-             closingItems.includes(etap.id) && etap.options?.some(opt => opt.id === editingOptionId)
-         )?.id;
-         if (closingEtapId) {
-             setEditingOptionId(null);
-         }
     };
 
 
@@ -438,54 +447,48 @@ export default function OrderDetailPage() {
                             <Accordion
                                 type="multiple"
                                 className="w-full"
-                                key={JSON.stringify(orderData.etaps)} // Re-render accordion if etaps change drastically
+                                key={JSON.stringify(orderData.etaps)} // Force re-render if etaps change drastically
                                 value={openAccordionItems}
                                 onValueChange={handleAccordionChange}
                             >
                                 {orderData.etaps.map((etap: Etap) => (
-                                     <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        <div className="flex items-center w-full pr-2">
-                                            {/* Accordion Trigger - Wraps the clickable area */}
-                                             <AccordionTrigger
-                                                 className={cn(
-                                                    "flex-1 flex items-center justify-between font-semibold text-left hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer p-2 rounded-md", // Base trigger styles
-                                                     {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing
-                                                 )}
-                                                 // Removed asChild as button is outside now
-                                             >
-                                                {/* Content inside the trigger */}
-                                                <span className="flex-1 mr-2">{etap.name}</span>
-                                                <div className="flex items-center gap-2 flex-shrink-0">
-                                                    <Badge variant="secondary" className="text-xs">
-                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                    </Badge>
-                                                    <Badge variant="outline">
-                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                    </Badge>
-                                                    {/* Chevron Down Icon is added automatically by AccordionTrigger */}
-                                                </div>
-                                             </AccordionTrigger>
+                                     <AccordionItem value={etap.id} key={etap.id} className="border rounded-md mb-2 overflow-hidden">
+                                          <div className="flex items-center w-full bg-muted hover:bg-accent/50 transition-colors">
+                                              {/* Make the entire trigger area clickable */}
+                                              <AccordionTrigger className="flex-1 flex items-center justify-between font-semibold text-left hover:no-underline cursor-pointer px-4 py-3">
+                                                  {/* Content inside the trigger */}
+                                                  <span className="flex-1 mr-2">{etap.name}</span>
+                                                  <div className="flex items-center gap-2 flex-shrink-0">
+                                                      <Badge variant="secondary" className="text-xs">
+                                                          {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                      </Badge>
+                                                      <Badge variant="outline">
+                                                          {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                      </Badge>
+                                                      {/* Chevron Down Icon is part of AccordionTrigger */}
+                                                  </div>
+                                              </AccordionTrigger>
 
-                                            {/* Edit Button placed next to the trigger */}
-                                            {userRole === "Заказчик" && (
-                                                <Button
-                                                    size="icon"
-                                                    variant="ghost"
-                                                    onClick={(e) => {
-                                                        // e.stopPropagation(); // Stop propagation if it causes issues, but might not be needed now
-                                                        handleEditEtapClick(etap.id);
-                                                    }}
-                                                    className="h-6 w-6 p-1 ml-2 flex-shrink-0 text-muted-foreground hover:text-primary"
-                                                    disabled={isAddingEtap || !!addingOptionToEtapId || !!editingOptionId || (!!editingEtapId && editingEtapId !== etap.id)}
-                                                    aria-label="Edit Stage"
-                                                >
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                        </div>
-                                        <AccordionContent>
+                                              {/* Edit Button placed next to the trigger */}
+                                              {userRole === "Заказчик" && (
+                                                  <Button
+                                                      size="icon"
+                                                      variant="ghost"
+                                                      onClick={(e) => {
+                                                          e.stopPropagation(); // Prevent accordion toggle when clicking edit
+                                                          handleEditEtapClick(etap.id);
+                                                      }}
+                                                      className="h-8 w-8 p-1 mr-2 flex-shrink-0 text-muted-foreground hover:text-primary"
+                                                      disabled={isAddingEtap || !!addingOptionToEtapId || !!editingOptionId || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                      aria-label="Edit Stage"
+                                                  >
+                                                      <Pencil className="h-4 w-4" />
+                                                  </Button>
+                                              )}
+                                          </div>
+                                        <AccordionContent className="border-t">
                                              {editingEtapId === etap.id ? (
-                                                <div className="mb-4 p-4 border rounded-md bg-card">
+                                                <div className="p-4 bg-card">
                                                     <h4 className="text-md font-semibold mb-3">Edit Stage: {etap.name}</h4>
                                                     <EditEtapForm
                                                         etap={etap}
