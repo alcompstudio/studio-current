@@ -29,44 +29,38 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
+    // Use React.use for server-side or Suspense-enabled rendering
+    // Use useParams directly for client-side only components like this one
     const params = useParams<{ orderId: string }>();
     const orderId = params?.orderId; // Get orderId directly from hook
 
     // State holds the specific order being viewed. Initialize from mock data.
-    const [orderData, setOrderData] = React.useState<Order | null>(() => {
-        if (orderId) {
-             const foundOrder = mockOrders.find(o => o.id === orderId);
-             return foundOrder ? { ...foundOrder, etaps: foundOrder.etaps || [] } : null;
-        }
-        return null;
-    });
-    const [isLoading, setIsLoading] = React.useState(!orderData); // Only loading if data wasn't found initially
+    const [orderData, setOrderData] = React.useState<Order | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true); // Start loading true
     const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline Add form visibility
     const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null); // State for inline Edit form visibility
     const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]); // State for controlled accordion
     const { toast } = useToast();
 
     React.useEffect(() => {
-        if (!orderData && orderId && !isLoading) {
-            console.log(`Effect: Order data null, trying to find order ${orderId}`);
-            const foundOrder = mockOrders.find(o => o.id === orderId);
-            if (foundOrder) {
+        // Only run fetching logic once or when orderId changes
+        if (orderId) {
+             console.log(`Effect: Attempting to find order ${orderId}`);
+             const foundOrder = mockOrders.find(o => o.id === orderId);
+             if (foundOrder) {
                  console.log(`Effect: Found order ${orderId}`);
-                setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
-                // Optionally open the first etap by default
-                // if (foundOrder.etaps && foundOrder.etaps.length > 0) {
-                //     setOpenAccordionItems([foundOrder.etaps[0].id]);
-                // }
-            } else {
-                console.log(`Effect: Order ${orderId} not found in mock data.`);
-                toast({
+                 setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
+             } else {
+                 console.log(`Effect: Order ${orderId} not found in mock data.`);
+                 toast({
                      title: "Error",
                      description: `Order with ID ${orderId} not found.`,
                      variant: "destructive",
                  });
-            }
-            setIsLoading(false);
-        } else if (!orderId && !isLoading) {
+                 // Optionally redirect or show a 'not found' state in the UI
+             }
+             setIsLoading(false);
+        } else if (!isLoading) { // Only show error if not already loading and no orderId
              console.log(`Effect: Order ID missing.`);
              toast({
                  title: "Error",
@@ -75,7 +69,7 @@ export default function OrderDetailPage() {
              });
              setIsLoading(false);
         }
-    }, [orderId, toast, orderData, isLoading]); // Dependencies include orderData and isLoading
+     }, [orderId, toast, isLoading]); // Include isLoading to prevent redundant runs
 
 
      // Function to update local state AND mock data when a new etap is added
@@ -98,17 +92,31 @@ export default function OrderDetailPage() {
                  if (!mockOrders[orderIndex].etaps) {
                      mockOrders[orderIndex].etaps = [];
                  }
-                 mockOrders[orderIndex].etaps?.push(newEtap);
-                 mockOrders[orderIndex].updatedAt = new Date();
-                 console.log("Updated mockOrders array item with new etap:", mockOrders[orderIndex]);
+                 // Ensure etaps is treated as an array before pushing
+                 const currentEtaps = mockOrders[orderIndex].etaps || [];
+                 // Make sure not to add duplicate keys if the ID generation is not robust
+                 if (!currentEtaps.some(e => e.id === newEtap.id)) {
+                    mockOrders[orderIndex].etaps = [...currentEtaps, newEtap];
+                    mockOrders[orderIndex].updatedAt = new Date();
+                    console.log("Updated mockOrders array item with new etap:", mockOrders[orderIndex]);
+
+                     toast({
+                        title: "Stage Added",
+                        description: `New stage "${newEtap.name}" added to the order.`,
+                    });
+                 } else {
+                     console.warn(`Attempted to add etap with duplicate ID: ${newEtap.id}`);
+                     toast({
+                        title: "Warning",
+                        description: `Stage with ID ${newEtap.id} might already exist.`,
+                        variant: "destructive"
+                     });
+                 }
+
+
              } else {
                  console.warn(`Order ID ${orderId} not found in mockOrders during add.`);
             }
-
-            toast({
-                title: "Stage Added",
-                description: `New stage "${newEtap.name}" added to the order.`,
-            });
 
         } else {
              console.error("Cannot add etap: orderData is null.");
@@ -140,9 +148,12 @@ export default function OrderDetailPage() {
             // Update the mockOrders array (IN-PLACE MUTATION)
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
-                const etapIndex = mockOrders[orderIndex].etaps?.findIndex(e => e.id === updatedEtap.id);
+                const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === updatedEtap.id);
                 if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
-                    mockOrders[orderIndex].etaps![etapIndex] = updatedEtap; // Update the specific etap
+                    // Ensure etaps is treated as an array before updating
+                    const currentEtaps = mockOrders[orderIndex].etaps || [];
+                    currentEtaps[etapIndex] = updatedEtap; // Update the specific etap
+                    mockOrders[orderIndex].etaps = [...currentEtaps]; // Assign new array to trigger updates if needed
                     mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
                     console.log("Updated mockOrders array item with updated etap:", mockOrders[orderIndex]);
                 } else {
@@ -168,15 +179,23 @@ export default function OrderDetailPage() {
         setEditingEtapId(null); // Close the inline edit form
     };
 
-    const handleEditClick = (event: React.MouseEvent, etapId: string) => {
-        event.stopPropagation(); // Prevent accordion toggle initially
-        // If the item is not currently open, open it
-        if (!openAccordionItems.includes(etapId)) {
-            setOpenAccordionItems(prev => [...prev, etapId]);
-        }
-        setEditingEtapId(etapId);
-        setIsAddingEtap(false); // Close add form if open
+     // Updated handler: Toggles accordion and sets editing state
+    const handleEditClick = (etapId: string) => {
+         setOpenAccordionItems(prev => {
+            if (prev.includes(etapId)) {
+                // If already open, just set editing ID
+                setEditingEtapId(etapId);
+                setIsAddingEtap(false); // Close add form if open
+                return prev; // Keep it open
+            } else {
+                 // If closed, open it and set editing ID
+                 setEditingEtapId(etapId);
+                 setIsAddingEtap(false); // Close add form if open
+                 return [...prev, etapId]; // Add to open items
+            }
+        });
     };
+
 
     const handleCancelEdit = () => {
         setEditingEtapId(null);
@@ -293,37 +312,42 @@ export default function OrderDetailPage() {
                             <Accordion
                                 type="multiple"
                                 className="w-full"
-                                key={orderData.etaps.map(e => e.id).join('-')} // Ensure re-render on etaps change
+                                // Use JSON stringify as key to force re-render on deep changes
+                                key={JSON.stringify(orderData.etaps)}
                                 value={openAccordionItems} // Controlled component value
                                 onValueChange={setOpenAccordionItems} // Controlled component change handler
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id}>
-                                        <AccordionTrigger className="hover:no-underline">
-                                            <div className="flex justify-between items-center w-full pr-4">
-                                                <span className="font-semibold">{etap.name}</span>
-                                                <div className="flex items-center gap-2">
-                                                     <Badge variant="secondary" className="text-xs">
-                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                     </Badge>
-                                                     <Badge variant="outline">
-                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                     </Badge>
-                                                     {userRole === "Заказчик" && (
-                                                         <Button
-                                                            size="icon"
-                                                            variant="ghost"
-                                                            onClick={(e) => handleEditClick(e, etap.id)}
-                                                            className="h-6 w-6 p-1"
-                                                            disabled={isAddingEtap || !!editingEtapId && editingEtapId !== etap.id} // Disable if adding or editing another item
-                                                         >
-                                                             <Pencil className="h-4 w-4" />
-                                                             <span className="sr-only">Edit Stage</span>
-                                                         </Button>
-                                                     )}
-                                                </div>
-                                            </div>
-                                        </AccordionTrigger>
+                                        {/* Wrap trigger and edit button */}
+                                        <div className="flex items-center justify-between pr-4 hover:bg-accent/50 rounded-t-md">
+                                            <AccordionTrigger className="flex-1 text-left px-4 py-4 font-semibold hover:no-underline">
+                                                 {etap.name}
+                                            </AccordionTrigger>
+                                             <div className="flex items-center gap-2 flex-shrink-0 pr-2"> {/* Adjusted padding right */}
+                                                 <Badge variant="secondary" className="text-xs">
+                                                     {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                 </Badge>
+                                                 <Badge variant="outline">
+                                                     {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                 </Badge>
+                                                 {userRole === "Заказчик" && (
+                                                     <Button
+                                                        size="icon"
+                                                        variant="ghost"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation(); // Prevent accordion trigger if clicking button
+                                                            handleEditClick(etap.id);
+                                                        }}
+                                                        className="h-6 w-6 p-1"
+                                                        disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)} // Disable if adding or editing another item
+                                                     >
+                                                         <Pencil className="h-4 w-4" />
+                                                         <span className="sr-only">Edit Stage</span>
+                                                     </Button>
+                                                 )}
+                                             </div>
+                                         </div>
                                         <AccordionContent>
                                              {/* Inline Edit Etap Form */}
                                             {editingEtapId === etap.id ? (
