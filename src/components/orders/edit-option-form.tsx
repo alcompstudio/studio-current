@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import type { EtapOption } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils';
 
 // Define the form schema using Zod for EtapOption (same as add form)
 const optionFormSchema = z.object({
@@ -156,8 +157,9 @@ export default function EditOptionForm({ etapId, option, currency, onOptionUpdat
                                 <Checkbox
                                     checked={field.value}
                                     onCheckedChange={(checked) => {
-                                        field.onChange(checked);
-                                        if (!checked) {
+                                        const isChecked = Boolean(checked); // Ensure boolean
+                                        field.onChange(isChecked);
+                                        if (!isChecked) {
                                             form.reset({
                                                 ...form.getValues(),
                                                 planUnits: undefined,
@@ -261,7 +263,13 @@ export default function EditOptionForm({ etapId, option, currency, onOptionUpdat
 
                  {/* Form Action Buttons */}
                 <div className="flex justify-end gap-2 pt-2">
-                     <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+                     <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={onCancel}
+                        className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
+                     >
                          Cancel
                      </Button>
                      <Button type="submit" size="sm" disabled={form.formState.isSubmitting}>

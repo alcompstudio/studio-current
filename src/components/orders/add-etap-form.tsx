@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import type { Etap, EtapWorkType, EtapOption } from "@/lib/types"; // Import EtapOption
 import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils';
 
 const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
 
@@ -139,7 +140,12 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel, 
                 </div>
 
                 <div className="flex justify-end gap-2 pt-4">
-                     <Button type="button" variant="outline" onClick={onCancel}>
+                     <Button
+                        type="button"
+                        variant="outline"
+                        onClick={onCancel}
+                        className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
+                     >
                          Cancel
                      </Button>
                      <Button type="submit" disabled={form.formState.isSubmitting || isSaveDisabled}>
