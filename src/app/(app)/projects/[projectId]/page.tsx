@@ -5,12 +5,14 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock } from "lucide-react";
+import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock, Eye } from "lucide-react"; // Added Eye icon
 import Link from "next/link";
-import { useParams } from 'next/navigation';
-import type { Project } from "@/lib/types";
+import { useParams, useRouter } from 'next/navigation'; // Use client-side hooks
+import type { Project, Order } from "@/lib/types"; // Import Order type
 import { mockProjects } from '../mockProjects';
-import { useToast } from "@/hooks/use-toast"; // Import useToast
+import { mockOrders, getOrderStatusVariant } from '../../orders/mockOrders'; // Import orders and variant helper
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils"; // Import cn for conditional classes
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -34,11 +36,11 @@ const getStatusIcon = (status: string) => {
     }
 };
 
-// No need for ProjectDetailPageProps definition in Client Component using hooks
-
 export default function ProjectDetailPage() {
+    const router = useRouter(); // Use router for potential redirection or navigation
+    // Client Component: Use useParams hook
     const params = useParams<{ projectId: string }>();
-    const projectId = params?.projectId; // Get projectId directly from hook
+    const projectId = params?.projectId; // Get projectId after unwrapping
 
     // Need state to re-render when mock data changes (after edit)
     const [projectData, setProjectData] = React.useState<Project | null>(null);
@@ -57,7 +59,7 @@ export default function ProjectDetailPage() {
                      description: `Project with ID ${projectId} not found.`,
                      variant: "destructive",
                  });
-                // Optionally redirect or show not found message
+                 router.replace('/projects'); // Redirect if project not found
             }
             setIsLoading(false);
         } else {
@@ -67,16 +69,21 @@ export default function ProjectDetailPage() {
                  description: "Project ID is missing.",
                  variant: "destructive",
              });
+             router.replace('/projects'); // Redirect if ID is missing
         }
-    }, [projectId, toast]); // Re-run if projectId changes
+    }, [projectId, toast, router]); // Add router to dependency array
 
     if (isLoading) {
         return <div className="flex min-h-screen items-center justify-center">Loading project...</div>;
     }
 
     if (!projectData) {
-        return <div className="flex min-h-screen items-center justify-center">Project not found or ID missing.</div>; // Or a proper 404 component
+        // Message already shown in useEffect, this is a fallback
+        return <div className="flex min-h-screen items-center justify-center">Project not found or ID missing. Redirecting...</div>;
     }
+
+    // Filter orders related to this project
+    const relatedOrders = mockOrders.filter(order => order.projectId === projectId);
 
     // Mock user role for conditional rendering
     const userRole = "Заказчик"; // Replace with actual role check
@@ -99,15 +106,15 @@ export default function ProjectDetailPage() {
                 </div>
                 {userRole === "Заказчик" && ( // Show edit button for Client
                     <Link href={`/projects/${projectId}/edit`} passHref>
-                         <Button variant="outline">
+                        <Button variant="outline">
                             <Edit className="mr-2 h-4 w-4" /> Edit Project
-                         </Button>
+                        </Button>
                     </Link>
                 )}
             </div>
 
             {/* Project Details Card */}
-            <Card>
+             <Card className="shadow-sm border-none">
                 <CardHeader>
                     <CardTitle>Project Overview</CardTitle>
                     <CardDescription>{projectData.description}</CardDescription>
@@ -134,24 +141,63 @@ export default function ProjectDetailPage() {
 
             {/* Sections for related entities (Orders, Bids, etc.) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Orders Section */}
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-semibold">Orders</CardTitle>
+                {/* Orders Section - Spanning full width */}
+                <div className={cn("lg:col-span-2 space-y-4")}> {/* Changed Card to div and applied space-y */}
+                    <div className="flex items-center justify-between pb-2"> {/* Replicated CardHeader structure without CardHeader component */}
+                        <h3 className="text-lg font-semibold">Orders</h3> {/* Used h3 instead of CardTitle */}
                         {userRole === "Заказчик" && (
-                             <Button size="sm">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Create Order
-                            </Button>
+                            <Link href="/orders/new" passHref> {/* Link to create new order page */}
+                                <Button size="sm">
+                                    <PlusCircle className="mr-2 h-4 w-4" /> Create Order
+                                </Button>
+                            </Link>
                         )}
-                    </CardHeader>
-                    <CardContent>
-                         <p className="text-sm text-muted-foreground">No orders created for this project yet.</p>
-                         {/* TODO: List orders related to this project */}
-                    </CardContent>
-                </Card>
+                    </div>
+                    <div className={cn("pt-0 space-y-4")}> {/* Replicated CardContent padding (top is 0) and applied space-y */}
+                         {relatedOrders.length > 0 ? (
+                            relatedOrders.map((order: Order) => (
+                                <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Added border-none */}
+                                    <CardHeader className="pb-2"> {/* Reduced padding bottom */}
+                                        <div className="flex justify-between items-start gap-2">
+                                            <div className="flex-1">
+                                                <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
+                                                 {/* Removed project link as we are on the project page */}
+                                            </div>
+                                            <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
+                                                {order.status}
+                                            </Badge>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-semibold">
+                                                Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
+                                            </span>
+                                            <Link href={`/orders/${order.id}`} passHref>
+                                                <Button variant="outline" size="sm">
+                                                    <Eye className="mr-2 h-4 w-4" /> View Details
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground mt-2">
+                                            Created: {order.createdAt.toLocaleDateString()}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        ) : (
+                             <Card className="shadow-sm border-none"> {/* Optional: Wrap 'not found' message */}
+                                <CardContent>
+                                    <p className="text-sm text-muted-foreground text-center py-4">No orders created for this project yet.</p>
+                                </CardContent>
+                             </Card>
+                        )}
+                    </div>
+                </div>
 
                  {/* Team/Freelancers Section */}
-                <Card>
+                 <Card className="shadow-sm border-none">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Team</CardTitle>
                         {/* Button to add/manage team? */}
@@ -163,7 +209,7 @@ export default function ProjectDetailPage() {
                 </Card>
 
                 {/* Work Assignments Section */}
-                <Card className="lg:col-span-2">
+                <Card className="shadow-sm border-none"> {/* Adjusted colspan back to default */}
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Work Assignments</CardTitle>
                          {userRole === "Заказчик" && (
@@ -179,7 +225,7 @@ export default function ProjectDetailPage() {
                 </Card>
 
                 {/* Finance Summary Section */}
-                <Card className="lg:col-span-2">
+                <Card className="lg:col-span-2 shadow-sm border-none">
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Finance Summary</CardTitle>
                         <Link href="/finance" passHref>
