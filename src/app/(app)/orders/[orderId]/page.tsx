@@ -207,6 +207,17 @@ export default function OrderDetailPage() {
         setEditingEtapId(null); // Close edit form if open
     };
 
+     // Controlled accordion handler
+     const handleAccordionChange = (value: string[]) => {
+        setOpenAccordionItems(value);
+        // If the item being closed is the one being edited, cancel edit mode
+        const closingItems = openAccordionItems.filter(item => !value.includes(item));
+        if (closingItems.includes(editingEtapId ?? '')) {
+            setEditingEtapId(null);
+        }
+    };
+
+
     if (isLoading) {
         return <div className="flex min-h-screen items-center justify-center">Loading order...</div>;
     }
@@ -316,45 +327,45 @@ export default function OrderDetailPage() {
                                 // Use JSON stringify as key to force re-render on deep changes
                                 key={JSON.stringify(orderData.etaps)}
                                 value={openAccordionItems} // Controlled component value
-                                onValueChange={setOpenAccordionItems} // Controlled component change handler
+                                onValueChange={handleAccordionChange} // Controlled component change handler
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        {/* AccordionTrigger needs to wrap the clickable area */}
-                                        <AccordionTrigger
-                                            className={cn(
-                                                "flex items-center justify-between w-full px-4 py-4 font-semibold text-left",
-                                                "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline rounded-t-md cursor-pointer" // Added hover styles and cursor
-                                            )}
-                                         >
-                                            <div className="flex-1 flex items-center justify-between">
-                                                <span>{etap.name}</span> {/* Etap Name */}
-                                                 <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges and Edit Button */}
-                                                    <Badge variant="secondary" className="text-xs">
-                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                    </Badge>
-                                                    <Badge variant="outline">
-                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                    </Badge>
-                                                    {userRole === "Заказчик" && (
-                                                        <Button
-                                                           size="icon"
-                                                           variant="ghost"
-                                                           onClick={(e) => {
-                                                               e.stopPropagation(); // Prevent trigger from toggling accordion
-                                                               handleEditClick(etap.id);
-                                                           }}
-                                                           className="h-6 w-6 p-1"
-                                                           disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                            <span className="sr-only">Edit Stage</span>
-                                                        </Button>
-                                                    )}
-                                                     {/* Chevron is now part of the default AccordionTrigger */}
+                                        <div className="flex items-center justify-between w-full px-4 py-2"> {/* Wrapper for trigger and button */}
+                                            {/* AccordionTrigger wraps only the clickable area for toggle */}
+                                            <AccordionTrigger
+                                                className={cn(
+                                                    "flex-1 flex items-center justify-between font-semibold text-left",
+                                                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline rounded-t-md cursor-pointer p-2" // Adjusted padding
+                                                )}
+                                            >
+                                                <div className="flex-1 flex items-center justify-between mr-2"> {/* Inner div for name and badges */}
+                                                    <span>{etap.name}</span> {/* Etap Name */}
+                                                    <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges */}
+                                                        <Badge variant="secondary" className="text-xs">
+                                                            {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                        </Badge>
+                                                        <Badge variant="outline">
+                                                            {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                        </Badge>
+                                                         {/* Chevron is now part of the default AccordionTrigger */}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                         </AccordionTrigger>
+                                            </AccordionTrigger>
+                                            {/* Edit Button placed outside the trigger */}
+                                            {userRole === "Заказчик" && (
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    onClick={() => handleEditClick(etap.id)} // Directly trigger edit
+                                                    className="h-6 w-6 p-1 ml-2 flex-shrink-0" // Added margin and shrink
+                                                    disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                    <span className="sr-only">Edit Stage</span>
+                                                </Button>
+                                            )}
+                                        </div>
                                         <AccordionContent>
                                              {/* Inline Edit Etap Form */}
                                             {editingEtapId === etap.id ? (
