@@ -5,12 +5,14 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit } from "lucide-react"; // Import Edit icon
+import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info } from "lucide-react"; // Import Edit, Tag, Calculator, Info icons
 import Link from "next/link";
 import { useParams } from 'next/navigation';
-import type { Order } from "@/lib/types";
+import type { Order, Etap, EtapOption } from "@/lib/types"; // Import Etap and EtapOption types
 import { mockOrders, getOrderStatusVariant } from '../mockOrders'; // Import mock data and helper
 import { useToast } from "@/hooks/use-toast";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
+import { Separator } from '@/components/ui/separator'; // Import Separator
 
 // Helper function to get status icon
 const getStatusIcon = (status: string) => {
@@ -101,7 +103,7 @@ export default function OrderDetailPage() {
             <Card>
                 <CardHeader>
                     <CardTitle>Order Overview</CardTitle>
-                    <CardDescription>{orderData.description}</CardDescription>
+                    <CardDescription>{orderData.description || "No description provided."}</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
@@ -112,7 +114,7 @@ export default function OrderDetailPage() {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Estimated Price</p>
-                        <p>{orderData.currency} {orderData.totalCalculatedPrice?.toLocaleString() || 'N/A'}</p>
+                        <p>{orderData.currency} {orderData.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}</p>
                     </div>
                     <div>
                         <p className="text-sm font-medium text-muted-foreground">Created</p>
@@ -128,14 +130,76 @@ export default function OrderDetailPage() {
             {/* Sections for related entities (Etaps, Work Positions, Bids) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Etaps Section */}
-                <Card>
+                <Card className="lg:col-span-2"> {/* Span full width */}
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Stages (Etaps)</CardTitle>
-                        {/* Button to manage etaps? */}
+                        {userRole === "Заказчик" && (
+                             <Link href={`/orders/${orderId}/edit#stages`} passHref>
+                                <Button size="sm" variant="outline">
+                                    <Edit className="mr-2 h-4 w-4" /> Manage Stages
+                                </Button>
+                            </Link>
+                        )}
                     </CardHeader>
                     <CardContent>
-                         <p className="text-sm text-muted-foreground">Stages and options for this order will be listed here.</p>
-                         {/* TODO: List Etaps and Options */}
+                         {orderData.etaps && orderData.etaps.length > 0 ? (
+                            <Accordion type="multiple" className="w-full">
+                                {orderData.etaps.map((etap: Etap) => (
+                                    <AccordionItem value={etap.id} key={etap.id}>
+                                        <AccordionTrigger className="hover:no-underline">
+                                            <div className="flex justify-between items-center w-full pr-4">
+                                                <span className="font-semibold">{etap.name}</span>
+                                                <div className="flex items-center gap-2">
+                                                     <Badge variant="secondary" className="text-xs">
+                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                     </Badge>
+                                                     <Badge variant="outline">
+                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                     </Badge>
+                                                </div>
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <p className="text-sm text-muted-foreground mb-4">{etap.description || "No description."}</p>
+                                            <h4 className="text-sm font-semibold mb-2">Options:</h4>
+                                            {etap.options && etap.options.length > 0 ? (
+                                                <ul className="space-y-3">
+                                                    {etap.options.map((option: EtapOption) => (
+                                                        <li key={option.id} className="text-sm border-l-2 pl-3 border-muted ml-2">
+                                                            <div className="flex justify-between items-start">
+                                                                <span className="font-medium text-foreground">{option.name}</span>
+                                                                 <Badge
+                                                                    variant={option.isCalculable ? "default" : "outline"}
+                                                                    className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
+                                                                 >
+                                                                    {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
+                                                                    {option.isCalculable ? 'Calculable' : 'Informational'}
+                                                                    {!option.includedInPrice && ' (Not in Price)'}
+                                                                 </Badge>
+                                                            </div>
+                                                            {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
+                                                            {option.isCalculable && (
+                                                                <div className="text-xs text-muted-foreground flex gap-4 mt-1">
+                                                                    <span>Plan: {option.planUnits ?? 'N/A'} units</span>
+                                                                    <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
+                                                                    <span className="font-medium text-foreground">
+                                                                        Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
+                                            )}
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                         ) : (
+                            <p className="text-sm text-muted-foreground">No stages defined for this order yet.</p>
+                         )}
                     </CardContent>
                 </Card>
 
@@ -152,7 +216,7 @@ export default function OrderDetailPage() {
                 </Card>
 
                 {/* Work Positions Section */}
-                <Card className="lg:col-span-2">
+                <Card>
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Work Positions</CardTitle>
                          {userRole === "Заказчик" && (
@@ -165,8 +229,8 @@ export default function OrderDetailPage() {
                     </CardContent>
                 </Card>
 
-                 {/* Work Assignments Link (might be better placed elsewhere or managed differently) */}
-                 <Card className="lg:col-span-2">
+                 {/* Work Assignments Link */}
+                 <Card className="lg:col-span-2"> {/* Span full width */}
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Related Work Assignments</CardTitle>
                         <Link href={`/projects/${orderData.projectId}?tab=assignments`} passHref>
@@ -180,7 +244,7 @@ export default function OrderDetailPage() {
                 </Card>
 
                  {/* Communications Section Placeholder */}
-                <Card className="lg:col-span-2">
+                <Card className="lg:col-span-2"> {/* Span full width */}
                      <CardHeader>
                         <CardTitle className="text-lg font-semibold">Communication</CardTitle>
                     </CardHeader>
