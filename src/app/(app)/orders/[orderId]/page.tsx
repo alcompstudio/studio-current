@@ -320,8 +320,8 @@ export default function OrderDetailPage() {
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id}>
                                         {/* Wrap trigger and edit button */}
-                                        <div className="flex items-center justify-between pr-4 hover:bg-accent/50 rounded-t-md">
-                                            <AccordionTrigger className="flex-1 text-left px-4 py-4 font-semibold hover:no-underline">
+                                        <div className="flex items-center justify-between pr-4 hover:bg-accent/50 rounded-t-md border-b">
+                                            <AccordionTrigger className="flex-1 text-left px-4 py-4 font-semibold hover:no-underline border-b-0">
                                                  {etap.name}
                                             </AccordionTrigger>
                                              <div className="flex items-center gap-2 flex-shrink-0 pr-2"> {/* Adjusted padding right */}
@@ -361,41 +361,49 @@ export default function OrderDetailPage() {
                                                     />
                                                 </div>
                                             ) : (
-                                                <>
-                                                    <p className="text-sm text-muted-foreground mb-4">{etap.description || "No description."}</p>
-                                                    <h4 className="text-sm font-semibold mb-2">Options:</h4>
-                                                    {etap.options && etap.options.length > 0 ? (
-                                                        <ul className="space-y-3">
-                                                            {etap.options.map((option: EtapOption) => (
-                                                                <li key={option.id} className="text-sm border-l-2 pl-3 border-muted ml-2">
-                                                                    <div className="flex justify-between items-start">
-                                                                        <span className="font-medium text-foreground">{option.name}</span>
-                                                                         <Badge
-                                                                            variant={option.isCalculable ? "default" : "outline"}
-                                                                            className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
-                                                                         >
-                                                                            {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
-                                                                            {option.isCalculable ? 'Calculable' : 'Informational'}
-                                                                            {!option.includedInPrice && ' (Not in Price)'}
-                                                                         </Badge>
-                                                                    </div>
-                                                                    {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
-                                                                    {option.isCalculable && (
-                                                                        <div className="text-xs text-muted-foreground flex gap-4 mt-1">
-                                                                            <span>Plan: {option.planUnits ?? 'N/A'} units</span>
-                                                                            <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
-                                                                            <span className="font-medium text-foreground">
-                                                                                Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
-                                                                            </span>
+                                                // Use Grid for two columns
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-4">
+                                                    {/* Left Column: Description */}
+                                                    <div>
+                                                        <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Description</h4>
+                                                        <p className="text-sm text-foreground">{etap.description || "No description."}</p>
+                                                    </div>
+                                                    {/* Right Column: Options */}
+                                                    <div>
+                                                        <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Options</h4>
+                                                        {etap.options && etap.options.length > 0 ? (
+                                                            <ul className="space-y-3">
+                                                                {etap.options.map((option: EtapOption) => (
+                                                                    <li key={option.id} className="text-sm border-l-2 pl-3 border-muted">
+                                                                        <div className="flex justify-between items-start">
+                                                                            <span className="font-medium text-foreground">{option.name}</span>
+                                                                            <Badge
+                                                                                variant={option.isCalculable ? "default" : "outline"}
+                                                                                className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
+                                                                            >
+                                                                                {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
+                                                                                {option.isCalculable ? 'Calculable' : 'Informational'}
+                                                                                {!option.includedInPrice && ' (Not in Price)'}
+                                                                            </Badge>
                                                                         </div>
-                                                                    )}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    ) : (
-                                                        <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
-                                                    )}
-                                                </>
+                                                                        {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
+                                                                        {option.isCalculable && (
+                                                                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1"> {/* Allow wrapping */}
+                                                                                <span>Plan: {option.planUnits ?? 'N/A'} units</span>
+                                                                                <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
+                                                                                <span className="font-medium text-foreground">
+                                                                                    Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
+                                                                                </span>
+                                                                            </div>
+                                                                        )}
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        ) : (
+                                                            <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
+                                                        )}
+                                                     </div>
+                                                </div>
                                             )}
                                         </AccordionContent>
                                     </AccordionItem>
