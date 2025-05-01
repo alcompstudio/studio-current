@@ -65,7 +65,7 @@ export default function ProjectsPage() {
             <p className="text-sm text-muted-foreground">Manage your ongoing and completed projects.</p>
         </div>
 
-       {/* Project List Content - Direct mapping */}
+       {/* Project List Content - No wrapping Card */}
        <div className="space-y-4">
           {mockProjects.length > 0 ? (
             mockProjects.map((project) => (
@@ -99,4 +99,3 @@ export default function ProjectsPage() {
     </div>
   );
 }
-```

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock, Eye } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation'; // Import useSearchParams
 import type { Project, Order } from "@/lib/types";
 import { mockProjects } from '../mockProjects';
 import { mockOrders, getOrderStatusVariant } from '../../orders/mockOrders';
@@ -37,12 +37,17 @@ const getStatusIcon = (status: string) => {
 
 export default function ProjectDetailPage() {
     const router = useRouter();
+    // Ensure this component is a Client Component (`'use client'`) before using hooks
     const params = useParams<{ projectId: string }>();
+    const searchParams = useSearchParams(); // Use useSearchParams hook
     const projectId = params?.projectId;
 
     const [projectData, setProjectData] = React.useState<Project | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const { toast } = useToast();
+
+    // Example: Read query parameter for tab management
+    const initialTab = searchParams.get('tab') || 'orders'; // Default to 'orders' tab
 
     React.useEffect(() => {
         if (projectId) {
@@ -232,4 +237,3 @@ export default function ProjectDetailPage() {
         </div>
     );
 }
-```
