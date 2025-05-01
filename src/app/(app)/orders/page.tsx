@@ -16,10 +16,11 @@ export default function OrdersPage() {
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
                 {userRole === "Заказчик" && (
-                    // TODO: Link to actual create order page when available
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" /> Create New Order
-                    </Button>
+                    <Link href="/orders/new" passHref>
+                        <Button>
+                            <PlusCircle className="mr-2 h-4 w-4" /> Create New Order
+                        </Button>
+                    </Link>
                 )}
                  {userRole === "Исполнитель" && (
                     <Button variant="outline">
