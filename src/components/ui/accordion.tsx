@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import * as React from "react"
@@ -25,7 +24,8 @@ const AccordionItem = React.forwardRef<
 AccordionItem.displayName = "AccordionItem"
 
 
-// Reverted AccordionTrigger to simpler version without asChild by default
+// Reverted AccordionTrigger to standard ShadCN version without asChild by default
+// This avoids potential issues with nested buttons or incorrect child structures.
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
@@ -34,9 +34,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
-        // Default hover styles (similar to sidebar) and cursor-pointer
-         "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer", // Added cursor-pointer
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180", // Standard hover
         className
       )}
       {...props}
@@ -66,3 +64,4 @@ const AccordionContent = React.forwardRef<
 AccordionContent.displayName = AccordionPrimitive.Content.displayName
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+

@@ -51,6 +51,8 @@ export default function OrderDetailPage() {
              const foundOrder = mockOrders.find(o => o.id === orderId);
              if (foundOrder) {
                  setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
+                 // Initialize accordion state if needed (e.g., open all by default)
+                 // setOpenAccordionItems((foundOrder.etaps || []).map(e => e.id));
              } else {
                  toast({
                      title: "Error",
@@ -105,10 +107,6 @@ export default function OrderDetailPage() {
              }
 
             setOpenAccordionItems(prev => [...prev, newEtap.id]);
-            // Keep forms potentially open if user wants to add options immediately
-            // setEditingEtapId(null);
-            // setAddingOptionToEtapId(null);
-            // setEditingOptionId(null);
             setIsAddingEtap(false); // Close the add etap form itself
 
         } else {
@@ -279,7 +277,6 @@ export default function OrderDetailPage() {
      const handleEditEtapClick = (etapId: string) => {
          setEditingEtapId(prev => (prev === etapId ? null : etapId)); // Toggle edit form
          setIsAddingEtap(false); // Ensure add form is closed
-         // Keep option forms potentially open
          // Ensure the accordion item is open when editing starts
          if (!openAccordionItems.includes(etapId)) {
              setOpenAccordionItems(prev => [...prev, etapId]);
@@ -293,13 +290,11 @@ export default function OrderDetailPage() {
     const handleToggleAddForm = () => {
         setIsAddingEtap(!isAddingEtap);
         setEditingEtapId(null); // Ensure edit form is closed
-        // Keep option forms potentially open
     };
 
      const handleToggleAddOptionForm = (etapId: string) => {
         setAddingOptionToEtapId(prev => (prev === etapId ? null : etapId)); // Toggle add option form
         setEditingOptionId(null); // Close option edit form if open
-        // Keep etap forms potentially open
         if (!openAccordionItems.includes(etapId)) {
             setOpenAccordionItems(prev => [...prev, etapId]);
         }
@@ -312,7 +307,6 @@ export default function OrderDetailPage() {
      const handleEditOptionClick = (optionId: string, etapId: string) => {
          setEditingOptionId(prev => (prev === optionId ? null : optionId)); // Toggle edit option form
          setAddingOptionToEtapId(null); // Close add option form if open
-         // Keep etap forms potentially open
          if (!openAccordionItems.includes(etapId)) {
             setOpenAccordionItems(prev => [...prev, etapId]);
          }
@@ -452,25 +446,24 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border rounded-md mb-2 overflow-hidden">
+                                          {/* Use AccordionTrigger without asChild */}
                                           <AccordionTrigger
                                               className={cn(
-                                                "flex items-center w-full bg-muted hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors hover:no-underline cursor-pointer px-4 py-3",
-                                                openAccordionItems.includes(etap.id) && "rounded-b-none" // Remove bottom rounding if open
+                                                "flex items-center justify-between w-full px-4 py-3 font-semibold text-left transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
+                                                openAccordionItems.includes(etap.id) && "bg-muted rounded-b-none", // Style when open
                                               )}
-                                              asChild // Use asChild to allow custom content
                                               onClick={(e) => {
-                                                  // Prevent accordion toggle if clicking the edit button
+                                                  // Prevent accordion toggle if clicking the edit button inside the content
                                                   const target = e.target as HTMLElement;
                                                   if (target.closest('[data-edit-etap-button]')) {
-                                                      e.preventDefault(); // Stop propagation and default behavior
+                                                      e.stopPropagation(); // Stop propagation
+                                                      e.preventDefault(); // Stop default behavior if needed
+                                                      handleEditEtapClick(etap.id);
                                                   }
                                               }}
                                             >
-                                              <div className="flex-1 flex items-center justify-between w-full">
-                                                  <span className="font-semibold text-left mr-2">{etap.name}</span>
-                                                  {/* Chevon icon for accordion toggle */}
-                                                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-                                              </div>
+                                              {etap.name}
+                                              {/* Chevron is automatically added by AccordionTrigger */}
                                           </AccordionTrigger>
                                         <AccordionContent className="border-t">
                                              {/* Two-column layout inside content */}
@@ -499,7 +492,7 @@ export default function OrderDetailPage() {
                                                                 </Badge>
                                                                  {userRole === "Заказчик" && (
                                                                      <Button
-                                                                         data-edit-etap-button // Add data attribute
+                                                                         data-edit-etap-button // Keep data attribute for click handling
                                                                          size="icon"
                                                                          variant="ghost"
                                                                          onClick={() => handleEditEtapClick(etap.id)}
@@ -672,4 +665,3 @@ export default function OrderDetailPage() {
         </div>
     );
 }
-
