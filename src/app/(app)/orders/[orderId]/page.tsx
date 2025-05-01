@@ -453,39 +453,11 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border rounded-md mb-2 overflow-hidden">
-                                          <div className="flex items-center w-full bg-muted hover:bg-accent/50 transition-colors">
-                                              {/* Make the entire trigger area clickable */}
-                                              <AccordionTrigger className="flex-1 flex items-center justify-between font-semibold text-left hover:no-underline cursor-pointer px-4 py-3">
-                                                  {/* Content inside the trigger */}
-                                                  <span className="flex-1 mr-2">{etap.name}</span>
-                                                  <div className="flex items-center gap-2 flex-shrink-0">
-                                                      <Badge variant="secondary" className="text-xs">
-                                                          {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                      </Badge>
-                                                      <Badge variant="outline">
-                                                          {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                      </Badge>
-                                                      {/* Chevron Down Icon is part of AccordionTrigger */}
-                                                  </div>
-                                              </AccordionTrigger>
-
-                                              {/* Edit Button placed next to the trigger */}
-                                              {userRole === "Заказчик" && (
-                                                  <Button
-                                                      size="icon"
-                                                      variant="ghost"
-                                                      onClick={(e) => {
-                                                          e.stopPropagation(); // Prevent accordion toggle when clicking edit
-                                                          handleEditEtapClick(etap.id);
-                                                      }}
-                                                      className="h-8 w-8 p-1 mr-2 flex-shrink-0 text-muted-foreground hover:text-primary"
-                                                      disabled={isAddingEtap || !!addingOptionToEtapId || !!editingOptionId || (!!editingEtapId && editingEtapId !== etap.id)}
-                                                      aria-label="Edit Stage"
-                                                  >
-                                                      <Pencil className="h-4 w-4" />
-                                                  </Button>
-                                              )}
-                                          </div>
+                                          {/* Make the trigger area span the full width */}
+                                          <AccordionTrigger className="flex items-center w-full bg-muted hover:bg-accent/50 transition-colors hover:no-underline cursor-pointer px-4 py-3">
+                                                <span className="flex-1 font-semibold text-left mr-2">{etap.name}</span>
+                                                {/* Chevron is part of AccordionTrigger */}
+                                          </AccordionTrigger>
                                         <AccordionContent className="border-t">
                                              {editingEtapId === etap.id ? (
                                                 <div className="p-4 bg-card">
@@ -499,8 +471,31 @@ export default function OrderDetailPage() {
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-4">
-                                                    {/* Left Column: Description */}
+                                                    {/* Left Column: Badges, Description, Edit Button */}
                                                     <div>
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Badge variant="secondary" className="text-xs">
+                                                                {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                            </Badge>
+                                                            <Badge variant="outline">
+                                                                {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                            </Badge>
+                                                             {userRole === "Заказчик" && (
+                                                                 <Button
+                                                                     size="icon"
+                                                                     variant="ghost"
+                                                                     onClick={(e) => {
+                                                                         e.stopPropagation(); // Prevent accordion toggle if needed, though it's inside content now
+                                                                         handleEditEtapClick(etap.id);
+                                                                     }}
+                                                                     className="h-6 w-6 p-1 text-muted-foreground hover:text-primary"
+                                                                     disabled={isAddingEtap || !!addingOptionToEtapId || !!editingOptionId || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                                     aria-label="Edit Stage"
+                                                                 >
+                                                                     <Pencil className="h-4 w-4" />
+                                                                 </Button>
+                                                             )}
+                                                        </div>
                                                         <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Description</h4>
                                                         <p className="text-sm text-foreground">{etap.description || "No description."}</p>
                                                     </div>
