@@ -43,6 +43,7 @@ export default function OrderDetailPage() {
     const [isLoading, setIsLoading] = React.useState(!orderData); // Only loading if data wasn't found initially
     const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline Add form visibility
     const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null); // State for inline Edit form visibility
+    const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]); // State for controlled accordion
     const { toast } = useToast();
 
     React.useEffect(() => {
@@ -52,6 +53,10 @@ export default function OrderDetailPage() {
             if (foundOrder) {
                  console.log(`Effect: Found order ${orderId}`);
                 setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
+                // Optionally open the first etap by default
+                // if (foundOrder.etaps && foundOrder.etaps.length > 0) {
+                //     setOpenAccordionItems([foundOrder.etaps[0].id]);
+                // }
             } else {
                 console.log(`Effect: Order ${orderId} not found in mock data.`);
                 toast({
@@ -164,7 +169,11 @@ export default function OrderDetailPage() {
     };
 
     const handleEditClick = (event: React.MouseEvent, etapId: string) => {
-        event.stopPropagation(); // Prevent accordion toggle
+        event.stopPropagation(); // Prevent accordion toggle initially
+        // If the item is not currently open, open it
+        if (!openAccordionItems.includes(etapId)) {
+            setOpenAccordionItems(prev => [...prev, etapId]);
+        }
         setEditingEtapId(etapId);
         setIsAddingEtap(false); // Close add form if open
     };
@@ -281,7 +290,13 @@ export default function OrderDetailPage() {
 
                          {/* Existing Etaps List */}
                          {orderData.etaps && orderData.etaps.length > 0 ? (
-                            <Accordion type="multiple" className="w-full" key={orderData.etaps.map(e => e.id).join('-')}>
+                            <Accordion
+                                type="multiple"
+                                className="w-full"
+                                key={orderData.etaps.map(e => e.id).join('-')} // Ensure re-render on etaps change
+                                value={openAccordionItems} // Controlled component value
+                                onValueChange={setOpenAccordionItems} // Controlled component change handler
+                            >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id}>
                                         <AccordionTrigger className="hover:no-underline">
@@ -300,7 +315,7 @@ export default function OrderDetailPage() {
                                                             variant="ghost"
                                                             onClick={(e) => handleEditClick(e, etap.id)}
                                                             className="h-6 w-6 p-1"
-                                                            disabled={isAddingEtap || !!editingEtapId}
+                                                            disabled={isAddingEtap || !!editingEtapId && editingEtapId !== etap.id} // Disable if adding or editing another item
                                                          >
                                                              <Pencil className="h-4 w-4" />
                                                              <span className="sr-only">Edit Stage</span>
