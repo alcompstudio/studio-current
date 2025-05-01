@@ -165,7 +165,7 @@ export default function OrderDetailPage() {
                     <CardContent>
                         {/* Inline Add Etap Form */}
                         {isAddingEtap && (
-                            <div className="mb-6 p-4 border rounded-md bg-muted">
+                            <div className="mb-6 p-4 border rounded-md"> {/* Removed bg-muted */}
                                 <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
                                 <AddEtapForm
                                     orderId={orderData.id}
