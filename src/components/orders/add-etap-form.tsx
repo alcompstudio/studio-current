@@ -16,10 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-// Removed Dialog imports: DialogFooter, DialogClose
 import type { Etap, EtapWorkType } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { mockOrders } from '@/app/(app)/orders/mockOrders'; // Import mockOrders to update
+// Removed import { mockOrders } - we should not mutate mock data directly here
 
 const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
 
@@ -72,37 +71,33 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
             sequence: 0, // Default sequence, maybe calculate later based on count
         };
 
-        // --- Simulate updating the mock order ---
+        // --- Simulate successful addition ---
+        console.log("Generated new stage:", newEtap);
+
+        // Call the callback function to update the parent component's state
+        onEtapAdded(newEtap);
+
+        toast({
+            title: "Stage Added",
+            description: `New stage "${data.name}" added to the order (simulated).`,
+        });
+
+        form.reset(); // Reset form after successful submission
+        // --- End Simulation ---
+
+        /*
+        // Removed direct mutation of mockOrders:
         const orderIndex = mockOrders.findIndex(o => o.id === orderId);
         if (orderIndex !== -1) {
-            // Ensure etaps array exists
-            if (!mockOrders[orderIndex].etaps) {
-                mockOrders[orderIndex].etaps = [];
-            }
-            mockOrders[orderIndex].etaps!.push(newEtap); // Add the new etap
-            mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
-
-            console.log("Added new stage to mock order:", newEtap);
-            console.log("Updated mockOrders:", mockOrders);
-
-            // Call the callback function to update the parent component's state
-            onEtapAdded(newEtap);
-
-            toast({
-                title: "Stage Added",
-                description: `New stage "${data.name}" added to the order (mock).`,
-            });
-
-            form.reset(); // Reset form after successful submission
-
+            // ... (mutation code removed) ...
         } else {
             toast({
                 title: "Error Adding Stage",
-                description: `Could not find order with ID ${orderId} to add stage.`,
+                description: `Could not find order with ID ${orderId} in mock data.`, // Adjusted message
                 variant: "destructive",
             });
         }
-        // -----------------------------------------
+        */
     };
 
     return (

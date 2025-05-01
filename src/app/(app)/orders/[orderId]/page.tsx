@@ -1,4 +1,3 @@
-// src/app/(app)/orders/[orderId]/page.tsx
 'use client';
 
 import React from 'react';
@@ -31,45 +30,96 @@ export default function OrderDetailPage() {
     const params = useParams<{ orderId: string }>();
     const orderId = params?.orderId; // Get orderId directly from hook
 
-    const [orderData, setOrderData] = React.useState<Order | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
+    // State holds the specific order being viewed. Initialize from mock data.
+    const [orderData, setOrderData] = React.useState<Order | null>(() => {
+        // Initial state read directly from potentially mutated mock data
+        if (orderId) {
+             const foundOrder = mockOrders.find(o => o.id === orderId);
+             // Ensure etaps array is initialized even if empty
+             return foundOrder ? { ...foundOrder, etaps: foundOrder.etaps || [] } : null;
+        }
+        return null;
+    });
+    const [isLoading, setIsLoading] = React.useState(!orderData); // Only loading if data wasn't found initially
     const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline form visibility
     const { toast } = useToast();
 
     React.useEffect(() => {
-        if (orderId) {
-            // Simulate fetching data
+        // This effect primarily handles the case where the orderId changes
+        // or if the initial find failed. It also handles re-fetching/finding
+        // if the data somehow becomes null later.
+        if (!orderData && orderId && !isLoading) {
+            console.log(`Effect: Order data null, trying to find order ${orderId}`);
             const foundOrder = mockOrders.find(o => o.id === orderId);
             if (foundOrder) {
-                // Ensure etaps is always an array
+                 console.log(`Effect: Found order ${orderId}`);
                 setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
             } else {
+                console.log(`Effect: Order ${orderId} not found in mock data.`);
                 toast({
                      title: "Error",
                      description: `Order with ID ${orderId} not found.`,
                      variant: "destructive",
                  });
-                // Optionally redirect or show not found message
             }
             setIsLoading(false);
-        } else {
-            setIsLoading(false);
-            toast({
+        } else if (!orderId && !isLoading) {
+             console.log(`Effect: Order ID missing.`);
+             toast({
                  title: "Error",
                  description: "Order ID is missing.",
                  variant: "destructive",
              });
+             setIsLoading(false);
         }
-    }, [orderId, toast]); // Re-run if orderId changes
+        // If orderData exists and matches orderId, don't do anything.
+        // This prevents infinite loops if mockOrders is mutated elsewhere incorrectly.
+    }, [orderId, toast, orderData, isLoading]); // Dependencies include orderData and isLoading
 
-     // Function to update local state when a new etap is added and hide the form
+
+     // Function to update local state AND mock data when a new etap is added
      const handleEtapAdded = (newEtap: Etap) => {
         if (orderData) {
-            setOrderData(prevOrder => ({
-                ...prevOrder!,
-                etaps: [...(prevOrder?.etaps || []), newEtap], // Add the new etap to the existing array
-                updatedAt: new Date(), // Update timestamp
-            }));
+             // Add new etap to the existing list
+             const updatedEtaps = [...(orderData.etaps || []), newEtap];
+             const updatedOrderData = {
+                ...orderData,
+                etaps: updatedEtaps,
+                updatedAt: new Date(),
+            };
+
+            // Update local state for immediate UI feedback
+            setOrderData(updatedOrderData);
+
+            // Update the mockOrders array (IN-PLACE MUTATION - BE CAREFUL)
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId);
+            if (orderIndex !== -1) {
+                // Directly mutate the etaps array inside the mockOrders item
+                 if (!mockOrders[orderIndex].etaps) {
+                     mockOrders[orderIndex].etaps = [];
+                 }
+                 mockOrders[orderIndex].etaps?.push(newEtap); // Add the new etap
+                 mockOrders[orderIndex].updatedAt = new Date(); // Update timestamp
+                 console.log("Updated mockOrders array item with new etap:", mockOrders[orderIndex]);
+             } else {
+                 console.warn(`Order ID ${orderId} not found in mockOrders during update.`);
+                 // If the order wasn't in the mock array for some reason, add it?
+                 // This might indicate a deeper issue.
+                 // mockOrders.push(updatedOrderData); // Avoid this if possible
+            }
+
+            toast({
+                title: "Stage Added",
+                description: `New stage "${newEtap.name}" added to the order.`,
+            });
+
+        } else {
+             console.error("Cannot add etap: orderData is null.");
+             toast({
+                title: "Error",
+                description: "Could not add stage because order data is missing.",
+                 variant: "destructive",
+            });
         }
         setIsAddingEtap(false); // Close the inline form
     };
@@ -165,7 +215,7 @@ export default function OrderDetailPage() {
                     <CardContent>
                         {/* Inline Add Etap Form */}
                         {isAddingEtap && (
-                            <div className="mb-6 p-4 border rounded-md"> {/* Removed bg-muted */}
+                            <div className="mb-6 p-4 border rounded-md bg-card"> {/* Use bg-card for lighter background */}
                                 <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
                                 <AddEtapForm
                                     orderId={orderData.id}
@@ -180,7 +230,8 @@ export default function OrderDetailPage() {
                          {orderData.etaps && orderData.etaps.length > 0 ? (
                             <Accordion type="multiple" className="w-full">
                                 {orderData.etaps.map((etap: Etap) => (
-                                    <AccordionItem value={etap.id} key={etap.id}>
+                                     // Use a combination key to ensure uniqueness if IDs might clash momentarily
+                                     <AccordionItem value={etap.id} key={`${etap.id}-${etap.createdAt.getTime()}`}>
                                         <AccordionTrigger className="hover:no-underline">
                                             <div className="flex justify-between items-center w-full pr-4">
                                                 <span className="font-semibold">{etap.name}</span>
