@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect } from 'react';
@@ -33,10 +32,10 @@ const etapFormSchema = z.object({
 type EtapFormValues = z.infer<typeof etapFormSchema>;
 
 interface EditEtapFormProps {
-    etap: Etap; // The etap to edit
+    etap: Etap;
     currency: string;
-    onEtapUpdated: (updatedEtap: Etap) => void; // Callback to notify parent
-    onCancel: () => void; // Callback to cancel/hide the form
+    onEtapUpdated: (updatedEtap: Etap) => void;
+    onCancel: () => void;
 }
 
 export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }: EditEtapFormProps) {
@@ -53,7 +52,6 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
         mode: "onChange",
     });
 
-    // Reset form if the etap prop changes
     useEffect(() => {
         form.reset({
             name: etap.name || "",
@@ -67,35 +65,34 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
     const onSubmit = (data: EtapFormValues) => {
         console.log("Attempting to update stage with data:", data);
 
+        // Validation: Check if the etap (which already exists) still has options
+        if (!etap.options || etap.options.length === 0) {
+            toast({
+                title: "Validation Error",
+                description: "Stage cannot be saved without at least one option. Please add options first.",
+                variant: "destructive",
+            });
+            return; // Prevent saving
+        }
+
+
         const updatedEtap: Etap = {
-            ...etap, // Spread existing etap properties (like id, orderId, options, createdAt)
+            ...etap,
             name: data.name,
             description: data.description || "",
             workType: data.workType,
             estimatedPrice: data.estimatedPrice,
-            updatedAt: new Date(), // Update timestamp
+            updatedAt: new Date(),
         };
 
-        // --- Simulate successful update ---
         console.log("Generated updated stage:", updatedEtap);
-
-        // Call the callback function to update the parent component's state
-        onEtapUpdated(updatedEtap);
-
-        // Optionally show toast
-        // toast({
-        //     title: "Stage Updated",
-        //     description: `Stage "${data.name}" has been updated (simulated).`,
-        // });
-
-        // Form reset is handled by the parent closing the form or by useEffect if needed
-        // --- End Simulation ---
+        onEtapUpdated(updatedEtap); // Call the callback
     };
 
     return (
         <Form {...form}>
              <form
-                id={`edit-etap-form-${etap.id}`} // Unique ID for the form
+                id={`edit-etap-form-${etap.id}`}
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
              >
@@ -183,7 +180,6 @@ export default function EditEtapForm({ etap, currency, onEtapUpdated, onCancel }
                     />
                 </div>
 
-                 {/* Form Action Buttons */}
                 <div className="flex justify-end gap-2 pt-4">
                      <Button type="button" variant="outline" onClick={onCancel}>
                          Cancel

@@ -18,7 +18,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import type { Etap, EtapWorkType } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-// Removed import { mockOrders } - we should not mutate mock data directly here
 
 const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
 
@@ -35,8 +34,8 @@ type EtapFormValues = z.infer<typeof etapFormSchema>;
 interface AddEtapFormProps {
     orderId: string;
     currency: string;
-    onEtapAdded: (newEtap: Etap) => void; // Callback to notify parent
-    onCancel: () => void; // Callback to cancel/hide the form
+    onEtapAdded: (newEtap: Etap) => void;
+    onCancel: () => void;
 }
 
 export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }: AddEtapFormProps) {
@@ -56,6 +55,9 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
     const onSubmit = (data: EtapFormValues) => {
         console.log("Attempting to add new stage with data:", data);
 
+        // Basic Validation Hint: Remind user to add options after adding the stage
+        // Cannot enforce option addition here directly.
+
         const newEtapId = `${orderId}_etap_${Date.now()}`; // Simple unique ID
 
         const newEtap: Etap = {
@@ -64,40 +66,23 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
             name: data.name,
             description: data.description || "",
             workType: data.workType,
-            estimatedPrice: data.estimatedPrice, // Use the value from form
-            options: [], // Start with empty options
+            estimatedPrice: data.estimatedPrice,
+            options: [], // Start with empty options - User must add them
             createdAt: new Date(),
             updatedAt: new Date(),
-            sequence: 0, // Default sequence, maybe calculate later based on count
+            sequence: 0,
         };
 
-        // --- Simulate successful addition ---
         console.log("Generated new stage:", newEtap);
+        onEtapAdded(newEtap); // Call the callback
 
-        // Call the callback function to update the parent component's state
-        onEtapAdded(newEtap);
-
+        // Toast message updated to prompt adding options
         toast({
             title: "Stage Added",
-            description: `New stage "${data.name}" added to the order (simulated).`,
+            description: `New stage "${data.name}" created. Please add at least one option to this stage.`,
         });
 
-        form.reset(); // Reset form after successful submission
-        // --- End Simulation ---
-
-        /*
-        // Removed direct mutation of mockOrders:
-        const orderIndex = mockOrders.findIndex(o => o.id === orderId);
-        if (orderIndex !== -1) {
-            // ... (mutation code removed) ...
-        } else {
-            toast({
-                title: "Error Adding Stage",
-                description: `Could not find order with ID ${orderId} in mock data.`, // Adjusted message
-                variant: "destructive",
-            });
-        }
-        */
+        form.reset();
     };
 
     return (
@@ -105,7 +90,7 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
              <form
                 id="add-etap-form"
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4" // Removed px/py, handled by parent container
+                className="space-y-4"
              >
                 <FormField
                     control={form.control}
@@ -191,7 +176,6 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }
                     />
                 </div>
 
-                 {/* Form Action Buttons */}
                 <div className="flex justify-end gap-2 pt-4">
                      <Button type="button" variant="outline" onClick={onCancel}>
                          Cancel
