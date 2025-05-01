@@ -33,8 +33,13 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
-    const params = useParams<{ orderId: string }>();
-    const orderId = params?.orderId;
+    // Use React.use to unwrap the Promise-like object from useParams
+    // Although useParams returns a sync object in client components,
+    // using React.use aligns with Next.js's future direction for accessing params.
+    // Wrap the hook result directly.
+    const params = React.use(Promise.resolve(useParams<{ orderId: string }>()));
+    const orderId = params?.orderId; // Get projectId after unwrapping
+
 
     const [orderData, setOrderData] = React.useState<Order | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -442,28 +447,29 @@ export default function OrderDetailPage() {
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
                                         <div className="flex items-center w-full pr-2">
-                                             {/* Use AccordionTrigger asChild to wrap the content */}
-                                             <AccordionTrigger asChild className={cn(
-                                                    "flex-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer rounded-md p-2", // Added rounded-md and padding
-                                                    {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing etap or any of its options
-                                                )}>
+                                             {/* This div wraps the trigger content and the edit button */}
+                                             <AccordionTrigger
+                                                className={cn(
+                                                    "flex-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer rounded-md p-2", // Style the trigger area
+                                                    {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing
+                                                )}
+                                             >
+                                                {/* Content inside the trigger */}
                                                 <div className="flex items-center justify-between w-full">
-                                                    <div className="flex-1 flex items-center justify-between mr-2">
-                                                        <span>{etap.name}</span>
-                                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                                            <Badge variant="secondary" className="text-xs">
-                                                                {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                            </Badge>
-                                                            <Badge variant="outline">
-                                                                {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                            </Badge>
-                                                        </div>
+                                                    <span className="font-semibold">{etap.name}</span>
+                                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                                        <Badge variant="secondary" className="text-xs">
+                                                            {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                        </Badge>
+                                                        <Badge variant="outline">
+                                                            {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                        </Badge>
+                                                         {/* Chevron Down Icon is added automatically by AccordionTrigger */}
                                                     </div>
-                                                     {/* Chevron Down Icon */}
-                                                    <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                                                 </div>
                                              </AccordionTrigger>
 
+                                            {/* Edit Button placed outside the trigger */}
                                             {userRole === "Заказчик" && (
                                                 <Button
                                                     size="icon"
@@ -653,6 +659,3 @@ export default function OrderDetailPage() {
         </div>
     );
 }
-
-
-    
