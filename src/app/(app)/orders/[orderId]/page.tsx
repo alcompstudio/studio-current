@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle } from "lucide-react"; // Import Edit, Tag, Calculator, Info, PlusCircle icons
+import { ArrowLeft, Eye, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle } from "lucide-react"; // Import Edit, Tag, Calculator, Info, PlusCircle, MinusCircle icons
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import type { Order, Etap, EtapOption } from "@/lib/types"; // Import Etap and EtapOption types
@@ -13,17 +13,7 @@ import { mockOrders, getOrderStatusVariant } from '../mockOrders'; // Import moc
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
 import { Separator } from '@/components/ui/separator'; // Import Separator
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose, // Import DialogClose
-  DialogFooter, // Import DialogFooter
-} from "@/components/ui/dialog";
-import AddEtapForm from '@/components/orders/add-etap-form'; // Import the new form component
+import AddEtapForm from '@/components/orders/add-etap-form'; // Import the form component
 
 // Helper function to get status icon
 const getStatusIcon = (status: string) => {
@@ -43,7 +33,7 @@ export default function OrderDetailPage() {
 
     const [orderData, setOrderData] = React.useState<Order | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [isAddEtapDialogOpen, setIsAddEtapDialogOpen] = React.useState(false); // State for dialog
+    const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline form visibility
     const { toast } = useToast();
 
     React.useEffect(() => {
@@ -72,7 +62,7 @@ export default function OrderDetailPage() {
         }
     }, [orderId, toast]); // Re-run if orderId changes
 
-     // Function to update local state when a new etap is added
+     // Function to update local state when a new etap is added and hide the form
      const handleEtapAdded = (newEtap: Etap) => {
         if (orderData) {
             setOrderData(prevOrder => ({
@@ -81,7 +71,7 @@ export default function OrderDetailPage() {
                 updatedAt: new Date(), // Update timestamp
             }));
         }
-        setIsAddEtapDialogOpen(false); // Close the dialog
+        setIsAddingEtap(false); // Close the inline form
     };
 
 
@@ -112,7 +102,6 @@ export default function OrderDetailPage() {
                          {orderData.status}
                     </Badge>
                 </div>
-                {/* Change Manage Order to Edit Order */}
                  {userRole === "Заказчик" && (
                     <Link href={`/orders/${orderId}/edit`} passHref>
                          <Button variant="outline">
@@ -160,39 +149,34 @@ export default function OrderDetailPage() {
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Stages (Etaps)</CardTitle>
                          {userRole === "Заказчик" && (
-                            <Dialog open={isAddEtapDialogOpen} onOpenChange={setIsAddEtapDialogOpen}>
-                                <DialogTrigger asChild>
-                                    <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" onClick={() => setIsAddingEtap(!isAddingEtap)}>
+                                {isAddingEtap ? (
+                                    <>
+                                        <MinusCircle className="mr-2 h-4 w-4" /> Cancel
+                                    </>
+                                ) : (
+                                     <>
                                         <PlusCircle className="mr-2 h-4 w-4" /> Add Stage
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[600px]">
-                                    <DialogHeader>
-                                        <DialogTitle>Add New Stage to "{orderData.name}"</DialogTitle>
-                                        <DialogDescription>
-                                            Define a new stage for this order. Options can be added later.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    {/* Pass orderId, currency, and the handler function */}
-                                    <AddEtapForm
-                                        orderId={orderData.id}
-                                        currency={orderData.currency}
-                                        onEtapAdded={handleEtapAdded}
-                                        onOpenChange={setIsAddEtapDialogOpen} // Pass setter to close dialog from form
-                                    />
-                                    {/* Footer with Close button might be needed if form doesn't handle closing */}
-                                    {/*
-                                    <DialogFooter>
-                                        <DialogClose asChild>
-                                            <Button type="button" variant="secondary">Cancel</Button>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                     */}
-                                </DialogContent>
-                            </Dialog>
+                                     </>
+                                )}
+                            </Button>
                          )}
                     </CardHeader>
                     <CardContent>
+                        {/* Inline Add Etap Form */}
+                        {isAddingEtap && (
+                            <div className="mb-6 p-4 border rounded-md bg-muted">
+                                <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
+                                <AddEtapForm
+                                    orderId={orderData.id}
+                                    currency={orderData.currency}
+                                    onEtapAdded={handleEtapAdded}
+                                    onCancel={() => setIsAddingEtap(false)} // Pass cancel handler
+                                />
+                             </div>
+                        )}
+
+                         {/* Existing Etaps List */}
                          {orderData.etaps && orderData.etaps.length > 0 ? (
                             <Accordion type="multiple" className="w-full">
                                 {orderData.etaps.map((etap: Etap) => (
@@ -249,7 +233,7 @@ export default function OrderDetailPage() {
                                 ))}
                             </Accordion>
                          ) : (
-                            <p className="text-sm text-muted-foreground">No stages defined for this order yet.</p>
+                            !isAddingEtap && <p className="text-sm text-muted-foreground">No stages defined for this order yet.</p>
                          )}
                     </CardContent>
                 </Card>

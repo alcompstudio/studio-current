@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { DialogFooter, DialogClose } from "@/components/ui/dialog"; // Import Dialog components for closing
+// Removed Dialog imports: DialogFooter, DialogClose
 import type { Etap, EtapWorkType } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { mockOrders } from '@/app/(app)/orders/mockOrders'; // Import mockOrders to update
@@ -37,10 +37,10 @@ interface AddEtapFormProps {
     orderId: string;
     currency: string;
     onEtapAdded: (newEtap: Etap) => void; // Callback to notify parent
-    onOpenChange: (open: boolean) => void; // To close the dialog
+    onCancel: () => void; // Callback to cancel/hide the form
 }
 
-export default function AddEtapForm({ orderId, currency, onEtapAdded, onOpenChange }: AddEtapFormProps) {
+export default function AddEtapForm({ orderId, currency, onEtapAdded, onCancel }: AddEtapFormProps) {
     const { toast } = useToast();
 
     const form = useForm<EtapFormValues>({
@@ -94,7 +94,6 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onOpenChan
             });
 
             form.reset(); // Reset form after successful submission
-            // onOpenChange(false); // Close the dialog - handled by parent now via state
 
         } else {
             toast({
@@ -111,7 +110,7 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onOpenChan
              <form
                 id="add-etap-form"
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4 px-1 py-4" // Added padding
+                className="space-y-4" // Removed px/py, handled by parent container
              >
                 <FormField
                     control={form.control}
@@ -197,17 +196,15 @@ export default function AddEtapForm({ orderId, currency, onEtapAdded, onOpenChan
                     />
                 </div>
 
-                 {/* Dialog Footer for buttons */}
-                <DialogFooter className="pt-4">
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                            Cancel
-                        </Button>
-                    </DialogClose>
-                    <Button type="submit" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? 'Adding...' : 'Add Stage'}
-                    </Button>
-                </DialogFooter>
+                 {/* Form Action Buttons */}
+                <div className="flex justify-end gap-2 pt-4">
+                     <Button type="button" variant="outline" onClick={onCancel}>
+                         Cancel
+                     </Button>
+                     <Button type="submit" disabled={form.formState.isSubmitting}>
+                         {form.formState.isSubmitting ? 'Adding...' : 'Add Stage'}
+                     </Button>
+                 </div>
              </form>
         </Form>
     );

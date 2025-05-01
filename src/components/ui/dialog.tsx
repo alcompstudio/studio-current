@@ -12,6 +12,7 @@ const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = DialogPrimitive.Portal
 
+// DialogClose is mainly used internally or for specific close buttons within DialogContent
 const DialogClose = DialogPrimitive.Close
 
 const DialogOverlay = React.forwardRef<
@@ -112,7 +113,7 @@ export {
   Dialog,
   DialogPortal,
   DialogOverlay,
-  DialogClose,
+  // DialogClose, // Removed from export
   DialogTrigger,
   DialogContent,
   DialogHeader,
