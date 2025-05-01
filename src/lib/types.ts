@@ -1,4 +1,5 @@
 
+
 // Basic User Role Definition
 export type UserRole = "Заказчик" | "Исполнитель" | "Администратор" | "Модератор";
 
@@ -69,8 +70,10 @@ export interface Etap extends BaseEntity {
 // Etap Option Interface (Опция Этапа)
 export interface EtapOption extends BaseEntity {
   etapId: string;
+  name: string; // Ensure name is mandatory
+  description?: string;
   isCalculable: boolean; // Калькулируемая опция
-  includedInPrice: boolean; // Включена в цену (informational)
+  includedInPrice: boolean; // Включена в цену (informational, or if calculable)
   calculationFormula?: string; // e.g., "units / unitDivider * pricePerUnit"
   planUnits?: number; // e.g., 2500 (characters)
   unitDivider?: number; // e.g., 1000

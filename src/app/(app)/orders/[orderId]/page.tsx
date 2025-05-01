@@ -6,17 +6,18 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle, Pencil, ChevronDown } from "lucide-react"; // Added Pencil, ChevronDown icons
+import { ArrowLeft, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle, Pencil, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
-import type { Order, Etap, EtapOption } from "@/lib/types"; // Import Etap and EtapOption types
-import { mockOrders, getOrderStatusVariant } from '../mockOrders'; // Import mock data and helper
+import type { Order, Etap, EtapOption } from "@/lib/types";
+import { mockOrders, getOrderStatusVariant } from '../mockOrders';
 import { useToast } from "@/hooks/use-toast";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Import Accordion
-import { Separator } from '@/components/ui/separator'; // Import Separator
-import AddEtapForm from '@/components/orders/add-etap-form'; // Import the Add form component
-import EditEtapForm from '@/components/orders/edit-etap-form'; // Import the Edit form component
-import { cn } from '@/lib/utils'; // Import cn utility
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Separator } from '@/components/ui/separator';
+import AddEtapForm from '@/components/orders/add-etap-form';
+import EditEtapForm from '@/components/orders/edit-etap-form';
+import AddOptionForm from '@/components/orders/add-option-form'; // Import AddOptionForm
+import { cn } from '@/lib/utils';
 
 // Helper function to get status icon
 const getStatusIcon = (status: string) => {
@@ -31,40 +32,31 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
-    // Use useParams directly for client-side only components like this one
     const params = useParams<{ orderId: string }>();
-    const orderId = params?.orderId; // Get orderId directly from hook
+    const orderId = params?.orderId;
 
-    // State holds the specific order being viewed. Initialize from mock data.
     const [orderData, setOrderData] = React.useState<Order | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true); // Start loading true
-    const [isAddingEtap, setIsAddingEtap] = React.useState(false); // State for inline Add form visibility
-    const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null); // State for inline Edit form visibility
-    const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]); // State for controlled accordion
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [isAddingEtap, setIsAddingEtap] = React.useState(false);
+    const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null);
+    const [addingOptionToEtapId, setAddingOptionToEtapId] = React.useState<string | null>(null); // State for adding option
+    const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]);
     const { toast } = useToast();
 
     React.useEffect(() => {
-        // Only run fetching logic once or when orderId changes
         if (orderId) {
-             console.log(`Effect: Attempting to find order ${orderId}`);
              const foundOrder = mockOrders.find(o => o.id === orderId);
              if (foundOrder) {
-                 console.log(`Effect: Found order ${orderId}`);
                  setOrderData({ ...foundOrder, etaps: foundOrder.etaps || [] });
-                 // Automatically open accordion items for existing etaps initially if needed
-                 // setOpenAccordionItems(foundOrder.etaps?.map(e => e.id) || []);
              } else {
-                 console.log(`Effect: Order ${orderId} not found in mock data.`);
                  toast({
                      title: "Error",
                      description: `Order with ID ${orderId} not found.`,
                      variant: "destructive",
                  });
-                 // Optionally redirect or show a 'not found' state in the UI
              }
              setIsLoading(false);
-        } else if (!isLoading) { // Only show error if not already loading and no orderId
-             console.log(`Effect: Order ID missing.`);
+        } else if (!isLoading) {
              toast({
                  title: "Error",
                  description: "Order ID is missing.",
@@ -72,13 +64,11 @@ export default function OrderDetailPage() {
              });
              setIsLoading(false);
         }
-     }, [orderId, toast, isLoading]); // Include isLoading to prevent redundant runs
+     }, [orderId, toast, isLoading]);
 
 
-     // Function to update local state AND mock data when a new etap is added
      const handleEtapAdded = (newEtap: Etap) => {
         if (orderData) {
-             // Add new etap to the existing list
              const updatedEtaps = [...(orderData.etaps || []), newEtap];
              const updatedOrderData = {
                 ...orderData,
@@ -86,90 +76,69 @@ export default function OrderDetailPage() {
                 updatedAt: new Date(),
             };
 
-            // Update local state for immediate UI feedback
             setOrderData(updatedOrderData);
 
-            // Update the mockOrders array (IN-PLACE MUTATION)
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
                  if (!mockOrders[orderIndex].etaps) {
                      mockOrders[orderIndex].etaps = [];
                  }
-                 // Ensure etaps is treated as an array before pushing
                  const currentEtaps = mockOrders[orderIndex].etaps || [];
-                 // Make sure not to add duplicate keys if the ID generation is not robust
                  if (!currentEtaps.some(e => e.id === newEtap.id)) {
                     mockOrders[orderIndex].etaps = [...currentEtaps, newEtap];
                     mockOrders[orderIndex].updatedAt = new Date();
-                    console.log("Updated mockOrders array item with new etap:", mockOrders[orderIndex]);
 
                      toast({
                         title: "Stage Added",
                         description: `New stage "${newEtap.name}" added to the order.`,
                     });
                  } else {
-                     console.warn(`Attempted to add etap with duplicate ID: ${newEtap.id}`);
                      toast({
                         title: "Warning",
                         description: `Stage with ID ${newEtap.id} might already exist.`,
                         variant: "destructive"
                      });
                  }
+             }
 
-
-             } else {
-                 console.warn(`Order ID ${orderId} not found in mockOrders during add.`);
-            }
-
-            // Automatically open the newly added etap
             setOpenAccordionItems(prev => [...prev, newEtap.id]);
-            setEditingEtapId(null); // Ensure edit mode is off
-            setIsAddingEtap(false); // Close the inline form
+            setEditingEtapId(null);
+            setAddingOptionToEtapId(null);
+            setIsAddingEtap(false);
 
         } else {
-             console.error("Cannot add etap: orderData is null.");
              toast({
                 title: "Error",
                 description: "Could not add stage because order data is missing.",
                  variant: "destructive",
             });
-            setIsAddingEtap(false); // Still close the form on error
+            setIsAddingEtap(false);
         }
     };
 
-    // Function to update local state AND mock data when an etap is updated
     const handleEtapUpdated = (updatedEtap: Etap) => {
         if (orderData) {
-             // Update the etap in the local state's etaps list
             const updatedEtaps = (orderData.etaps || []).map(etap =>
                 etap.id === updatedEtap.id ? updatedEtap : etap
             );
             const updatedOrderData = {
                 ...orderData,
                 etaps: updatedEtaps,
-                updatedAt: new Date(), // Also update the order's updatedAt timestamp
+                updatedAt: new Date(),
             };
 
-            // Update local state for immediate UI feedback
             setOrderData(updatedOrderData);
 
-            // Update the mockOrders array (IN-PLACE MUTATION)
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
                 const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === updatedEtap.id);
                 if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
-                    // Ensure etaps is treated as an array before updating
                     const currentEtaps = mockOrders[orderIndex].etaps || [];
-                    currentEtaps[etapIndex] = updatedEtap; // Update the specific etap
-                    mockOrders[orderIndex].etaps = [...currentEtaps]; // Assign new array to trigger updates if needed
-                    mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
-                    console.log("Updated mockOrders array item with updated etap:", mockOrders[orderIndex]);
-                } else {
-                     console.warn(`Etap ID ${updatedEtap.id} not found in mockOrders order ${orderId} during update.`);
+                    currentEtaps[etapIndex] = updatedEtap;
+                    mockOrders[orderIndex].etaps = [...currentEtaps];
+                    mockOrders[orderIndex].updatedAt = new Date();
                 }
-             } else {
-                 console.warn(`Order ID ${orderId} not found in mockOrders during etap update.`);
-            }
+             }
 
             toast({
                 title: "Stage Updated",
@@ -177,26 +146,86 @@ export default function OrderDetailPage() {
             });
 
         } else {
-             console.error("Cannot update etap: orderData is null.");
              toast({
                 title: "Error",
                 description: "Could not update stage because order data is missing.",
                  variant: "destructive",
             });
         }
-        setEditingEtapId(null); // Close the inline edit form
+        setEditingEtapId(null);
     };
 
-     // Updated handler: Toggles accordion and sets editing state
+     // Handle adding a new option to an etap
+     const handleOptionAdded = (etapId: string, newOption: EtapOption) => {
+        if (orderData) {
+            const updatedEtaps = (orderData.etaps || []).map(etap => {
+                if (etap.id === etapId) {
+                    // Ensure options is an array before pushing
+                    const currentOptions = etap.options || [];
+                     // Make sure not to add duplicate option keys if the ID generation is not robust
+                     if (!currentOptions.some(o => o.id === newOption.id)) {
+                        return {
+                            ...etap,
+                            options: [...currentOptions, newOption]
+                        };
+                     } else {
+                         console.warn(`Attempted to add option with duplicate ID: ${newOption.id} to etap ${etapId}`);
+                         toast({
+                            title: "Warning",
+                            description: `Option with ID ${newOption.id} might already exist in this stage.`,
+                            variant: "destructive"
+                         });
+                         return etap; // Return unchanged etap if duplicate found
+                     }
+                }
+                return etap;
+            });
+
+            const updatedOrderData = {
+                ...orderData,
+                etaps: updatedEtaps,
+                updatedAt: new Date(), // Update order timestamp
+            };
+
+            // Update local state
+            setOrderData(updatedOrderData);
+
+            // Update mock data
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId);
+            if (orderIndex !== -1) {
+                const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === etapId);
+                if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
+                     const currentOptions = mockOrders[orderIndex].etaps![etapIndex].options || [];
+                     if (!currentOptions.some(o => o.id === newOption.id)) {
+                        mockOrders[orderIndex].etaps![etapIndex].options = [...currentOptions, newOption];
+                        mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
+
+                        toast({
+                            title: "Option Added",
+                            description: `New option "${newOption.name}" added to stage "${updatedEtaps[etapIndex].name}".`,
+                        });
+                     } // Else: Warning already shown from state update check
+                }
+            }
+        } else {
+            toast({
+                title: "Error",
+                description: "Could not add option because order data is missing.",
+                variant: "destructive",
+            });
+        }
+        setAddingOptionToEtapId(null); // Close the add option form
+    };
+
+
     const handleEditClick = (etapId: string) => {
          setEditingEtapId(etapId);
-         setIsAddingEtap(false); // Close add form if open
-         // Ensure the accordion item is open when editing starts
+         setIsAddingEtap(false);
+         setAddingOptionToEtapId(null); // Close add option form if open
          if (!openAccordionItems.includes(etapId)) {
              setOpenAccordionItems(prev => [...prev, etapId]);
          }
     };
-
 
     const handleCancelEdit = () => {
         setEditingEtapId(null);
@@ -204,17 +233,36 @@ export default function OrderDetailPage() {
 
     const handleToggleAddForm = () => {
         setIsAddingEtap(!isAddingEtap);
-        setEditingEtapId(null); // Close edit form if open
+        setEditingEtapId(null);
+        setAddingOptionToEtapId(null); // Close add option form if open
     };
 
-     // Controlled accordion handler
+     // Toggle handler for showing/hiding the AddOptionForm for a specific etap
+     const handleToggleAddOptionForm = (etapId: string) => {
+        setAddingOptionToEtapId(prev => (prev === etapId ? null : etapId));
+        setEditingEtapId(null); // Close etap edit form if open
+        setIsAddingEtap(false); // Close etap add form if open
+         // Ensure accordion is open when adding option
+        if (!openAccordionItems.includes(etapId)) {
+            setOpenAccordionItems(prev => [...prev, etapId]);
+        }
+    };
+
+     // Handler to cancel adding an option
+     const handleCancelAddOption = () => {
+         setAddingOptionToEtapId(null);
+     };
+
+
      const handleAccordionChange = (value: string[]) => {
         setOpenAccordionItems(value);
-        // If the item being closed is the one being edited, cancel edit mode
         const closingItems = openAccordionItems.filter(item => !value.includes(item));
-        if (closingItems.includes(editingEtapId ?? '')) {
-            setEditingEtapId(null);
+        if (editingEtapId && closingItems.includes(editingEtapId)) {
+            setEditingEtapId(null); // Cancel edit if accordion closes
         }
+         if (addingOptionToEtapId && closingItems.includes(addingOptionToEtapId)) {
+             setAddingOptionToEtapId(null); // Cancel add option if accordion closes
+         }
     };
 
 
@@ -226,8 +274,7 @@ export default function OrderDetailPage() {
         return <div className="flex min-h-screen items-center justify-center">Order not found or ID missing.</div>;
     }
 
-    // Mock user role for conditional rendering
-    const userRole = "Заказчик"; // Replace with actual role check
+    const userRole = "Заказчик";
 
     return (
         <div className="flex flex-col gap-6">
@@ -285,28 +332,22 @@ export default function OrderDetailPage() {
                 </CardContent>
             </Card>
 
-            {/* Sections for related entities (Etaps, Work Positions, Bids) */}
+            {/* Sections for related entities */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Etaps Section */}
-                <Card className="lg:col-span-2"> {/* Span full width */}
+                <Card className="lg:col-span-2">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Stages (Etaps)</CardTitle>
                          {userRole === "Заказчик" && (
-                            <Button size="sm" variant="outline" onClick={handleToggleAddForm} disabled={!!editingEtapId}>
+                            <Button size="sm" variant="outline" onClick={handleToggleAddForm} disabled={!!editingEtapId || !!addingOptionToEtapId}>
                                 {isAddingEtap ? (
-                                    <>
-                                        <MinusCircle className="mr-2 h-4 w-4" /> Cancel Add
-                                    </>
+                                    <><MinusCircle className="mr-2 h-4 w-4" /> Cancel Add</>
                                 ) : (
-                                     <>
-                                        <PlusCircle className="mr-2 h-4 w-4" /> Add Stage
-                                     </>
+                                    <><PlusCircle className="mr-2 h-4 w-4" /> Add Stage</>
                                 )}
                             </Button>
                          )}
                     </CardHeader>
                     <CardContent>
-                        {/* Inline Add Etap Form */}
                         {isAddingEtap && (
                             <div className="mb-6 p-4 border rounded-md bg-card">
                                 <h4 className="text-md font-semibold mb-3">Add New Stage</h4>
@@ -314,68 +355,58 @@ export default function OrderDetailPage() {
                                     orderId={orderData.id}
                                     currency={orderData.currency}
                                     onEtapAdded={handleEtapAdded}
-                                    onCancel={handleToggleAddForm} // Use toggle function
+                                    onCancel={handleToggleAddForm}
                                 />
                              </div>
                         )}
-
-                         {/* Existing Etaps List */}
                          {orderData.etaps && orderData.etaps.length > 0 ? (
                             <Accordion
                                 type="multiple"
                                 className="w-full"
-                                // Use JSON stringify as key to force re-render on deep changes
                                 key={JSON.stringify(orderData.etaps)}
-                                value={openAccordionItems} // Controlled component value
-                                onValueChange={handleAccordionChange} // Controlled component change handler
+                                value={openAccordionItems}
+                                onValueChange={handleAccordionChange}
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        {/* Wrapper for trigger and button */}
-                                        <div className="flex items-center justify-between w-full">
-                                            {/* AccordionTrigger wraps the main clickable area */}
+                                        <div className="flex items-center justify-between w-full pr-2">
                                              <AccordionTrigger
                                                 className={cn(
                                                     "flex-1 flex items-center justify-between font-semibold text-left",
-                                                    // Apply hover styles and cursor
                                                     "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
-                                                    // Adjust padding
                                                     "p-2"
                                                 )}
                                             >
-                                                <div className="flex-1 flex items-center justify-between mr-2"> {/* Inner div for name and badges */}
-                                                    <span>{etap.name}</span> {/* Etap Name */}
-                                                    <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges */}
+                                                <div className="flex-1 flex items-center justify-between mr-2">
+                                                    <span>{etap.name}</span>
+                                                    <div className="flex items-center gap-2 flex-shrink-0">
                                                         <Badge variant="secondary" className="text-xs">
                                                             {etap.workType === "Последовательный" ? "Seq." : "Par."}
                                                         </Badge>
                                                         <Badge variant="outline">
                                                             {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
                                                         </Badge>
-                                                        {/* Chevron is now part of the default AccordionTrigger */}
                                                     </div>
                                                 </div>
                                             </AccordionTrigger>
-                                             {/* Edit Button placed outside the trigger */}
                                             {userRole === "Заказчик" && (
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={(e) => {
-                                                        e.stopPropagation(); // Prevent AccordionTrigger from firing unnecessarily
+                                                        e.stopPropagation();
                                                         handleEditClick(etap.id);
                                                     }}
-                                                    className="h-6 w-6 p-1 ml-2 mr-2 flex-shrink-0 text-muted-foreground hover:text-primary" // Added hover style
-                                                    disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
-                                                    aria-label="Edit Stage" // Added aria-label
+                                                    className="h-6 w-6 p-1 ml-2 flex-shrink-0 text-muted-foreground hover:text-primary"
+                                                    disabled={isAddingEtap || !!addingOptionToEtapId || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                    aria-label="Edit Stage"
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
                                             )}
                                         </div>
                                         <AccordionContent>
-                                             {/* Inline Edit Etap Form */}
-                                            {editingEtapId === etap.id ? (
+                                             {editingEtapId === etap.id ? (
                                                 <div className="mb-4 p-4 border rounded-md bg-card">
                                                     <h4 className="text-md font-semibold mb-3">Edit Stage: {etap.name}</h4>
                                                     <EditEtapForm
@@ -386,16 +417,44 @@ export default function OrderDetailPage() {
                                                     />
                                                 </div>
                                             ) : (
-                                                // Use Grid for two columns
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-4">
-                                                    {/* Left Column: Description */}
                                                     <div>
                                                         <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Description</h4>
                                                         <p className="text-sm text-foreground">{etap.description || "No description."}</p>
                                                     </div>
-                                                    {/* Right Column: Options */}
                                                     <div>
-                                                        <h4 className="text-sm font-semibold mb-2 text-muted-foreground">Options</h4>
+                                                        <div className="flex justify-between items-center mb-2">
+                                                             <h4 className="text-sm font-semibold text-muted-foreground">Options</h4>
+                                                              {userRole === "Заказчик" && (
+                                                                  <Button
+                                                                      size="sm"
+                                                                      variant="ghost"
+                                                                      onClick={() => handleToggleAddOptionForm(etap.id)}
+                                                                      disabled={!!editingEtapId || isAddingEtap || (!!addingOptionToEtapId && addingOptionToEtapId !== etap.id)}
+                                                                      className="h-auto p-1 text-xs text-primary hover:text-primary"
+                                                                  >
+                                                                      {addingOptionToEtapId === etap.id ? (
+                                                                         <><MinusCircle className="mr-1 h-3 w-3" /> Cancel Add</>
+                                                                      ) : (
+                                                                          <><PlusCircle className="mr-1 h-3 w-3" /> Add Option</>
+                                                                      )}
+                                                                  </Button>
+                                                              )}
+                                                        </div>
+
+                                                        {/* Inline Add Option Form */}
+                                                        {addingOptionToEtapId === etap.id && (
+                                                            <div className="mb-4 p-4 border rounded-md bg-card">
+                                                                <h5 className="text-md font-semibold mb-3">Add New Option</h5>
+                                                                <AddOptionForm
+                                                                    etapId={etap.id}
+                                                                    currency={orderData.currency}
+                                                                    onOptionAdded={(newOption) => handleOptionAdded(etap.id, newOption)}
+                                                                    onCancel={handleCancelAddOption}
+                                                                />
+                                                            </div>
+                                                        )}
+
                                                         {etap.options && etap.options.length > 0 ? (
                                                             <ul className="space-y-3">
                                                                 {etap.options.map((option: EtapOption) => (
@@ -413,7 +472,7 @@ export default function OrderDetailPage() {
                                                                         </div>
                                                                         {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
                                                                         {option.isCalculable && (
-                                                                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1"> {/* Allow wrapping */}
+                                                                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
                                                                                 <span>Plan: {option.planUnits ?? 'N/A'} units</span>
                                                                                 <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
                                                                                 <span className="font-medium text-foreground">
@@ -425,7 +484,7 @@ export default function OrderDetailPage() {
                                                                 ))}
                                                             </ul>
                                                         ) : (
-                                                            <p className="text-sm text-muted-foreground italic">No options defined for this stage.</p>
+                                                            ! (addingOptionToEtapId === etap.id) && <p className="text-sm text-muted-foreground italic">No options defined yet.</p>
                                                         )}
                                                      </div>
                                                 </div>
@@ -444,11 +503,9 @@ export default function OrderDetailPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Bids</CardTitle>
-                         {/* Button to view bids? */}
                     </CardHeader>
                     <CardContent>
                          <p className="text-sm text-muted-foreground">Bids submitted by freelancers will appear here.</p>
-                        {/* TODO: List Bids */}
                     </CardContent>
                 </Card>
 
@@ -462,12 +519,11 @@ export default function OrderDetailPage() {
                     </CardHeader>
                     <CardContent>
                          <p className="text-sm text-muted-foreground">Individual work items (positions) for this order.</p>
-                         {/* TODO: List Work Positions */}
                     </CardContent>
                 </Card>
 
                  {/* Work Assignments Link */}
-                 <Card className="lg:col-span-2"> {/* Span full width */}
+                 <Card className="lg:col-span-2">
                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Related Work Assignments</CardTitle>
                         <Link href={`/projects/${orderData.projectId}?tab=assignments`} passHref>
@@ -476,18 +532,16 @@ export default function OrderDetailPage() {
                     </CardHeader>
                     <CardContent>
                          <p className="text-sm text-muted-foreground">Assignments created based on this order.</p>
-                         {/* TODO: List related Work Assignments or provide a direct link */}
                     </CardContent>
                 </Card>
 
                  {/* Communications Section Placeholder */}
-                <Card className="lg:col-span-2"> {/* Span full width */}
+                <Card className="lg:col-span-2">
                      <CardHeader>
                         <CardTitle className="text-lg font-semibold">Communication</CardTitle>
                     </CardHeader>
                     <CardContent>
                          <p className="text-sm text-muted-foreground">Chat or comments related to this order will be shown here.</p>
-                         {/* TODO: Implement communication component */}
                     </CardContent>
                 </Card>
             </div>

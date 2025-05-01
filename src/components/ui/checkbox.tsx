@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -6,9 +7,19 @@ import { Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// Define a type for the onCheckedChange prop based on Radix's type
+type CheckedState = CheckboxPrimitive.CheckedState;
+type CheckedChangeCallback = (checked: CheckedState) => void;
+
+// Extend the props interface to include the correctly typed onCheckedChange
+interface CheckboxProps extends Omit<React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>, 'onCheckedChange'> {
+  onCheckedChange?: CheckedChangeCallback;
+}
+
+
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
+  CheckboxProps // Use the extended props interface
 >(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
