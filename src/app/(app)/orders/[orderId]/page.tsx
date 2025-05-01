@@ -16,7 +16,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Separator } from '@/components/ui/separator';
 import AddEtapForm from '@/components/orders/add-etap-form';
 import EditEtapForm from '@/components/orders/edit-etap-form';
-import AddOptionForm from '@/components/orders/add-option-form'; // Import AddOptionForm
+import AddOptionForm from '@/components/orders/add-option-form';
+import EditOptionForm from '@/components/orders/edit-option-form'; // Import EditOptionForm
 import { cn } from '@/lib/utils';
 
 // Helper function to get status icon
@@ -39,7 +40,8 @@ export default function OrderDetailPage() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [isAddingEtap, setIsAddingEtap] = React.useState(false);
     const [editingEtapId, setEditingEtapId] = React.useState<string | null>(null);
-    const [addingOptionToEtapId, setAddingOptionToEtapId] = React.useState<string | null>(null); // State for adding option
+    const [addingOptionToEtapId, setAddingOptionToEtapId] = React.useState<string | null>(null);
+    const [editingOptionId, setEditingOptionId] = React.useState<string | null>(null); // State for editing option
     const [openAccordionItems, setOpenAccordionItems] = React.useState<string[]>([]);
     const { toast } = useToast();
 
@@ -104,6 +106,7 @@ export default function OrderDetailPage() {
             setOpenAccordionItems(prev => [...prev, newEtap.id]);
             setEditingEtapId(null);
             setAddingOptionToEtapId(null);
+            setEditingOptionId(null); // Close option edit form
             setIsAddingEtap(false);
 
         } else {
@@ -160,9 +163,7 @@ export default function OrderDetailPage() {
         if (orderData) {
             const updatedEtaps = (orderData.etaps || []).map(etap => {
                 if (etap.id === etapId) {
-                    // Ensure options is an array before pushing
-                    const currentOptions = etap.options || [];
-                     // Make sure not to add duplicate option keys if the ID generation is not robust
+                     const currentOptions = etap.options || [];
                      if (!currentOptions.some(o => o.id === newOption.id)) {
                         return {
                             ...etap,
@@ -175,7 +176,7 @@ export default function OrderDetailPage() {
                             description: `Option with ID ${newOption.id} might already exist in this stage.`,
                             variant: "destructive"
                          });
-                         return etap; // Return unchanged etap if duplicate found
+                         return etap;
                      }
                 }
                 return etap;
@@ -184,13 +185,11 @@ export default function OrderDetailPage() {
             const updatedOrderData = {
                 ...orderData,
                 etaps: updatedEtaps,
-                updatedAt: new Date(), // Update order timestamp
+                updatedAt: new Date(),
             };
 
-            // Update local state
             setOrderData(updatedOrderData);
 
-            // Update mock data
             const orderIndex = mockOrders.findIndex(o => o.id === orderId);
             if (orderIndex !== -1) {
                 const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === etapId);
@@ -198,13 +197,13 @@ export default function OrderDetailPage() {
                      const currentOptions = mockOrders[orderIndex].etaps![etapIndex].options || [];
                      if (!currentOptions.some(o => o.id === newOption.id)) {
                         mockOrders[orderIndex].etaps![etapIndex].options = [...currentOptions, newOption];
-                        mockOrders[orderIndex].updatedAt = new Date(); // Update order timestamp
+                        mockOrders[orderIndex].updatedAt = new Date();
 
                         toast({
                             title: "Option Added",
                             description: `New option "${newOption.name}" added to stage "${updatedEtaps[etapIndex].name}".`,
                         });
-                     } // Else: Warning already shown from state update check
+                     }
                 }
             }
         } else {
@@ -214,43 +213,109 @@ export default function OrderDetailPage() {
                 variant: "destructive",
             });
         }
-        setAddingOptionToEtapId(null); // Close the add option form
+        setAddingOptionToEtapId(null);
     };
 
+    // Handle updating an existing option
+     const handleOptionUpdated = (etapId: string, updatedOption: EtapOption) => {
+         if (orderData) {
+            const updatedEtaps = (orderData.etaps || []).map(etap => {
+                if (etap.id === etapId) {
+                    const updatedOptions = (etap.options || []).map(option =>
+                        option.id === updatedOption.id ? updatedOption : option
+                    );
+                    return { ...etap, options: updatedOptions };
+                }
+                return etap;
+            });
 
-    const handleEditClick = (etapId: string) => {
+            const updatedOrderData = {
+                ...orderData,
+                etaps: updatedEtaps,
+                updatedAt: new Date(),
+            };
+
+             setOrderData(updatedOrderData);
+
+            // Update mock data
+            const orderIndex = mockOrders.findIndex(o => o.id === orderId);
+             if (orderIndex !== -1) {
+                 const etapIndex = (mockOrders[orderIndex].etaps || []).findIndex(e => e.id === etapId);
+                 if (etapIndex !== -1 && mockOrders[orderIndex].etaps) {
+                     const optionIndex = (mockOrders[orderIndex].etaps![etapIndex].options || []).findIndex(o => o.id === updatedOption.id);
+                     if (optionIndex !== -1 && mockOrders[orderIndex].etaps![etapIndex].options) {
+                         mockOrders[orderIndex].etaps![etapIndex].options![optionIndex] = updatedOption;
+                         mockOrders[orderIndex].updatedAt = new Date();
+                     }
+                 }
+             }
+
+            toast({
+                title: "Option Updated",
+                description: `Option "${updatedOption.name}" has been updated.`,
+            });
+
+        } else {
+             toast({
+                title: "Error",
+                description: "Could not update option because order data is missing.",
+                variant: "destructive",
+            });
+        }
+         setEditingOptionId(null); // Close the edit form
+     };
+
+
+     const handleEditEtapClick = (etapId: string) => {
          setEditingEtapId(etapId);
          setIsAddingEtap(false);
-         setAddingOptionToEtapId(null); // Close add option form if open
+         setAddingOptionToEtapId(null);
+         setEditingOptionId(null); // Close option edit form
          if (!openAccordionItems.includes(etapId)) {
              setOpenAccordionItems(prev => [...prev, etapId]);
          }
     };
 
-    const handleCancelEdit = () => {
+    const handleCancelEditEtap = () => {
         setEditingEtapId(null);
     };
 
     const handleToggleAddForm = () => {
         setIsAddingEtap(!isAddingEtap);
         setEditingEtapId(null);
-        setAddingOptionToEtapId(null); // Close add option form if open
+        setAddingOptionToEtapId(null);
+        setEditingOptionId(null); // Close option edit form
     };
 
-     // Toggle handler for showing/hiding the AddOptionForm for a specific etap
      const handleToggleAddOptionForm = (etapId: string) => {
         setAddingOptionToEtapId(prev => (prev === etapId ? null : etapId));
-        setEditingEtapId(null); // Close etap edit form if open
-        setIsAddingEtap(false); // Close etap add form if open
-         // Ensure accordion is open when adding option
+        setEditingEtapId(null);
+        setIsAddingEtap(false);
+        setEditingOptionId(null); // Close option edit form
         if (!openAccordionItems.includes(etapId)) {
             setOpenAccordionItems(prev => [...prev, etapId]);
         }
     };
 
-     // Handler to cancel adding an option
      const handleCancelAddOption = () => {
          setAddingOptionToEtapId(null);
+     };
+
+     // Handle clicking the edit button for an option
+     const handleEditOptionClick = (optionId: string, etapId: string) => {
+         setEditingOptionId(optionId);
+         setEditingEtapId(null);
+         setIsAddingEtap(false);
+         setAddingOptionToEtapId(null);
+         // Ensure accordion is open
+         if (!openAccordionItems.includes(etapId)) {
+            setOpenAccordionItems(prev => [...prev, etapId]);
+         }
+     };
+
+     // Handle cancelling the edit option form
+     const handleCancelEditOption = () => {
+         setEditingOptionId(null);
      };
 
 
@@ -258,10 +323,17 @@ export default function OrderDetailPage() {
         setOpenAccordionItems(value);
         const closingItems = openAccordionItems.filter(item => !value.includes(item));
         if (editingEtapId && closingItems.includes(editingEtapId)) {
-            setEditingEtapId(null); // Cancel edit if accordion closes
+            setEditingEtapId(null);
         }
          if (addingOptionToEtapId && closingItems.includes(addingOptionToEtapId)) {
-             setAddingOptionToEtapId(null); // Cancel add option if accordion closes
+             setAddingOptionToEtapId(null);
+         }
+         // Find if any option being edited belongs to a closing accordion
+         const closingEtapId = orderData?.etaps?.find(etap =>
+             closingItems.includes(etap.id) && etap.options?.some(opt => opt.id === editingOptionId)
+         )?.id;
+         if (closingEtapId) {
+             setEditingOptionId(null);
          }
     };
 
@@ -274,7 +346,7 @@ export default function OrderDetailPage() {
         return <div className="flex min-h-screen items-center justify-center">Order not found or ID missing.</div>;
     }
 
-    const userRole = "Заказчик";
+    const userRole = "Заказчик"; // Mock role
 
     return (
         <div className="flex flex-col gap-6">
@@ -338,7 +410,7 @@ export default function OrderDetailPage() {
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-lg font-semibold">Stages (Etaps)</CardTitle>
                          {userRole === "Заказчик" && (
-                            <Button size="sm" variant="outline" onClick={handleToggleAddForm} disabled={!!editingEtapId || !!addingOptionToEtapId}>
+                            <Button size="sm" variant="outline" onClick={handleToggleAddForm} disabled={!!editingEtapId || !!addingOptionToEtapId || !!editingOptionId}>
                                 {isAddingEtap ? (
                                     <><MinusCircle className="mr-2 h-4 w-4" /> Cancel Add</>
                                 ) : (
@@ -363,42 +435,45 @@ export default function OrderDetailPage() {
                             <Accordion
                                 type="multiple"
                                 className="w-full"
-                                key={JSON.stringify(orderData.etaps)}
+                                key={JSON.stringify(orderData.etaps)} // Re-render accordion if etaps change drastically
                                 value={openAccordionItems}
                                 onValueChange={handleAccordionChange}
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        <div className="flex items-center justify-between w-full pr-2">
-                                             <AccordionTrigger
-                                                className={cn(
-                                                    "flex-1 flex items-center justify-between font-semibold text-left",
-                                                    "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
-                                                    "p-2"
-                                                )}
-                                            >
-                                                <div className="flex-1 flex items-center justify-between mr-2">
-                                                    <span>{etap.name}</span>
-                                                    <div className="flex items-center gap-2 flex-shrink-0">
-                                                        <Badge variant="secondary" className="text-xs">
-                                                            {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                        </Badge>
-                                                        <Badge variant="outline">
-                                                            {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                        </Badge>
+                                        <div className="flex items-center w-full pr-2">
+                                             {/* Use AccordionTrigger asChild to wrap the content */}
+                                             <AccordionTrigger asChild className={cn(
+                                                    "flex-1 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer rounded-md p-2", // Added rounded-md and padding
+                                                    {"bg-sidebar-accent/80": editingEtapId === etap.id || addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)} // Highlight if editing etap or any of its options
+                                                )}>
+                                                <div className="flex items-center justify-between w-full">
+                                                    <div className="flex-1 flex items-center justify-between mr-2">
+                                                        <span>{etap.name}</span>
+                                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                                            <Badge variant="secondary" className="text-xs">
+                                                                {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                            </Badge>
+                                                            <Badge variant="outline">
+                                                                {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                            </Badge>
+                                                        </div>
                                                     </div>
+                                                     {/* Chevron Down Icon */}
+                                                    <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                                                 </div>
-                                            </AccordionTrigger>
+                                             </AccordionTrigger>
+
                                             {userRole === "Заказчик" && (
                                                 <Button
                                                     size="icon"
                                                     variant="ghost"
                                                     onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleEditClick(etap.id);
+                                                        e.stopPropagation(); // Prevent accordion toggle
+                                                        handleEditEtapClick(etap.id);
                                                     }}
                                                     className="h-6 w-6 p-1 ml-2 flex-shrink-0 text-muted-foreground hover:text-primary"
-                                                    disabled={isAddingEtap || !!addingOptionToEtapId || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                    disabled={isAddingEtap || !!addingOptionToEtapId || !!editingOptionId || (!!editingEtapId && editingEtapId !== etap.id)}
                                                     aria-label="Edit Stage"
                                                 >
                                                     <Pencil className="h-4 w-4" />
@@ -413,7 +488,7 @@ export default function OrderDetailPage() {
                                                         etap={etap}
                                                         currency={orderData.currency}
                                                         onEtapUpdated={handleEtapUpdated}
-                                                        onCancel={handleCancelEdit}
+                                                        onCancel={handleCancelEditEtap}
                                                     />
                                                 </div>
                                             ) : (
@@ -430,7 +505,7 @@ export default function OrderDetailPage() {
                                                                       size="sm"
                                                                       variant="ghost"
                                                                       onClick={() => handleToggleAddOptionForm(etap.id)}
-                                                                      disabled={!!editingEtapId || isAddingEtap || (!!addingOptionToEtapId && addingOptionToEtapId !== etap.id)}
+                                                                      disabled={!!editingEtapId || isAddingEtap || !!editingOptionId || (!!addingOptionToEtapId && addingOptionToEtapId !== etap.id)}
                                                                       className="h-auto p-1 text-xs text-primary hover:text-primary"
                                                                   >
                                                                       {addingOptionToEtapId === etap.id ? (
@@ -458,33 +533,63 @@ export default function OrderDetailPage() {
                                                         {etap.options && etap.options.length > 0 ? (
                                                             <ul className="space-y-3">
                                                                 {etap.options.map((option: EtapOption) => (
-                                                                    <li key={option.id} className="text-sm border-l-2 pl-3 border-muted">
-                                                                        <div className="flex justify-between items-start">
-                                                                            <span className="font-medium text-foreground">{option.name}</span>
-                                                                            <Badge
-                                                                                variant={option.isCalculable ? "default" : "outline"}
-                                                                                className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
-                                                                            >
-                                                                                {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
-                                                                                {option.isCalculable ? 'Calculable' : 'Informational'}
-                                                                                {!option.includedInPrice && ' (Not in Price)'}
-                                                                            </Badge>
-                                                                        </div>
-                                                                        {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
-                                                                        {option.isCalculable && (
-                                                                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                                                                                <span>Plan: {option.planUnits ?? 'N/A'} units</span>
-                                                                                <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
-                                                                                <span className="font-medium text-foreground">
-                                                                                    Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
-                                                                                </span>
+                                                                     <li key={option.id} className="text-sm border-l-2 pl-3 border-muted">
+                                                                         {editingOptionId === option.id ? (
+                                                                            <div className="mb-4 p-3 border rounded-md bg-card">
+                                                                                <h5 className="text-md font-semibold mb-3">Edit Option: {option.name}</h5>
+                                                                                <EditOptionForm
+                                                                                    etapId={etap.id}
+                                                                                    option={option}
+                                                                                    currency={orderData.currency}
+                                                                                    onOptionUpdated={(updatedOpt) => handleOptionUpdated(etap.id, updatedOpt)}
+                                                                                    onCancel={handleCancelEditOption}
+                                                                                />
                                                                             </div>
-                                                                        )}
-                                                                    </li>
+                                                                         ) : (
+                                                                            <>
+                                                                                <div className="flex justify-between items-start">
+                                                                                     <span className="font-medium text-foreground flex-1 mr-2">{option.name}</span>
+                                                                                     <div className="flex items-center gap-1 flex-shrink-0">
+                                                                                        <Badge
+                                                                                            variant={option.isCalculable ? "default" : "outline"}
+                                                                                            className={`text-xs ${option.isCalculable ? 'bg-blue-100 text-blue-800 border-blue-300' : 'text-muted-foreground'}`}
+                                                                                        >
+                                                                                            {option.isCalculable ? <Calculator className="mr-1 h-3 w-3"/> : <Info className="mr-1 h-3 w-3"/>}
+                                                                                            {option.isCalculable ? 'Calculable' : 'Informational'}
+                                                                                            {!option.includedInPrice && ' (Not in Price)'}
+                                                                                        </Badge>
+                                                                                         {userRole === "Заказчик" && (
+                                                                                             <Button
+                                                                                                size="icon"
+                                                                                                variant="ghost"
+                                                                                                onClick={() => handleEditOptionClick(option.id, etap.id)}
+                                                                                                className="h-5 w-5 p-0.5 text-muted-foreground hover:text-primary"
+                                                                                                disabled={isAddingEtap || !!editingEtapId || !!addingOptionToEtapId || (!!editingOptionId && editingOptionId !== option.id)}
+                                                                                                aria-label="Edit Option"
+                                                                                             >
+                                                                                                <Pencil className="h-3 w-3" />
+                                                                                             </Button>
+                                                                                         )}
+                                                                                     </div>
+                                                                                </div>
+                                                                                {option.description && <p className="text-xs text-muted-foreground mt-1 mb-1">{option.description}</p>}
+                                                                                {option.isCalculable && (
+                                                                                    <div className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                                                                                        <span>Plan: {option.planUnits ?? 'N/A'} units</span>
+                                                                                        <span>Rate: {orderData.currency} {option.pricePerUnit ?? 'N/A'} / {option.unitDivider ?? 'unit'}</span>
+                                                                                        <span className="font-medium text-foreground">
+                                                                                            Est: {orderData.currency} {option.calculatedPlanPrice?.toLocaleString() ?? 'N/A'}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                )}
+                                                                            </>
+                                                                         )}
+                                                                     </li>
                                                                 ))}
                                                             </ul>
                                                         ) : (
-                                                            ! (addingOptionToEtapId === etap.id) && <p className="text-sm text-muted-foreground italic">No options defined yet.</p>
+                                                            !(addingOptionToEtapId === etap.id || etap.options?.some(opt => opt.id === editingOptionId)) &&
+                                                            <p className="text-sm text-muted-foreground italic">No options defined yet.</p>
                                                         )}
                                                      </div>
                                                 </div>
@@ -548,3 +653,6 @@ export default function OrderDetailPage() {
         </div>
     );
 }
+
+
+    
