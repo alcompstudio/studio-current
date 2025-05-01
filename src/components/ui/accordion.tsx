@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -42,8 +43,8 @@ const AccordionTrigger = React.forwardRef<
         {...props} // Pass all props
       >
         {children}
+        {/* Conditionally render the chevron only if it's rendered as a button (not asChild) */}
         {!asChild && <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />}
-         {/* Conditionally render the chevron only if it's rendered as a button */}
       </Comp>
     </AccordionPrimitive.Header>
   );
