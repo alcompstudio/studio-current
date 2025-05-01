@@ -31,7 +31,6 @@ const getStatusIcon = (status: string) => {
 };
 
 export default function OrderDetailPage() {
-    // Use React.use for server-side or Suspense-enabled rendering
     // Use useParams directly for client-side only components like this one
     const params = useParams<{ orderId: string }>();
     const orderId = params?.orderId; // Get orderId directly from hook
@@ -321,39 +320,38 @@ export default function OrderDetailPage() {
                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                      <AccordionItem value={etap.id} key={etap.id} className="border-b">
-                                        {/* Use AccordionTrigger asChild to make the whole div clickable */}
+                                        {/* AccordionTrigger needs to wrap the clickable area */}
                                         <AccordionTrigger
-                                            asChild
-                                            className={cn("flex items-center justify-between w-full px-4 py-4 font-semibold text-left hover:bg-accent/50 hover:no-underline rounded-t-md")}
+                                            className={cn(
+                                                "flex items-center justify-between w-full px-4 py-4 font-semibold text-left",
+                                                "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline rounded-t-md cursor-pointer" // Added hover styles and cursor
+                                            )}
                                          >
-                                            {/* Need a single child element for asChild */}
-                                            <div>
-                                                <div className="flex-1 flex items-center justify-between">
-                                                    <span>{etap.name}</span> {/* Etap Name */}
-                                                     <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges and Edit Button */}
-                                                        <Badge variant="secondary" className="text-xs">
-                                                            {etap.workType === "Последовательный" ? "Seq." : "Par."}
-                                                        </Badge>
-                                                        <Badge variant="outline">
-                                                            {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
-                                                        </Badge>
-                                                        {userRole === "Заказчик" && (
-                                                            <Button
-                                                               size="icon"
-                                                               variant="ghost"
-                                                               onClick={(e) => {
-                                                                   e.stopPropagation(); // Prevent trigger from toggling accordion
-                                                                   handleEditClick(etap.id);
-                                                               }}
-                                                               className="h-6 w-6 p-1"
-                                                               disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
-                                                            >
-                                                                <Pencil className="h-4 w-4" />
-                                                                <span className="sr-only">Edit Stage</span>
-                                                            </Button>
-                                                        )}
-                                                         <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" /> {/* Manually add chevron */}
-                                                    </div>
+                                            <div className="flex-1 flex items-center justify-between">
+                                                <span>{etap.name}</span> {/* Etap Name */}
+                                                 <div className="flex items-center gap-2 flex-shrink-0"> {/* Badges and Edit Button */}
+                                                    <Badge variant="secondary" className="text-xs">
+                                                        {etap.workType === "Последовательный" ? "Seq." : "Par."}
+                                                    </Badge>
+                                                    <Badge variant="outline">
+                                                        {orderData.currency} {etap.estimatedPrice?.toLocaleString() ?? '0'}
+                                                    </Badge>
+                                                    {userRole === "Заказчик" && (
+                                                        <Button
+                                                           size="icon"
+                                                           variant="ghost"
+                                                           onClick={(e) => {
+                                                               e.stopPropagation(); // Prevent trigger from toggling accordion
+                                                               handleEditClick(etap.id);
+                                                           }}
+                                                           className="h-6 w-6 p-1"
+                                                           disabled={isAddingEtap || (!!editingEtapId && editingEtapId !== etap.id)}
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                            <span className="sr-only">Edit Stage</span>
+                                                        </Button>
+                                                    )}
+                                                     {/* Chevron is now part of the default AccordionTrigger */}
                                                 </div>
                                             </div>
                                          </AccordionTrigger>
