@@ -6,12 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit, PlusCircle, FileText, Briefcase, Users, DollarSign, CheckCircle, Clock, Eye } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from 'next/navigation'; // Import useSearchParams
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import type { Project, Order } from "@/lib/types";
 import { mockProjects } from '../mockProjects';
 import { mockOrders, getOrderStatusVariant } from '../../orders/mockOrders';
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs components
 
 // Helper function to get status badge variant
 const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -37,17 +38,16 @@ const getStatusIcon = (status: string) => {
 
 export default function ProjectDetailPage() {
     const router = useRouter();
-    // Ensure this component is a Client Component (`'use client'`) before using hooks
     const params = useParams<{ projectId: string }>();
-    const searchParams = useSearchParams(); // Use useSearchParams hook
+    const searchParams = useSearchParams();
     const projectId = params?.projectId;
 
     const [projectData, setProjectData] = React.useState<Project | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
     const { toast } = useToast();
 
-    // Example: Read query parameter for tab management
-    const initialTab = searchParams.get('tab') || 'orders'; // Default to 'orders' tab
+    // Read query parameter for tab management, default to 'overview'
+    const initialTab = searchParams.get('tab') || 'overview';
 
     React.useEffect(() => {
         if (projectId) {
@@ -110,38 +110,72 @@ export default function ProjectDetailPage() {
                 )}
             </div>
 
-            {/* Project Details Card */}
-             <Card className="shadow-sm border-none">
-                <CardHeader>
-                    <CardTitle>Project Overview</CardTitle>
-                    <CardDescription>{projectData.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <p className="text-sm font-medium text-muted-foreground">Client</p>
-                        <p>{projectData.clientName || 'N/A'}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm font-medium text-muted-foreground">Budget</p>
-                        <p>{projectData.currency} {projectData.budget?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm font-medium text-muted-foreground">Created</p>
-                        <p>{projectData.createdAt?.toLocaleDateString() || 'N/A'}</p>
-                    </div>
-                     <div>
-                        <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
-                        <p>{projectData.updatedAt?.toLocaleDateString() || 'N/A'}</p>
-                    </div>
-                </CardContent>
-            </Card>
+            {/* Tabs for Content Sections */}
+            <Tabs defaultValue={initialTab} className="w-full">
+                 <TabsList className="mb-4 bg-transparent p-0 border-b border-border rounded-none justify-start h-auto">
+                     <TabsTrigger
+                         value="overview"
+                         className="mr-4 pb-2 px-1 text-muted-foreground data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none data-[state=active]:shadow-none bg-transparent"
+                    >
+                         Project Overview
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="orders"
+                        className="mr-4 pb-2 px-1 text-muted-foreground data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none data-[state=active]:shadow-none bg-transparent"
+                    >
+                        Orders
+                    </TabsTrigger>
+                     <TabsTrigger
+                         value="team"
+                         className="mr-4 pb-2 px-1 text-muted-foreground data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none data-[state=active]:shadow-none bg-transparent"
+                    >
+                         Team
+                    </TabsTrigger>
+                     <TabsTrigger
+                         value="assignments"
+                         className="mr-4 pb-2 px-1 text-muted-foreground data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none data-[state=active]:shadow-none bg-transparent"
+                    >
+                         Work Assignments
+                    </TabsTrigger>
+                     <TabsTrigger
+                         value="finance"
+                         className="mr-4 pb-2 px-1 text-muted-foreground data-[state=active]:text-foreground data-[state=active]:font-semibold data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none data-[state=active]:shadow-none bg-transparent"
+                    >
+                         Finance Summary
+                    </TabsTrigger>
+                </TabsList>
 
-            {/* Sections for related entities */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Orders Section - Spanning full width, no outer card */}
-                <div className={cn("lg:col-span-2 space-y-4")}>
+                <TabsContent value="overview" className="mt-6">
+                     <Card className="shadow-sm border-none">
+                        <CardHeader>
+                            {/* <CardTitle>Project Overview</CardTitle> */}
+                            <CardDescription>{projectData.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Client</p>
+                                <p>{projectData.clientName || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Budget</p>
+                                <p>{projectData.currency} {projectData.budget?.toLocaleString() || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-muted-foreground">Created</p>
+                                <p>{projectData.createdAt?.toLocaleDateString() || 'N/A'}</p>
+                            </div>
+                             <div>
+                                <p className="text-sm font-medium text-muted-foreground">Last Updated</p>
+                                <p>{projectData.updatedAt?.toLocaleDateString() || 'N/A'}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="orders" className="mt-6 space-y-4">
                     <div className="flex items-center justify-between pb-2">
-                        <h3 className="text-lg font-semibold">Orders</h3>
+                        {/* Moved heading inside TabContent */}
+                        {/* <h3 className="text-lg font-semibold">Orders</h3> */}
                         {userRole === "Заказчик" && (
                             <Link href="/orders/new" passHref>
                                 <Button size="sm">
@@ -150,90 +184,90 @@ export default function ProjectDetailPage() {
                             </Link>
                         )}
                     </div>
-                     <div className={cn("space-y-4")}> {/* Inner div for spacing */}
-                         {relatedOrders.length > 0 ? (
-                            relatedOrders.map((order: Order) => (
-                                <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none">
-                                    <CardHeader className="pb-2">
-                                        <div className="flex justify-between items-start gap-2">
-                                            <div className="flex-1">
-                                                <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
-                                            </div>
-                                            <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
-                                                {order.status}
-                                            </Badge>
+                    {relatedOrders.length > 0 ? (
+                        relatedOrders.map((order: Order) => (
+                            <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none">
+                                <CardHeader className="pb-2">
+                                    <div className="flex justify-between items-start gap-2">
+                                        <div className="flex-1">
+                                            <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
                                         </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm font-semibold">
-                                                Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
-                                            </span>
-                                            <Link href={`/orders/${order.id}`} passHref>
-                                                <Button variant="outline" size="sm">
-                                                    <Eye className="mr-2 h-4 w-4" /> View Details
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground mt-2">
-                                            Created: {order.createdAt.toLocaleDateString()}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            ))
-                        ) : (
-                             <Card className="shadow-sm border-none">
+                                        <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
+                                            {order.status}
+                                        </Badge>
+                                    </div>
+                                </CardHeader>
                                 <CardContent>
-                                    <p className="text-sm text-muted-foreground text-center py-4">No orders created for this project yet.</p>
+                                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-sm font-semibold">
+                                            Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
+                                        </span>
+                                        <Link href={`/orders/${order.id}`} passHref>
+                                            <Button variant="outline" size="sm">
+                                                <Eye className="mr-2 h-4 w-4" /> View Details
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-2">
+                                        Created: {order.createdAt.toLocaleDateString()}
+                                    </p>
                                 </CardContent>
-                             </Card>
-                        )}
-                    </div>
-                </div>
+                            </Card>
+                        ))
+                    ) : (
+                         <Card className="shadow-sm border-none">
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground text-center py-4">No orders created for this project yet.</p>
+                            </CardContent>
+                         </Card>
+                    )}
+                </TabsContent>
 
-                 {/* Team/Freelancers Section */}
-                 <Card className="shadow-sm border-none">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-semibold">Team</CardTitle>
-                        {/* Button to add/manage team? */}
-                    </CardHeader>
-                    <CardContent>
-                         <p className="text-sm text-muted-foreground">No freelancers assigned to this project yet.</p>
-                        {/* TODO: List freelancers associated with the project */}
-                    </CardContent>
-                </Card>
+                 <TabsContent value="team" className="mt-6">
+                    <Card className="shadow-sm border-none">
+                         {/* <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                             <CardTitle className="text-lg font-semibold">Team</CardTitle>
+                         </CardHeader> */}
+                         <CardContent>
+                            <p className="text-sm text-muted-foreground">No freelancers assigned to this project yet.</p>
+                            {/* TODO: List freelancers associated with the project */}
+                         </CardContent>
+                    </Card>
+                 </TabsContent>
 
-                {/* Work Assignments Section */}
-                <Card className="shadow-sm border-none">
-                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-semibold">Work Assignments</CardTitle>
-                         {userRole === "Заказчик" && (
-                            <Button size="sm" variant="outline">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Create Assignment
-                            </Button>
-                         )}
-                    </CardHeader>
-                    <CardContent>
-                         <p className="text-sm text-muted-foreground">No work assignments created yet.</p>
-                         {/* TODO: List work assignments related to this project */}
-                    </CardContent>
-                </Card>
+                 <TabsContent value="assignments" className="mt-6">
+                    <Card className="shadow-sm border-none">
+                         {/* <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                             <CardTitle className="text-lg font-semibold">Work Assignments</CardTitle>
+                             {userRole === "Заказчик" && (
+                                <Button size="sm" variant="outline">
+                                    <PlusCircle className="mr-2 h-4 w-4" /> Create Assignment
+                                </Button>
+                             )}
+                         </CardHeader> */}
+                         <CardContent>
+                            <p className="text-sm text-muted-foreground">No work assignments created yet.</p>
+                            {/* TODO: List work assignments related to this project */}
+                         </CardContent>
+                    </Card>
+                 </TabsContent>
 
-                {/* Finance Summary Section */}
-                <Card className="lg:col-span-2 shadow-sm border-none">
-                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-lg font-semibold">Finance Summary</CardTitle>
-                        <Link href="/finance" passHref>
-                             <Button size="sm" variant="link">View Full Finance</Button>
-                        </Link>
-                    </CardHeader>
-                    <CardContent>
-                         <p className="text-sm text-muted-foreground">Financial summary for this project will be displayed here.</p>
-                         {/* TODO: Display project-specific financial overview (spent, remaining budget, etc.) */}
-                    </CardContent>
-                </Card>
-            </div>
+                 <TabsContent value="finance" className="mt-6">
+                     <Card className="shadow-sm border-none">
+                         {/* <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                             <CardTitle className="text-lg font-semibold">Finance Summary</CardTitle>
+                             <Link href="/finance" passHref>
+                                  <Button size="sm" variant="link">View Full Finance</Button>
+                             </Link>
+                         </CardHeader> */}
+                         <CardContent>
+                             <p className="text-sm text-muted-foreground">Financial summary for this project will be displayed here.</p>
+                             {/* TODO: Display project-specific financial overview (spent, remaining budget, etc.) */}
+                         </CardContent>
+                    </Card>
+                 </TabsContent>
+            </Tabs>
         </div>
     );
 }
