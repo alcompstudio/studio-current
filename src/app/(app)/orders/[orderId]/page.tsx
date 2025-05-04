@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Users, FileText, DollarSign, Briefcase, CheckCircle, Clock, ListChecks, Edit, Tag, Calculator, Info, PlusCircle, MinusCircle, Pencil, ChevronDown } from "lucide-react";
-import Link from "next/link";
+import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import type { Order, Etap, EtapOption } from "@/lib/types";
 import { mockOrders, getOrderStatusVariant } from '../mockOrders';
@@ -44,9 +44,9 @@ export default function OrderDetailPage() {
     const router = useRouter();
     // Use standard hooks for client components
     const params = useParams<{ orderId: string }>();
-    const searchParamsHook = useSearchParams();
+    const searchParamsHook = useSearchParams(); // Renamed to avoid conflict
 
-    const orderId = params?.orderId;
+    const orderId = params?.orderId; // Get projectId after unwrapping
 
     const [orderData, setOrderData] = React.useState<Order | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -60,8 +60,8 @@ export default function OrderDetailPage() {
     const [selectedBidderId, setSelectedBidderId] = React.useState<string | null>(null); // Track selected bidder for comparison
     const { toast } = useToast();
 
-    // Read query parameter for tab management, default to 'overview'
-    const initialTab = searchParamsHook.get('tab') || 'overview';
+     // Read query parameter for tab management, default to 'overview'
+     const initialTab = searchParamsHook.get('tab') || 'overview'; // Use renamed hook
 
      React.useEffect(() => {
          if (orderId) {
@@ -675,23 +675,21 @@ export default function OrderDetailPage() {
                             </Card>
                         )}
                         {orderData.etaps && orderData.etaps.length > 0 ? (
-                            <Accordion
+                             <Accordion
                                 type="multiple"
                                 className="w-full space-y-2" // Add space between items
                                 key={JSON.stringify(orderData.etaps)} // Re-render accordion if etaps change fundamentally
                                 value={openAccordionItems}
                                 onValueChange={handleAccordionChange}
-                            >
+                             >
                                 {orderData.etaps.map((etap: Etap) => (
                                     <AccordionItem value={etap.id} key={etap.id} className="border-none rounded-lg overflow-hidden bg-card shadow-sm">
-                                         <AccordionTrigger
-                                            className={cn(
+                                         <AccordionTrigger className={cn(
                                                 "flex items-center justify-between w-full px-4 py-3 font-semibold text-left transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:no-underline cursor-pointer",
                                                 openAccordionItems.includes(etap.id) && "bg-muted rounded-b-none border-b", // Style when open
                                             )}
                                         >
                                             <span className="flex-1">{etap.name}</span>
-                                             {/* Moved badges and edit button inside trigger if needed, or keep them in content */}
                                         </AccordionTrigger>
                                         <AccordionContent className="border-t">
                                             {/* Two-column layout inside content */}
@@ -723,7 +721,7 @@ export default function OrderDetailPage() {
                                                                         size="icon"
                                                                         variant="ghost"
                                                                         onClick={(e) => {
-                                                                            e.stopPropagation(); // Prevent accordion toggle if it's nested in trigger
+                                                                            e.stopPropagation(); // Prevent accordion toggle
                                                                             handleEditEtapClick(etap.id);
                                                                         }}
                                                                         className="h-6 w-6 p-1 text-muted-foreground hover:text-primary"
@@ -874,7 +872,7 @@ export default function OrderDetailPage() {
                                                                             key={bidder.id}
                                                                             size="sm"
                                                                             variant={selectedBidderId === bidder.id ? "secondary" : "outline"}
-                                                                            onClick={()={() => handleSelectBidder(bidder.id)} }
+                                                                            onClick={() => handleSelectBidder(bidder.id)}
                                                                             className="h-8 px-2 py-1 text-xs flex items-center gap-1.5"
                                                                         >
                                                                             <Avatar className="w-4 h-4">
