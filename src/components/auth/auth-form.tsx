@@ -40,79 +40,155 @@ const registerSchema = z.object({
   path: ["confirmPassword"], // path of error
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-type RegisterFormValues = z.infer<typeof registerSchema>;
+// Базовая схема регистрации (без refine)
+const baseRegisterSchema = z.object({
+  email: z.string().email({ message: "Invalid email address." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  confirmPassword: z.string(),
+  role: z.enum(["Заказчик", "Исполнитель"], {
+    required_error: "You need to select a role.",
+  }),
+  name: z.string().min(1, { message: "Name is required." }), // Добавляем name сюда
+});
 
-// Hardcoded test users
-const testUsers = {
-  "client@taskverse.test": { password: "password", role: "Заказчик" as UserRole },
-  "freelancer@taskverse.test": { password: "password", role: "Исполнитель" as UserRole },
-  "admin@taskverse.test": { password: "password", role: "Администратор" as UserRole },
-};
+// Финальная схема регистрации с проверкой паролей
+const finalRegisterSchema = baseRegisterSchema.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"], // path of error
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+// Используем финальную схему для типа
+type RegisterFormValues = z.infer<typeof finalRegisterSchema>;
+
+// REMOVE Hardcoded test users
+// const testUsers = { ... };
 
 export function AuthForm() {
   const [isLogin, setIsLogin] = React.useState(true);
   const { toast } = useToast();
   const router = useRouter(); // Initialize router
 
-  const formSchema = isLogin ? loginSchema : registerSchema;
-  type FormValues = z.infer<typeof formSchema>;
+  // Используем финальную схему регистрации
+  const formSchema = isLogin ? loginSchema : finalRegisterSchema;
+  type FormValues = LoginFormValues | RegisterFormValues;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    // Устанавливаем defaultValues динамически в зависимости от isLogin
+    // Устанавливаем defaultValues динамически в зависимости от isLogin
+    // Гарантируем, что все строковые поля имеют начальное значение ""
     defaultValues: isLogin
-      ? { email: "", password: "" }
-      : { email: "", password: "", confirmPassword: "", role: undefined },
-    mode: "onChange", // Validate on change for better UX
+      ? { email: "", password: "" } 
+      : { email: "", password: "", confirmPassword: "", role: undefined, name: "" }, 
+    mode: "onChange", 
   });
 
+   // Обновляем onSubmit для вызова API
    const onSubmit = async (data: FormValues) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    const apiEndpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+    const requestBody = isLogin 
+        ? { email: data.email, password: data.password } 
+        : { email: data.email, password: data.password, role: (data as RegisterFormValues).role, name: (data as RegisterFormValues).name }; // Добавляем name для регистрации
 
-    if (isLogin) {
-      // Simulate login
-      const loginData = data as LoginFormValues;
-      const user = testUsers[loginData.email.toLowerCase() as keyof typeof testUsers];
-
-      if (user && user.password === loginData.password) {
-        // Store user info (e.g., in localStorage for mock)
-        localStorage.setItem('authUser', JSON.stringify({ email: loginData.email.toLowerCase(), role: user.role }));
-
-        toast({
-          title: "Login Successful",
-          description: `Welcome back, ${user.role}!`,
-        });
-        // Redirect to dashboard on successful login
-        router.push('/dashboard'); // Use router.push
-        router.refresh(); // Force refresh layout to update role
-      } else {
-         toast({
-           title: "Login Failed",
-           description: "Invalid email or password.",
-           variant: "destructive",
-         });
-      }
-    } else {
-       // Simulate registration - For now, just show a message
-       // In a real app, this would create a user and then log them in/redirect
-      const registerData = data as RegisterFormValues;
-      toast({
-        title: "Registration Submitted (Mock)",
-        description: `Registered ${registerData.email} as a ${registerData.role}. Please log in.`,
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
       });
-       // Reset to login form after mock registration
-       setIsLogin(true);
-       form.reset({ email: registerData.email, password: "" });
+
+      // Обрабатываем ответ
+      if (!response.ok) {
+        const status = response.status;
+        const errorResult = await response.json().catch(() => ({ error: `API Error: ${response.statusText} (${status})` }));
+        // Используем сообщение из errorResult.message, если оно есть (стандарт для API ошибок), иначе errorResult.error или дефолтное
+        const serverMessage = errorResult.message || errorResult.error || `API Error: ${response.statusText} (${status})`;
+
+
+        if (!isLogin && status === 409) { // Ошибка "Email уже занят" при регистрации
+          console.log("Handling 409 error locally in onSubmit for registration");
+          form.setError("email", {
+            type: "server",
+            message: "Этот email уже зарегистрирован. Пожалуйста, попробуйте войти.", // Можно локализовать
+          });
+          return; 
+        } else if (isLogin && (status === 401 || status === 400)) { // Ошибка "Неверный email или пароль" при логине
+           console.log("Handling 401/400 error locally in onSubmit for login");
+           form.setError("email", { // Устанавливаем на поле email
+             type: "server",
+             message: serverMessage, // Сообщение от сервера "Invalid email or password."
+           });
+           // Можно также установить ошибку для поля password, если хотите
+           // form.setError("password", { type: "server", message: " " }); // Пустое сообщение, чтобы только подсветить
+           return; // Завершаем, чтобы не попасть в общий catch и не показать toast
+        } else {
+          // Для всех ДРУГИХ непредвиденных ошибок от API (например, 500) - бросаем их
+          const error = new Error(serverMessage);
+          (error as any).status = status; // Сохраняем статус для возможной отладки
+          throw error; // Эта ошибка будет поймана в catch и показана через toast
+        }
+      }
+
+      // Если response.ok, читаем успешный результат
+      const result = await response.json();
+
+      // Успешный логин или регистрация
+      const { userId, email, role } = result; // API должен вернуть эти поля
+
+      if (!userId || !email || !role) {
+          throw new Error('Invalid response from server: missing user data.');
+      }
+
+      // Формируем объект для сохранения
+      const authDataToStore: any = { userId, email, role };
+      // Добавляем customerId, если он пришел от API
+      if (result.customerId) {
+        authDataToStore.customerId = result.customerId;
+      }
+      // TODO: Добавить freelancerId, если API будет его возвращать
+
+      // Сохраняем данные пользователя в localStorage
+      localStorage.setItem('authUser', JSON.stringify(authDataToStore));
+      console.log("Saved to localStorage:", authDataToStore); // Лог для отладки
+
+      toast({
+        title: isLogin ? "Login Successful" : "Registration Successful",
+        description: isLogin ? `Welcome back!` : `Account created for ${email}. Welcome!`,
+      });
+
+      // Перенаправляем на дашборд
+      router.push('/dashboard');
+      router.refresh(); // Обновляем layout для актуализации роли
+
+    } catch (error) {
+      console.error(`Auth failed: ${apiEndpoint}`, error);
+      const message = error instanceof Error ? error.message : 'An unknown error occurred';
+      // const message = error instanceof Error ? error.message : 'An unknown error occurred'; // <<< Удаляем дубликат
+      // const status = (error as any).status; // Статус теперь не нужен здесь
+
+      // Catch теперь обрабатывает только НЕОЖИДАННЫЕ ошибки (не 409)
+      // Проверка на 409 больше не нужна здесь
+      // if (!isLogin && status === 409) { ... }
+      
+      // Показываем общую ошибку через toast для всех ошибок, попавших в catch
+      toast({
+        title: isLogin ? "Login Failed" : "Registration Failed",
+        description: message,
+        variant: "destructive",
+      });
     }
   };
 
   const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-    form.reset(isLogin
-        ? { email: "", password: "", confirmPassword: "", role: undefined }
-        : { email: "", password: "" }
-    ); // Reset form when switching modes
+    const nextIsLogin = !isLogin;
+    setIsLogin(nextIsLogin);
+    // При переключении на РЕГИСТРАЦИЮ (nextIsLogin === false), сбрасываем ВСЕ поля регистрации
+    // При переключении на ЛОГИН (nextIsLogin === true), сбрасываем поля логина
+    form.reset(nextIsLogin 
+      ? { email: "", password: "" } 
+      : { email: "", password: "", confirmPassword: "", role: undefined, name: "" } // Добавили name: "" сюда
+    );
   };
 
   return (
@@ -125,6 +201,21 @@ export function AuthForm() {
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+             {!isLogin && (
+               <FormField
+                control={form.control}
+                name="name" // Добавляем поле Name для регистрации
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+             )}
             <FormField
               control={form.control}
               name="email"

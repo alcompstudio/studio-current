@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster"; // Import Toaster
+import Toaster from '@/components/layout/toaster-client';
 import { cn } from '@/lib/utils'; // Import cn utility
 
 // Initialize the Inter font
@@ -31,7 +31,7 @@ export default function RootLayout({
         )}
       >
         {children}
-        <Toaster /> {/* Add Toaster here */}
+        <Toaster />
       </body>
     </html>
   );
