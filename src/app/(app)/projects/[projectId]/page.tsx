@@ -51,26 +51,60 @@ export default function ProjectDetailPage() {
 
     React.useEffect(() => {
         if (projectId) {
-            const foundProject = mockProjects.find(p => p.id === projectId);
-            if (foundProject) {
-                setProjectData(foundProject);
-            } else {
-                toast({
-                     title: "Error",
-                     description: `Project with ID ${projectId} not found.`,
-                     variant: "destructive",
-                 });
-                 router.replace('/projects');
-            }
-            setIsLoading(false);
+            setIsLoading(true);
+            fetch(`/api/projects/${projectId}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch project: ${res.status} ${res.statusText}`);
+                    }
+                    return res.json();
+                })
+                .then((data: Project) => {
+                    // Преобразуем строки дат в объекты Date для основного объекта projectData
+                    const projectWithDates = {
+                        ...data,
+                        createdAt: data.createdAt ? new Date(data.createdAt) : null,
+                        updatedAt: data.updatedAt ? new Date(data.updatedAt) : null,
+                        // Если у вас есть вложенные объекты с датами (например, customer, orders),
+                        // их также нужно будет обработать здесь.
+                        // Пример для customer (если есть):
+                        // customer: data.customer ? {
+                        //     ...data.customer,
+                        //     createdAt: data.customer.createdAt ? new Date(data.customer.createdAt) : null,
+                        //     updatedAt: data.customer.updatedAt ? new Date(data.customer.updatedAt) : null,
+                        // } : null,
+                        // Пример для orders (если это массив и есть даты):
+                        // orders: data.orders ? data.orders.map(order => ({
+                        //    ...order,
+                        //    createdAt: order.createdAt ? new Date(order.createdAt) : null,
+                        //    deadline: order.deadline ? new Date(order.deadline) : null, 
+                        //    // ... другие даты в заказе
+                        // })) : [],
+                    };
+                    console.log("Project data received on client:", projectWithDates); // Выводим данные в консоль
+                    setProjectData(projectWithDates as Project); // Приводим к типу Project
+                })
+                .catch(error => {
+                    console.error("Error fetching project data:", error);
+                    toast({
+                        title: "Error",
+                        description: `Could not load project with ID ${projectId}. ${error.message}`,
+                        variant: "destructive",
+                    });
+                    // Возможно, перенаправить, если проект действительно не найден или нет доступа
+                    // router.replace('/projects'); 
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
         } else {
             setIsLoading(false);
             toast({
-                 title: "Error",
-                 description: "Project ID is missing.",
-                 variant: "destructive",
-             });
-             router.replace('/projects');
+                title: "Error",
+                description: "Project ID is missing.",
+                variant: "destructive",
+            });
+            router.replace('/projects');
         }
     }, [projectId, toast, router]);
 
@@ -154,7 +188,7 @@ export default function ProjectDetailPage() {
                         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Client</p>
-                                <p>{projectData.clientName || 'N/A'}</p>
+                                <p>{projectData.customer?.name || 'N/A'}</p>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-muted-foreground">Budget</p>

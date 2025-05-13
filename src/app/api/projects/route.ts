@@ -56,10 +56,17 @@ export async function POST(request: Request) {
     if (description !== undefined) {
       projectDataToCreate.description = description;
     }
-    
-    // Note: 'currency' and 'budget' are not part of the Project model (Project.ts)
-    // If they need to be stored, the model and database schema must be updated.
-    // For now, they are not included in Project.create to avoid errors.
+
+    // Добавляем budget и currency, если они есть и не пустые строки
+    if (budget !== undefined && budget !== null && String(budget).trim() !== '') {
+      const parsedBudget = parseFloat(String(budget));
+      if (!isNaN(parsedBudget)) {
+        projectDataToCreate.budget = parsedBudget;
+      }
+    }
+    if (currency !== undefined && String(currency).trim() !== '') {
+      projectDataToCreate.currency = String(currency).trim();
+    }
 
     const project = await Project.create(projectDataToCreate);
     return NextResponse.json(project, { status: 201 });

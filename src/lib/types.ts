@@ -35,15 +35,25 @@ export interface UserProfile {
   // Add other profile fields as needed
 }
 
+// Customer Interface
+export interface Customer extends BaseEntity {
+  userId: string;
+  email: string;
+  phone?: string;
+  address?: string;
+}
+
 // Project Interface
 export interface Project extends BaseEntity {
   clientId: string; // Link to Заказчик User ID
+  title: string;
   clientName?: string; // Optional: Denormalized client name for display
   status: string; // e.g., "Active", "Completed", "Archived" - Define specific statuses later
   currency: string; // e.g., "USD", "EUR", "RUB"
   budget?: number; // Optional: Provided budget
   totalBudget?: number; // Optional: Calculated total budget from orders/etaps
   freelancerIds?: string[]; // List of approved Исполнитель IDs for the project
+  customer?: Customer;
 }
 
 // Order Interface (Заказ)

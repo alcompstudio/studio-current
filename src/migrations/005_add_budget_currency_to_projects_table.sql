@@ -1,0 +1,3 @@
+ALTER TABLE "projects"
+ADD COLUMN "budget" DECIMAL(12, 2) NULL,
+ADD COLUMN "currency" VARCHAR(10) NULL;

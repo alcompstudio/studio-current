@@ -7,6 +7,8 @@ export interface ProjectAttributes {
   title: string;
   description?: string | null;
   status: string;
+  budget?: number | null;      // Добавлено поле budget
+  currency?: string | null;   // Добавлено поле currency
 }
 
 export interface ProjectInstance extends Model<ProjectAttributes>, ProjectAttributes {}
@@ -19,6 +21,8 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
     public title!: string;
     public description?: string | null;
     public status!: string;
+    public budget?: number | null;     // Добавлено поле budget
+    public currency?: string | null;  // Добавлено поле currency
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -59,6 +63,14 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
         type: DataTypes.STRING(50),
         allowNull: false,
         defaultValue: 'active',
+      },
+      budget: {
+        type: DataTypes.DECIMAL(12, 2), // Пример: 12 цифр всего, 2 после запятой
+        allowNull: true,
+      },
+      currency: {
+        type: DataTypes.STRING(10),      // Пример: 'USD', 'EUR'
+        allowNull: true,
       },
     },
     {
