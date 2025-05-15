@@ -8,6 +8,7 @@ export interface OrderAttributes {
   description?: string | null;
   status: string;
   deadline?: Date | null;
+  price?: string | number | null;
 }
 
 export interface OrderInstance extends Model<OrderAttributes>, OrderAttributes {}
@@ -21,6 +22,7 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
     public description?: string | null;
     public status!: string;
     public deadline?: Date | null;
+    public price?: string | number | null;
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -59,6 +61,10 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
       },
       deadline: {
         type: DataTypes.DATE,
+        allowNull: true,
+      },
+      price: {
+        type: DataTypes.DECIMAL(12, 2),
         allowNull: true,
       },
     },

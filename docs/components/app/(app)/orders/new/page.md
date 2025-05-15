@@ -35,8 +35,6 @@ flowchart TD
     page_tsx --> select
     types[@/lib/types]
     page_tsx --> types
-    mockOrders[../mockOrders]
-    page_tsx --> mockOrders
     use_toast[@/hooks/use-toast]
     page_tsx --> use_toast
 ```

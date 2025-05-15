@@ -10,6 +10,7 @@
   "params": [],
   "returnType": "React.JSX.Element",
   "dependencies": [
+    "react",
     "@/components/ui/card",
     "@/components/ui/button",
     "@/components/ui/badge",
@@ -21,7 +22,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-14",
+      "date": "2025-05-15",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

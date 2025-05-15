@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "userstudio",
+    "password": "userstudio",
+    "database": "userstudio",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "userstudio",
+    "password": "userstudio",
+    "database": "userstudio",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "userstudio",
+    "password": "userstudio",
+    "database": "userstudio",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  }
+}

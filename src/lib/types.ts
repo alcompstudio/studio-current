@@ -57,14 +57,19 @@ export interface Project extends BaseEntity {
 }
 
 // Order Interface (Заказ)
-export interface Order extends BaseEntity {
-  projectId: string;
-  projectName?: string; // Optional: Denormalized project name for display
+export interface Order {
+  id: string;
+  project_id: number;
+  title: string;
+  description?: string;
   status: OrderStatus;
-  etaps?: Etap[];
-  workPositions?: WorkPosition[]; // Рабочие Позиции directly linked initially
-  totalCalculatedPrice?: number; // Calculated based on options
-  currency: string; // Currency inherited or set for the order
+  price?: number;
+  currency?: string;
+  createdAt: string | Date | null; // Allow string, Date, or null
+  updatedAt: string | Date | null; // Allow string, Date, or null
+  // Add other fields from DB schema if needed
+  // etaps?: Etap[];
+  // workPositions?: WorkPosition[];
 }
 
 // Etap Interface (Этап Заказа)

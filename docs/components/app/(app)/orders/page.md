@@ -7,6 +7,8 @@
 ```mermaid
 flowchart TD
     page_tsx[page.tsx]
+    react[react]
+    page_tsx --> react
     card[@/components/ui/card]
     page_tsx --> card
     button[@/components/ui/button]

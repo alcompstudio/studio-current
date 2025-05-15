@@ -132,7 +132,7 @@ export default function ProjectsPage() {
               <Card key={project.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Removed border */}
                 <CardHeader className="pb-2"> {/* Reduce padding bottom */}
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg font-semibold">{project.name}</CardTitle>
+                    <CardTitle className="text-lg font-semibold">{project.title ?? project.name}</CardTitle>
                     <Badge variant={getStatusVariant(project.status)} className="flex items-center">
                          {getStatusIcon(project.status)}
                          {project.status}

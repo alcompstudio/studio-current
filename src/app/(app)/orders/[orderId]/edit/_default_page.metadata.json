@@ -24,13 +24,11 @@
     "@/components/ui/textarea",
     "@/components/ui/select",
     "@/lib/types",
-    "../../mockOrders",
-    "@/hooks/use-toast",
-    "@/components/ui/label"
+    "@/hooks/use-toast"
   ],
   "history": [
     {
-      "date": "2025-05-14",
+      "date": "2025-05-15",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

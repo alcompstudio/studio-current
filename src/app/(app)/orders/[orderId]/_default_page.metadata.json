@@ -18,21 +18,12 @@
     "next/link",
     "next/navigation",
     "@/lib/types",
-    "../mockOrders",
     "@/hooks/use-toast",
-    "@/components/ui/accordion",
-    "@/components/ui/separator",
-    "@/components/orders/add-etap-form",
-    "@/components/orders/edit-etap-form",
-    "@/components/orders/add-option-form",
-    "@/components/orders/edit-option-form",
-    "@/lib/utils",
-    "@/components/ui/avatar",
-    "@/components/ui/tabs"
+    "../mockOrders"
   ],
   "history": [
     {
-      "date": "2025-05-14",
+      "date": "2025-05-15",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

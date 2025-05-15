@@ -23,28 +23,10 @@ flowchart TD
     page_tsx --> navigation
     types[@/lib/types]
     page_tsx --> types
-    mockOrders[../mockOrders]
-    page_tsx --> mockOrders
     use_toast[@/hooks/use-toast]
     page_tsx --> use_toast
-    accordion[@/components/ui/accordion]
-    page_tsx --> accordion
-    separator[@/components/ui/separator]
-    page_tsx --> separator
-    add_etap_form[@/components/orders/add-etap-form]
-    page_tsx --> add_etap_form
-    edit_etap_form[@/components/orders/edit-etap-form]
-    page_tsx --> edit_etap_form
-    add_option_form[@/components/orders/add-option-form]
-    page_tsx --> add_option_form
-    edit_option_form[@/components/orders/edit-option-form]
-    page_tsx --> edit_option_form
-    utils[@/lib/utils]
-    page_tsx --> utils
-    avatar[@/components/ui/avatar]
-    page_tsx --> avatar
-    tabs[@/components/ui/tabs]
-    page_tsx --> tabs
+    mockOrders[../mockOrders]
+    page_tsx --> mockOrders
 ```
 
 ### `default` (ReactComponent)

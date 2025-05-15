@@ -1,23 +1,33 @@
 import { NextResponse } from 'next/server';
-import { Order } from '@/lib/models/Order'; // Изменено на Sequelize модель Order
+import db from '@/lib/models'; // Импорт объекта db по умолчанию
+const Order = db.Order; // Получаем модель Order из объекта db
 
 // GET /api/orders - Получить все заказы или отфильтровать по project_id
 export async function GET(request: Request) {
+  console.log('[API/ORDERS] Received GET request');
   try {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get('project_id');
+    console.log(`[API/ORDERS] Project ID from search params: ${projectId}`);
 
     let orders;
     if (projectId) {
+      console.log(`[API/ORDERS] Fetching orders for project_id: ${projectId}`);
       orders = await Order.findAll({ where: { project_id: parseInt(projectId, 10) } });
+      console.log(`[API/ORDERS] Found ${orders.length} orders for project_id: ${projectId}`);
     } else {
+      console.log('[API/ORDERS] Fetching all orders');
       orders = await Order.findAll();
+      console.log(`[API/ORDERS] Found ${orders.length} total orders`);
     }
+    console.log('[API/ORDERS] Successfully fetched orders. Returning JSON response.');
     return NextResponse.json(orders);
   } catch (error) {
-    console.error('Failed to fetch orders:', error);
+    console.error('[API/ORDERS] Failed to fetch orders:', error);
+    // Log the full error object for better debugging
+    console.error('[API/ORDERS] Full error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     return NextResponse.json(
-      { error: 'Failed to fetch orders' },
+      { error: 'Failed to fetch orders', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

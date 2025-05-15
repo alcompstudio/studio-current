@@ -1,17 +1,61 @@
+'use client';
 
+import { useEffect, useState } from 'react'; // Import useEffect and useState
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Eye, Filter } from "lucide-react"; // Import Eye and Filter icons
 import type { Order } from "@/lib/types"; // Import Order type
 import Link from "next/link";
-import { mockOrders, getOrderStatusVariant } from './mockOrders'; // Import mock data and helper from the new file
+import { getOrderStatusVariant } from './mockOrders'; // Import only the helper
 import { cn } from "@/lib/utils"; // Import cn for conditional classes
 
 
 export default function OrdersPage() {
-    // TODO: Fetch and display orders based on user role and context
-    const userRole = "Заказчик"; // Mock role
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [projects, setProjects] = useState<{ id: number; title: string }[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const userRole = "Заказчик";
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [ordersRes, projectsRes] = await Promise.all([
+                    fetch('/api/orders'),
+                    fetch('/api/projects')
+                ]);
+                if (!ordersRes.ok) throw new Error(`Error fetching orders: ${ordersRes.statusText}`);
+                if (!projectsRes.ok) throw new Error(`Error fetching projects: ${projectsRes.statusText}`);
+                const ordersData: Order[] = await ordersRes.json();
+                const projectsData: { id: number; title: string; currency?: string }[] = await projectsRes.json();
+                const ordersWithFormattedDates = ordersData.map(order => ({
+                    ...order,
+                    createdAt: order.createdAt ? new Date(order.createdAt) : null,
+                    updatedAt: order.updatedAt ? new Date(order.updatedAt) : null,
+                }));
+                setOrders(ordersWithFormattedDates);
+                setProjects(Array.isArray(projectsData) ? projectsData.map(p => ({ id: p.id, title: p.title, currency: p.currency })) : []);
+            } catch (err) {
+                console.error('Failed to fetch orders or projects:', err);
+                setError('Failed to load orders or projects.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <div className="flex flex-col gap-6">Loading orders...</div>;
+    }
+
+    if (error) {
+        return <div className="flex flex-col gap-6 text-red-500">{error}</div>;
+    }
+
 
     return (
         <div className="flex flex-col gap-6">
@@ -40,15 +84,18 @@ export default function OrdersPage() {
 
             {/* Order List Content - Direct mapping */}
              <div className="space-y-4">
-                 {mockOrders.length > 0 ? (
-                    mockOrders.map((order) => (
+                 {orders.length > 0 ? (
+                    orders.map((order) => (
                         <Card key={order.id} className="shadow-sm hover:shadow-md transition-shadow border-none"> {/* Removed border */}
                             <CardHeader className="pb-2"> {/* Reduce padding */}
                                 <div className="flex justify-between items-start gap-2">
                                     <div className="flex-1">
-                                        <CardTitle className="text-lg font-semibold mb-1">{order.name}</CardTitle>
+                                        <CardTitle className="text-lg font-semibold mb-1">{order.title}</CardTitle> {/* Use order.title */}
                                         <CardDescription>
-                                            Project: <Link href={`/projects/${order.projectId}`} className="text-primary hover:underline">{order.projectName}</Link>
+                                            Проект: {
+                                                projects.find(p => p.id === order.project_id)?.title
+                                                ?? `ID: ${order.project_id}`
+                                            }
                                         </CardDescription>
                                     </div>
                                      <Badge variant={getOrderStatusVariant(order.status)} className="flex-shrink-0">
@@ -60,7 +107,9 @@ export default function OrdersPage() {
                                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{order.description}</p> {/* Use line-clamp */}
                                 <div className="flex justify-between items-center">
                                      <span className="text-sm font-semibold">
-                                        Est. Price: {order.currency} {order.totalCalculatedPrice?.toLocaleString() ?? 'N/A'}
+                                        Цена: {order.price !== null && order.price !== undefined && order.price !== ''
+                                            ? Number(order.price).toLocaleString()
+                                            : "-"} {projects.find(p => p.id === order.project_id)?.currency ?? ""}
                                      </span>
                                      {/* Link to the new order detail page */}
                                      <Link href={`/orders/${order.id}`} passHref>
@@ -70,7 +119,7 @@ export default function OrdersPage() {
                                      </Link>
                                 </div>
                                  <p className="text-xs text-muted-foreground mt-2">
-                                    Created: {order.createdAt.toLocaleDateString()}
+                                    Created: {order.createdAt instanceof Date ? order.createdAt.toLocaleDateString() : 'N/A'} {/* Check if Date object */}
                                 </p>
                             </CardContent>
                         </Card>
@@ -86,4 +135,3 @@ export default function OrdersPage() {
         </div>
     );
 }
-

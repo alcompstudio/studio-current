@@ -9,8 +9,8 @@ flowchart TD
     route_ts[route.ts]
     server[next/server]
     route_ts --> server
-    Order[@/lib/models/Order]
-    route_ts --> Order
+    models[@/lib/models]
+    route_ts --> models
 ```
 
 ### `GET` (ReactComponent)
