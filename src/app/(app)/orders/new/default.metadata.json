@@ -1,0 +1,38 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\new\\page.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/button",
+    "lucide-react",
+    "next/link",
+    "next/navigation",
+    "react-hook-form",
+    "@hookform/resolvers/zod",
+    "zod",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/components/ui/textarea",
+    "@/components/ui/select",
+    "@/lib/types",
+    "../mockOrders",
+    "@/hooks/use-toast"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

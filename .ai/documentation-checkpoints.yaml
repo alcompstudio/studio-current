@@ -1,0 +1,84 @@
+checkpoints:
+  git-based:
+    - name: "Еженедельное обновление журнала прогресса и валидация"
+      type: "time-based"
+      trigger:
+        frequency: "weekly" # Например, каждую пятницу
+        day: "friday" # Условное поле, логика будет в checkpoint-detector.js
+        # Можно добавить time: "18:00" для более точного срабатывания, если детектор будет запускаться часто
+      actions:
+        - update-progress-log # Запустить git-progress-generator.js
+        - validate-docs       # Запустить docs-validator.js
+    
+    - name: "Обновление документации после N коммитов в ключевые файлы"
+      type: "commit-based"
+      trigger:
+        commit_count: 10  # Триггер после 10 коммитов с последнего чекпоинта/обновления
+        significant_files_pattern: # Паттерны файлов, коммиты в которые считаются значимыми
+          - "src/**/*.ts"
+          - "src/**/*.tsx"
+          # Исключая файлы тестов, конфигураций и т.п., если нужно
+          - "!src/**/*.spec.ts"
+          - "!src/**/*.test.ts"
+      actions:
+        - update-architecture-docs # Потенциально, если изменения затрагивают структуру
+        - update-component-metadata # Запустить code-structure-extractor.js для обновления метаданных
+        - update-progress-log # Обновить журнал прогресса
+        - validate-docs
+    
+    - name: "Обновление документации API после изменений в API"
+      type: "file-pattern-based"
+      trigger:
+        patterns: # Файлы, изменения в которых триггерят обновление API доков
+          - "src/app/api/**/*.ts"
+      actions:
+        - update-api-docs # Специализированное действие или вызов code-structure-extractor для API
+        - validate-docs
+        
+  code-based:
+    - name: "Документирование нового компонента"
+      type: "code-structure-change" # Тип изменения, который будет детектировать code-analyzer.js
+      trigger:
+        event: "new_component_added" # Событие от code-analyzer.js
+        # patterns можно использовать для указания, где искать новые компоненты, например:
+        # patterns:
+        #  - "src/components/**/[A-Z]*.tsx" # Компоненты в верхнем регистре
+      actions:
+        - create-component-docs # Запустить code-structure-extractor.js для нового компонента
+        - update-component-metadata # Также часть code-structure-extractor.js
+        - validate-docs
+        
+    - name: "Реакция на значительное изменение компонента"
+      type: "code-structure-change"
+      trigger:
+        event: "component_significantly_modified" # Событие от code-analyzer.js
+        # patterns:
+        #  - "src/components/**/*.tsx" # Можно указать порог изменений (например, % измененных строк)
+      actions:
+        - update-component-docs # Обновить существующую документацию компонента
+        - update-component-metadata
+        - validate-docs
+
+    - name: "Реакция на изменение архитектуры"
+      type: "code-structure-change"
+      trigger:
+        event: "project_structure_changed" # Например, изменение структуры директорий, ключевых зависимостей
+        # patterns:
+        #  - "tsconfig.json" # Изменение путей или настроек
+        #  - "package.json"  # Изменение ключевых зависимостей
+      actions:
+        - update-architecture-docs # Потребует анализа и, возможно, ручного вмешательства или умного агента
+        - suggest-adr # Создать шаблон ADR для документирования этого изменения
+        - validate-docs
+
+  manual:
+    - name: "Полное обновление документации по запросу"
+      type: "user-trigger"
+      command: "update-docs-full" # Команда, которую может вызвать пользователь или ИИ
+      description: "Запускает все основные скрипты для обновления документации: лог прогресса, структура кода, метаданные, валидация."
+      actions:
+        - update-progress-log
+        - update-component-metadata # Подразумевает и создание доков для новых
+        - update-architecture-docs # Попытка обновить, если есть автоматизируемые части
+        - update-api-docs
+        - validate-docs

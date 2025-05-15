@@ -1,0 +1,37 @@
+{
+  "component": "getCurrencyRates",
+  "version": "1.0.0",
+  "description": "Asynchronously retrieves currency exchange rates for a given currency.",
+  "tags": [
+    {
+      "tagName": "param",
+      "text": "The currency to retrieve rates for."
+    },
+    {
+      "tagName": "returns",
+      "text": "A promise that resolves to a CurrencyRates object containing the exchange rate to USD."
+    }
+  ],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "services\\currency-converter.ts",
+  "props": [],
+  "params": [
+    {
+      "name": "currency",
+      "type": "string",
+      "description": "",
+      "optional": false
+    }
+  ],
+  "returnType": "Promise<CurrencyRates>",
+  "dependencies": [],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

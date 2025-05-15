@@ -1,0 +1,41 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\page.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/badge",
+    "@/components/ui/button",
+    "lucide-react",
+    "next/link",
+    "next/navigation",
+    "@/lib/types",
+    "../mockOrders",
+    "@/hooks/use-toast",
+    "@/components/ui/accordion",
+    "@/components/ui/separator",
+    "@/components/orders/add-etap-form",
+    "@/components/orders/edit-etap-form",
+    "@/components/orders/add-option-form",
+    "@/components/orders/edit-option-form",
+    "@/lib/utils",
+    "@/components/ui/avatar",
+    "@/components/ui/tabs"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

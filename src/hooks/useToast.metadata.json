@@ -1,0 +1,24 @@
+{
+  "component": "useToast",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "hooks\\use-toast.ts",
+  "props": [],
+  "params": [],
+  "returnType": "{ toast: typeof import(\"E:/Business/Projects/studio/src/hooks/use-toast\").toast; dismiss: (toastId?: string | undefined) => void; toasts: ToasterToast[]; }",
+  "dependencies": [
+    "react",
+    "@/components/ui/toast"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

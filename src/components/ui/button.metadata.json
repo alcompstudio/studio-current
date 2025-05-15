@@ -1,0 +1,77 @@
+{
+  "component": "Button",
+  "version": "1.0.0",
+  "description": "Базовый компонент кнопки с различными вариантами отображения и размерами. Основан на @radix-ui/react-slot и cva.",
+  "maintainer": "AI Agent Cline",
+  "type": "ReactFunctionalComponent",
+  "path": "./button.tsx",
+  "dependencies": [
+    {
+      "name": "React",
+      "reason": "Основная библиотека для создания компонента."
+    },
+    {
+      "name": "@radix-ui/react-slot",
+      "reason": "Для возможности передавать пропсы дочернему элементу, если кнопка используется как обертка (asChild)."
+    },
+    {
+      "name": "cva (class-variance-authority)",
+      "reason": "Для создания вариантов стилей компонента."
+    },
+    {
+      "name": "@/lib/utils (cn function)",
+      "path": "../../lib/utils.ts",
+      "reason": "Для условного объединения CSS классов Tailwind."
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'",
+      "description": "Визуальный стиль кнопки.",
+      "required": false,
+      "defaultValue": "'default'"
+    },
+    {
+      "name": "size",
+      "type": "'default' | 'sm' | 'lg' | 'icon'",
+      "description": "Размер кнопки.",
+      "required": false,
+      "defaultValue": "'default'"
+    },
+    {
+      "name": "asChild",
+      "type": "boolean",
+      "description": "Если true, компонент Button передаст свои пропсы первому дочернему элементу.",
+      "required": false,
+      "defaultValue": false
+    }
+  ],
+  "api": {},
+  "usageExamples": [
+    {
+      "scenario": "Кнопка по умолчанию",
+      "code": "<Button>Нажми меня</Button>"
+    },
+    {
+      "scenario": "Кнопка с вариантом 'destructive' и размером 'lg'",
+      "code": "<Button variant='destructive' size='lg'>Удалить</Button>"
+    },
+    {
+      "scenario": "Кнопка-ссылка",
+      "code": "<Button variant='link' asChild><a href='/about'>О нас</a></Button>"
+    },
+    {
+      "scenario": "Кнопка-иконка",
+      "code": "<Button variant='outline' size='icon'><IconComponent /></Button>"
+    }
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "AI Agent Cline",
+      "changes": "Создан первоначальный файл метаданных."
+    }
+  ],
+  "notes": "Этот компонент является частью UI-кита, использующего Radix UI и cva. Полный список пропсов включает стандартные атрибуты HTMLButtonElement. Для более точного описания пропсов и API требуется анализ исходного кода src/components/ui/button.tsx."
+}

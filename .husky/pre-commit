@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-commit hooks..."
+
+# Запуск lint-staged
+# Флаг --concurrent false может быть полезен, если скрипты тяжелые или влияют друг на друга
+# Флаг --quiet подавляет вывод lint-staged, если команды успешны
+npx lint-staged --concurrent false
+
+if [ $? -ne 0 ]; then
+  echo "Pre-commit checks failed. Please fix the issues and try again."
+  exit 1
+fi
+
+echo "Pre-commit checks passed."
+exit 0

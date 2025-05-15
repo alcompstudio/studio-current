@@ -1,0 +1,71 @@
+{
+  "component": "FormField",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\ui\\form.tsx",
+  "props": [
+    {
+      "name": "render",
+      "type": "({ field, fieldState, formState, }: {\n        field: ControllerRenderProps<TFieldValues, TName>;\n        fieldState: ControllerFieldState;\n        formState: UseFormStateReturn<TFieldValues>;\n    }) => React.ReactElement",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "name",
+      "type": "TName",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "rules",
+      "type": "Omit<RegisterOptions<TFieldValues, TName>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "shouldUnregister",
+      "type": "boolean",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "defaultValue",
+      "type": "FieldPathValue<TFieldValues, TName>",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "control",
+      "type": "Control<TFieldValues, any, TTransformedValues>",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@radix-ui/react-label",
+    "@radix-ui/react-slot",
+    "react-hook-form",
+    "@/lib/utils",
+    "@/components/ui/label"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,30 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\projects\\page.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/button",
+    "@/components/ui/card",
+    "lucide-react",
+    "@/components/ui/badge",
+    "next/link",
+    "@/lib/utils",
+    "react",
+    "@/lib/types"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,37 @@
+# Документация для `index.ts`
+
+*Путь к файлу: `src/lib\models\index.ts`*
+
+## Зависимости файла
+
+```mermaid
+flowchart TD
+    index_ts[index.ts]
+    sequelize[sequelize]
+    index_ts --> sequelize
+    dotenv[dotenv]
+    index_ts --> dotenv
+    pg[pg]
+    index_ts --> pg
+    User[./User]
+    index_ts --> User
+    Customer[./Customer]
+    index_ts --> Customer
+    Project[./Project]
+    index_ts --> Project
+    Order[./Order]
+    index_ts --> Order
+```
+
+### `connectDB` (Function)
+
+**Возвращает:** `Promise<void>`
+
+*Источник: `src/lib\models\index.ts`*
+
+---
+### `default` (Variable (ObjectLiteralExpression))
+
+*Источник: `src/lib\models\index.ts`*
+
+---

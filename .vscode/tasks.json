@@ -1,0 +1,103 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Docs: Generate Progress Report",
+      "type": "shell",
+      "command": "node",
+      "args": ["./scripts/docs/git-progress-generator.js"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docs: Extract Code Structure",
+      "type": "shell",
+      "command": "node",
+      "args": ["./scripts/docs/code-structure-extractor.js"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docs: Validate Documentation",
+      "type": "shell",
+      "command": "node",
+      "args": ["./scripts/docs/docs-validator.js"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true, // Фокусируемся, так как могут быть ошибки
+        "panel": "dedicated", // Отдельная панель для вывода валидатора
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [
+        {
+          "owner": "docs-validator",
+          "pattern": [
+            {
+              "regexp": "^- \\[([^\\]]+)\\] в файле `([^`]+)`(?: \\(строка (\\d+)\\))?: (.*)$",
+              "file": 2,
+              "line": 3,
+              "message": 4,
+              "severity": 1 // Тип проблемы (Placeholder Found, Broken Link, etc.)
+                           // Можно настроить более сложный problemMatcher для разных типов ошибок
+            }
+          ],
+          "background": {
+            "activeOnStart": true
+          }
+        }
+      ]
+    },
+    {
+      "label": "Docs: Check for Pending Updates",
+      "type": "shell",
+      "command": "node",
+      "args": ["${workspaceFolder}/scripts/docs/checkpoint-detector.js", "--interactive"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "echo": true,
+        "focus": true,
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Docs: Update Documentation Manually",
+      "type": "shell",
+      "command": "node",
+      "args": ["${workspaceFolder}/scripts/docs/documentation-updater.js", "--manual-trigger"], // Флаг для ручного запуска всех действий
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "echo": true,
+        "focus": true,
+        "clear": true
+      },
+      "group": "build"
+    }
+  ]
+}

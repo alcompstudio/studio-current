@@ -1,0 +1,24 @@
+{
+  "component": "Toaster",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\ui\\toaster.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/hooks/use-toast",
+    "@/components/ui/toast"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

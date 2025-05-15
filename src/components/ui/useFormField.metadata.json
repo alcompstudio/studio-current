@@ -1,0 +1,28 @@
+{
+  "component": "useFormField",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "components\\ui\\form.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "{ invalid: boolean; isDirty: boolean; isTouched: boolean; isValidating: boolean; error?: import(\"E:/Business/Projects/studio/node_modules/react-hook-form/dist/types/errors\").FieldError | undefined; id: string; name: string; formItemId: string; formDescriptionId: string; formMessageId: string; }",
+  "dependencies": [
+    "react",
+    "@radix-ui/react-label",
+    "@radix-ui/react-slot",
+    "react-hook-form",
+    "@/lib/utils",
+    "@/components/ui/label"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

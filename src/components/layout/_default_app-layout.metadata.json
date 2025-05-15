@@ -1,0 +1,42 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\layout\\app-layout.tsx",
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element | null",
+  "dependencies": [
+    "react",
+    "@/components/ui/sidebar",
+    "@/components/layout/header",
+    "@/components/layout/communication-panel",
+    "lucide-react",
+    "next/link",
+    "next/navigation",
+    "@/components/ui/scroll-area",
+    "@/lib/types",
+    "@/components/ui/avatar",
+    "@/lib/utils",
+    "@/components/ui/button",
+    "@/hooks/use-toast"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

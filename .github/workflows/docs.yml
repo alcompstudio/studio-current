@@ -1,0 +1,88 @@
+name: Documentation CI
+
+on:
+  push:
+    branches:
+      - main # или ваша основная ветка
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate-docs:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Укажите вашу версию Node.js
+
+      - name: Install dependencies
+        run: npm ci # Используйте ci для более быстрого и надежного скачивания
+
+      - name: Run Docs Validator
+        run: node ./scripts/docs/docs-validator.js
+
+  generate-progress-report:
+    name: Generate Weekly Progress Report
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main') # Запускать по расписанию или при пуше в main
+    runs-on: ubuntu-latest
+    # Запуск по расписанию (например, каждую пятницу в 18:00 UTC)
+    # schedule:
+    #   - cron: '0 18 * * 5'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Нужна полная история для git log
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Progress Report
+        run: node ./scripts/docs/git-progress-generator.js --since="1 week ago" # или другой период
+
+      - name: Commit and push progress report
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: Generate weekly progress report [skip ci]"
+          branch: ${{ github.ref_name }} # Коммитить в ту же ветку, откуда запущен воркфлоу
+          file_pattern: "docs/progress/*.md" # Паттерн для файлов отчета
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "actions@github.com"
+          commit_author: "GitHub Actions Bot <actions@github.com>"
+          # [skip ci] в сообщении коммита, чтобы не запускать этот воркфлоу повторно
+
+  # Опционально: работа для code-structure-extractor
+  # extract-code-structure:
+  #   name: Extract Code Structure (Manual or on demand)
+  #   if: false # Запускать вручную или по другому триггеру
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: Run Code Structure Extractor
+  #       run: node ./scripts/docs/code-structure-extractor.js
+  #     - name: Commit and push generated docs
+  #       uses: stefanzweifel/git-auto-commit-action@v5
+  #       with:
+  #         commit_message: "docs: Update code structure documentation [skip ci]"
+  #         # Указать file_pattern для docs/components/*.md и src/**/*.metadata.json
+  #         # ...

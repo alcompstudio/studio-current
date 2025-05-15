@@ -1,0 +1,45 @@
+{
+  "component": "MenubarMenu",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\ui\\menubar.tsx",
+  "props": [
+    {
+      "name": "value",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "__scopeMenubar",
+      "type": "Scope",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@radix-ui/react-menubar",
+    "lucide-react",
+    "@/lib/utils"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

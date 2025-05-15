@@ -1,0 +1,35 @@
+{
+  "component": "AuthForm",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\auth\\auth-form.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@hookform/resolvers/zod",
+    "react-hook-form",
+    "zod",
+    "@/components/ui/button",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/components/ui/radio-group",
+    "@/components/ui/label",
+    "@/lib/utils",
+    "@/lib/types",
+    "@/hooks/use-toast",
+    "next/navigation"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

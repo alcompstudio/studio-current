@@ -1,0 +1,31 @@
+{
+  "component": "cn",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "lib\\utils.ts",
+  "props": [],
+  "params": [
+    {
+      "name": "inputs",
+      "type": "ClassValue[]",
+      "description": "",
+      "optional": true
+    }
+  ],
+  "returnType": "string",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

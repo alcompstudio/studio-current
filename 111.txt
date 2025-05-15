@@ -1,0 +1,333 @@
+PS E:\Business\Projects\studio> node scripts/docs/code-structure-extra
+
+
+
+
+
+
+
+
+
+
+
+                                node scripts/docs/code-structure-extractor.js
+Запуск извлечения структуры кода и генерации документации...
+Найдено 121 файлов для анализа.
+Анализ файла: next.config.ts
+Документация для next.config.ts сохранена в E:\Business\Projects\studio\docs\next.config.md
+Анализ файла: tailwind.config.ts
+Документация для tailwind.config.ts сохранена в E:\Business\Projects\studio\docs\tailwind.config.md
+Анализ файла: src\test-db-connection.ts
+Анализ файла: src\ai\ai-instance.ts
+Документация для ai-instance.ts сохранена в E:\Business\Projects\studio\docs\components\ai\ai-instance.md
+Анализ файла: src\ai\dev.ts
+Анализ файла: src\app\layout.tsx
+Метаданные для default (_default_layout.metadata.json) сохранены в E:\Business\Projects\studio\src\app\_default_layout.metadata.json
+Документация для layout.tsx сохранена в E:\Business\Projects\studio\docs\components\app\layout.md
+Анализ файла: src\app\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\page.md
+Анализ файла: src\hooks\use-mobile.tsx
+Метаданные для useIsMobile (useIsMobile.metadata.json) сохранены в E:\Business\Projects\studio\src\hooks\useIsMobile.metadata.json
+Документация для use-mobile.tsx сохранена в E:\Business\Projects\studio\docs\components\hooks\use-mobile.md
+Анализ файла: src\hooks\use-toast.ts
+Метаданные для reducer (reducer.metadata.json) сохранены в E:\Business\Projects\studio\src\hooks\reducer.metadata.json
+Метаданные для useToast (useToast.metadata.json) сохранены в E:\Business\Projects\studio\src\hooks\useToast.metadata.json
+Метаданные для toast (toast.metadata.json) сохранены в E:\Business\Projects\studio\src\hooks\toast.metadata.json
+Документация для use-toast.ts сохранена в E:\Business\Projects\studio\docs\components\hooks\use-toast.md
+Анализ файла: src\lib\db.ts
+Документация для db.ts сохранена в E:\Business\Projects\studio\docs\components\lib\db.md
+Анализ файла: src\lib\migrate.ts
+Метаданные для runMigrations (runMigrations.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\runMigrations.metadata.json
+Документация для migrate.ts сохранена в E:\Business\Projects\studio\docs\components\lib\migrate.md
+Анализ файла: src\lib\types.ts
+Документация для types.ts сохранена в E:\Business\Projects\studio\docs\components\lib\types.md
+Анализ файла: src\lib\utils.ts
+Метаданные для cn (cn.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\cn.metadata.json
+Документация для utils.ts сохранена в E:\Business\Projects\studio\docs\components\lib\utils.md
+Анализ файла: src\services\currency-converter.ts
+Метаданные для getCurrencyRates (getCurrencyRates.metadata.json) сохранены в E:\Business\Projects\studio\src\services\getCurrencyRates.metadata.json
+Документация для currency-converter.ts сохранена в E:\Business\Projects\studio\docs\components\services\currency-converter.md
+Анализ файла: src\utils\fonts.ts
+Метаданные для useGoogleFont (useGoogleFont.metadata.json) сохранены в E:\Business\Projects\studio\src\utils\useGoogleFont.metadata.json
+Документация для fonts.ts сохранена в E:\Business\Projects\studio\docs\components\utils\fonts.md
+Анализ файла: .next\types\app\layout.ts
+Документация для layout.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\layout.md
+Анализ файла: .next\types\app\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\page.md
+Анализ файла: src\app\(app)\layout.tsx
+Метаданные для default (_default_layout.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\_default_layout.metadata.json
+Документация для layout.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\layout.md
+Анализ файла: src\app\(app)\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\page.md
+Анализ файла: src\app\auth\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\auth\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\auth\page.md
+Анализ файла: src\components\auth\auth-form.tsx
+Метаданные для AuthForm (AuthForm.metadata.json) сохранены в E:\Business\Projects\studio\src\components\auth\AuthForm.metadata.json
+Документация для auth-form.tsx сохранена в E:\Business\Projects\studio\docs\components\auth\auth-form.md
+Анализ файла: src\components\layout\app-layout.tsx
+Метаданные для default (_default_app-layout.metadata.json) сохранены в E:\Business\Projects\studio\src\components\layout\_default_app-layout.metadata.json
+Документация для app-layout.tsx сохранена в E:\Business\Projects\studio\docs\components\layout\app-layout.md
+Анализ файла: src\components\layout\communication-panel.tsx
+Метаданные для CommunicationPanel (CommunicationPanel.metadata.json) сохранены в E:\Business\Projects\studio\src\components\layout\CommunicationPanel.metadata.json
+Документация для communication-panel.tsx сохранена в E:\Business\Projects\studio\docs\components\layout\communication-panel.md
+Анализ файла: src\components\layout\header.tsx
+Метаданные для Header (Header.metadata.json) сохранены в E:\Business\Projects\studio\src\components\layout\Header.metadata.json
+Документация для header.tsx сохранена в E:\Business\Projects\studio\docs\components\layout\header.md
+Анализ файла: src\components\layout\toaster-client.tsx
+Документация для toaster-client.tsx сохранена в E:\Business\Projects\studio\docs\components\layout\toaster-client.md
+Анализ файла: src\components\orders\add-etap-form.tsx
+Метаданные для default (_default_add-etap-form.metadata.json) сохранены в E:\Business\Projects\studio\src\components\orders\_default_add-etap-form.metadata.json
+Документация для add-etap-form.tsx сохранена в E:\Business\Projects\studio\docs\components\orders\add-etap-form.md
+Анализ файла: src\components\orders\add-option-form.tsx
+Метаданные для default (_default_add-option-form.metadata.json) сохранены в E:\Business\Projects\studio\src\components\orders\_default_add-option-form.metadata.json
+Документация для add-option-form.tsx сохранена в E:\Business\Projects\studio\docs\components\orders\add-option-form.md
+Анализ файла: src\components\orders\edit-etap-form.tsx
+Метаданные для default (_default_edit-etap-form.metadata.json) сохранены в E:\Business\Projects\studio\src\components\orders\_default_edit-etap-form.metadata.json
+Документация для edit-etap-form.tsx сохранена в E:\Business\Projects\studio\docs\components\orders\edit-etap-form.md
+Анализ файла: src\components\orders\edit-option-form.tsx
+Метаданные для default (_default_edit-option-form.metadata.json) сохранены в E:\Business\Projects\studio\src\components\orders\_default_edit-option-form.metadata.json
+Документация для edit-option-form.tsx сохранена в E:\Business\Projects\studio\docs\components\orders\edit-option-form.md
+Анализ файла: src\components\pages\dashboard-page.tsx
+Метаданные для default (_default_dashboard-page.metadata.json) сохранены в E:\Business\Projects\studio\src\components\pages\_default_dashboard-page.metadata.json
+Документация для dashboard-page.tsx сохранена в E:\Business\Projects\studio\docs\components\pages\dashboard-page.md
+Анализ файла: src\components\ui\accordion.tsx
+Документация для accordion.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\accordion.md
+Анализ файла: src\components\ui\alert-dialog.tsx
+Метаданные для AlertDialogHeader (AlertDialogHeader.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\AlertDialogHeader.metadata.json
+Метаданные для AlertDialogFooter (AlertDialogFooter.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\AlertDialogFooter.metadata.json
+Документация для alert-dialog.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\alert-dialog.md
+Анализ файла: src\components\ui\alert.tsx
+Документация для alert.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\alert.md
+Анализ файла: src\components\ui\avatar.tsx
+Документация для avatar.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\avatar.md
+Анализ файла: src\components\ui\badge.tsx
+Метаданные для Badge (Badge.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\Badge.metadata.json
+Документация для badge.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\badge.md
+Анализ файла: src\components\ui\button.tsx
+Документация для button.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\button.md
+Анализ файла: src\components\ui\calendar.tsx
+Метаданные для Calendar (Calendar.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\Calendar.metadata.json
+Документация для calendar.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\calendar.md
+Анализ файла: src\components\ui\card.tsx
+Документация для card.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\card.md
+Анализ файла: src\components\ui\chart.tsx
+Метаданные для ChartStyle (ChartStyle.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\ChartStyle.metadata.json
+Документация для chart.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\chart.md
+Анализ файла: src\components\ui\checkbox.tsx
+Документация для checkbox.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\checkbox.md
+Анализ файла: src\components\ui\dialog.tsx
+Метаданные для DialogHeader (DialogHeader.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\DialogHeader.metadata.json       
+Метаданные для DialogFooter (DialogFooter.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\DialogFooter.metadata.json       
+Документация для dialog.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\dialog.md
+Анализ файла: src\components\ui\dropdown-menu.tsx
+Метаданные для DropdownMenuShortcut (DropdownMenuShortcut.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\DropdownMenuShortcut.metadata.json
+Документация для dropdown-menu.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\dropdown-menu.md
+Анализ файла: src\components\ui\form.tsx
+Метаданные для useFormField (useFormField.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\useFormField.metadata.json       
+Метаданные для FormField (FormField.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\FormField.metadata.json
+Документация для form.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\form.md
+Анализ файла: src\components\ui\input.tsx
+Документация для input.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\input.md
+Анализ файла: src\components\ui\label.tsx
+Документация для label.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\label.md
+Анализ файла: src\components\ui\menubar.tsx
+Метаданные для MenubarMenu (MenubarMenu.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarMenu.metadata.json
+Метаданные для MenubarRadioGroup (MenubarRadioGroup.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarRadioGroup.metadata.json
+Метаданные для MenubarPortal (MenubarPortal.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarPortal.metadata.json    
+Метаданные для MenubarGroup (MenubarGroup.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarGroup.metadata.json       
+Метаданные для MenubarSub (MenubarSub.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarSub.metadata.json
+Метаданные для MenubarShortcut (MenubarShortcut.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\MenubarShortcut.metadata.json
+Документация для menubar.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\menubar.md
+Анализ файла: src\components\ui\popover.tsx
+Документация для popover.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\popover.md
+Анализ файла: src\components\ui\progress.tsx
+Документация для progress.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\progress.md
+Анализ файла: src\components\ui\radio-group.tsx
+Документация для radio-group.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\radio-group.md
+Анализ файла: src\components\ui\scroll-area.tsx
+Документация для scroll-area.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\scroll-area.md
+Анализ файла: src\components\ui\select.tsx
+Документация для select.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\select.md
+Анализ файла: src\components\ui\separator.tsx
+Документация для separator.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\separator.md
+Анализ файла: src\components\ui\sheet.tsx
+Метаданные для SheetHeader (SheetHeader.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\SheetHeader.metadata.json
+Метаданные для SheetFooter (SheetFooter.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\SheetFooter.metadata.json
+Документация для sheet.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\sheet.md
+Анализ файла: src\components\ui\sidebar.tsx
+Метаданные для useSidebar (useSidebar.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\useSidebar.metadata.json
+Документация для sidebar.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\sidebar.md
+Анализ файла: src\components\ui\skeleton.tsx
+Метаданные для Skeleton (Skeleton.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\Skeleton.metadata.json
+Документация для skeleton.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\skeleton.md
+Анализ файла: src\components\ui\slider.tsx
+Документация для slider.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\slider.md
+Анализ файла: src\components\ui\switch.tsx
+Документация для switch.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\switch.md
+Анализ файла: src\components\ui\table.tsx
+Документация для table.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\table.md
+Анализ файла: src\components\ui\tabs.tsx
+Документация для tabs.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\tabs.md
+Анализ файла: src\components\ui\textarea.tsx
+Документация для textarea.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\textarea.md
+Анализ файла: src\components\ui\toast.tsx
+Документация для toast.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\toast.md
+Анализ файла: src\components\ui\toaster.tsx
+Метаданные для Toaster (Toaster.metadata.json) сохранены в E:\Business\Projects\studio\src\components\ui\Toaster.metadata.json
+Документация для toaster.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\toaster.md
+Анализ файла: src\components\ui\tooltip.tsx
+Документация для tooltip.tsx сохранена в E:\Business\Projects\studio\docs\components\ui\tooltip.md
+Анализ файла: src\lib\models\Customer.ts
+Метаданные для default (_default_Customer.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\models\_default_Customer.metadata.json     
+Документация для Customer.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\Customer.md
+Анализ файла: src\lib\models\index.ts
+Метаданные для connectDB (connectDB.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\models\connectDB.metadata.json
+Документация для index.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\index.md
+Анализ файла: src\lib\models\Order.ts
+Метаданные для default (_default_Order.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\models\_default_Order.metadata.json
+Документация для Order.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\Order.md
+Анализ файла: src\lib\models\OrderStage.ts
+Документация для OrderStage.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\OrderStage.md
+Анализ файла: src\lib\models\Project.ts
+Метаданные для default (_default_Project.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\models\_default_Project.metadata.json       
+Документация для Project.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\Project.md
+Анализ файла: src\lib\models\User.ts
+Метаданные для default (_default_User.metadata.json) сохранены в E:\Business\Projects\studio\src\lib\models\_default_User.metadata.json
+Документация для User.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\User.md
+Анализ файла: src\lib\models\WorkTask.ts
+Документация для WorkTask.ts сохранена в E:\Business\Projects\studio\docs\components\lib\models\WorkTask.md
+Анализ файла: .next\types\app\auth\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\auth\page.md
+Анализ файла: src\app\(app)\admin-dashboard\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\admin-dashboard\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\admin-dashboard\page.md
+Анализ файла: src\app\(app)\dashboard\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\dashboard\_default_page.metadata.json    
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\dashboard\page.md
+Анализ файла: src\app\(app)\finance\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\finance\_default_page.metadata.json      
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\finance\page.md
+Анализ файла: src\app\(app)\finance-admin\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\finance-admin\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\finance-admin\page.md
+Анализ файла: src\app\(app)\find-orders\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\find-orders\_default_page.metadata.json  
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\find-orders\page.md
+Анализ файла: src\app\(app)\my-bids\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\my-bids\_default_page.metadata.json      
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\my-bids\page.md
+Анализ файла: src\app\(app)\my-tasks\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\my-tasks\_default_page.metadata.json     
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\my-tasks\page.md
+Анализ файла: src\app\(app)\orders\mockOrders.ts
+Метаданные для getOrderStatusVariant (getOrderStatusVariant.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\orders\getOrderStatusVariant.metadata.json
+Документация для mockOrders.ts сохранена в E:\Business\Projects\studio\docs\components\app\(app)\orders\mockOrders.md
+Анализ файла: src\app\(app)\orders\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\orders\_default_page.metadata.json       
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\orders\page.md
+Анализ файла: src\app\(app)\projects\mockProjects.ts
+Документация для mockProjects.ts сохранена в E:\Business\Projects\studio\docs\components\app\(app)\projects\mockProjects.md
+Анализ файла: src\app\(app)\projects\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\projects\_default_page.metadata.json     
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\projects\page.md
+Анализ файла: src\app\(app)\settings\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\settings\_default_page.metadata.json     
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\settings\page.md
+Анализ файла: src\app\(app)\users\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\users\_default_page.metadata.json        
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\users\page.md
+Анализ файла: src\app\api\customers\route.ts
+Метаданные для GET (GET.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\customers\GET.metadata.json
+Метаданные для POST (POST.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\customers\POST.metadata.json
+Метаданные для PUT (PUT.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\customers\PUT.metadata.json
+Метаданные для DELETE (DELETE.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\customers\DELETE.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\customers\route.md
+Анализ файла: src\app\api\orders\route.ts
+Метаданные для GET (GET.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\orders\GET.metadata.json
+Метаданные для POST (POST.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\orders\POST.metadata.json
+Метаданные для PUT (PUT.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\orders\PUT.metadata.json
+Метаданные для DELETE (DELETE.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\orders\DELETE.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\orders\route.md
+Анализ файла: src\app\api\projects\route.ts
+Метаданные для GET (GET.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\projects\GET.metadata.json
+Метаданные для POST (POST.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\projects\POST.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\projects\route.md
+Анализ файла: .next\types\app\(app)\admin-dashboard\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\admin-dashboard\page.md
+Анализ файла: .next\types\app\(app)\dashboard\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\dashboard\page.md
+Анализ файла: .next\types\app\(app)\finance\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\finance\page.md
+Анализ файла: .next\types\app\(app)\finance-admin\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\finance-admin\page.md
+Анализ файла: .next\types\app\(app)\find-orders\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\find-orders\page.md
+Анализ файла: .next\types\app\(app)\my-bids\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\my-bids\page.md
+Анализ файла: .next\types\app\(app)\my-tasks\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\my-tasks\page.md
+Анализ файла: .next\types\app\(app)\orders\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\orders\page.md
+Анализ файла: .next\types\app\(app)\projects\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\projects\page.md
+Анализ файла: .next\types\app\(app)\settings\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\settings\page.md
+Анализ файла: .next\types\app\(app)\users\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\users\page.md
+Анализ файла: .next\types\app\api\customers\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\customers\route.md
+Анализ файла: .next\types\app\api\orders\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\orders\route.md
+Анализ файла: .next\types\app\api\projects\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\projects\route.md
+Анализ файла: src\app\(app)\orders\[orderId]\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\orders\[orderId]\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\orders\[orderId]\page.md
+Анализ файла: src\app\(app)\orders\new\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\orders\new\_default_page.metadata.json   
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\orders\new\page.md
+Анализ файла: src\app\(app)\projects\[projectId]\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\projects\[projectId]\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\projects\[projectId]\page.md
+Анализ файла: src\app\(app)\projects\new\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\projects\new\_default_page.metadata.json 
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\projects\new\page.md
+Анализ файла: src\app\api\auth\login\route.ts
+Метаданные для POST (POST.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\auth\login\POST.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\auth\login\route.md
+Анализ файла: src\app\api\auth\register\route.ts
+Метаданные для POST (POST.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\auth\register\POST.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\auth\register\route.md
+Анализ файла: src\app\api\projects\[projectId]\route.ts
+Метаданные для GET (GET.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\projects\[projectId]\GET.metadata.json
+Метаданные для PUT (PUT.metadata.json) сохранены в E:\Business\Projects\studio\src\app\api\projects\[projectId]\PUT.metadata.json
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\components\app\api\projects\[projectId]\route.md
+Анализ файла: .next\types\app\(app)\orders\[orderId]\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\orders\[orderId]\page.md
+Анализ файла: .next\types\app\(app)\orders\new\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\orders\new\page.md
+Анализ файла: .next\types\app\(app)\projects\[projectId]\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\projects\[projectId]\page.md
+Анализ файла: .next\types\app\(app)\projects\new\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\projects\new\page.md
+Анализ файла: .next\types\app\api\auth\login\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\auth\login\route.md
+Анализ файла: .next\types\app\api\auth\register\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\auth\register\route.md
+Анализ файла: .next\types\app\api\projects\[projectId]\route.ts
+Документация для route.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\api\projects\[projectId]\route.md
+Анализ файла: src\app\(app)\orders\[orderId]\edit\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\orders\[orderId]\edit\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\orders\[orderId]\edit\page.md
+Анализ файла: src\app\(app)\projects\[projectId]\edit\page.tsx
+Метаданные для default (_default_page.metadata.json) сохранены в E:\Business\Projects\studio\src\app\(app)\projects\[projectId]\edit\_default_page.metadata.json
+Документация для page.tsx сохранена в E:\Business\Projects\studio\docs\components\app\(app)\projects\[projectId]\edit\page.md
+Анализ файла: .next\types\app\(app)\orders\[orderId]\edit\page.ts
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\orders\[orderId]\edit\page.md
+Анализ файла: .next\types\app\(app)\projects\[projectId]\edit\page.ts     
+Документация для page.ts сохранена в E:\Business\Projects\studio\docs\.next\types\app\(app)\projects\[projectId]\edit\page.md
+Извлечение структуры кода и генерация документации завершены.
+PS E:\Business\Projects\studio> 

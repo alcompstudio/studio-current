@@ -1,4 +1,52 @@
 {
-    "IDX.aI.enableInlineCompletion": true,
-    "IDX.aI.enableCodebaseIndexing": true
+  "ai.knowledgeBase.paths": [
+    "./docs/",
+    "./.ai/knowledge-base/"
+  ],
+  "ai.context.priorityPaths": [
+    "./docs/README.md",
+    "./docs/architecture.md",
+    "./project-metadata.yaml"
+  ],
+  "ai.sessionLogs.directory": "./.ai/sessions/",
+
+  // Рекомендации для работы со скриптами документации
+  "terminal.integrated.profiles.windows": {
+    "Node CLI for Docs": {
+      "path": "cmd.exe",
+      "args": [
+        "/k",
+        "cd scripts/docs && echo 'Вы находитесь в директории scripts/docs. Доступные команды: node git-progress-generator.js, node code-structure-extractor.js, node docs-validator.js'"
+      ],
+      "icon": "terminal-cmd"
+    }
+  },
+  // Настройки для Markdown файлов
+  "files.associations": {
+    "*.md": "markdown"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Пример, если используется Prettier
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    }
+    // "editor.defaultFormatter": "yzhang.markdown-all-in-one" // Альтернативный форматер для Markdown
+  },
+  // Настройки для YAML файлов
+  "[yaml]": {
+    // "editor.defaultFormatter": "redhat.vscode-yaml" // Пример, если используется YAML расширение от Red Hat
+  },
+  // Помощь в работе с Git для журнала прогресса
+  "git.inputValidationSubjectLength": 72, // Ограничение длины темы коммита
+  "git.inputValidationLength": 50, // Мягкое ограничение для первой строки сообщения коммита
+
+  // Поиск по файлам
+  "search.exclude": {
+    "**/.ai/sessions/**": true, // Исключить логи сессий из поиска по умолчанию
+    "**/docs/progress/**": true, // Исключить старые отчеты о прогрессе
+    "**/docs/validation_report.md": true
+  }
 }

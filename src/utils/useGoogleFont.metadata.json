@@ -1,0 +1,30 @@
+{
+  "component": "useGoogleFont",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "utils\\fonts.ts",
+  "props": [],
+  "params": [
+    {
+      "name": "fontName",
+      "type": "string",
+      "description": "",
+      "optional": false
+    }
+  ],
+  "returnType": "string",
+  "dependencies": [
+    "next/font/google"
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

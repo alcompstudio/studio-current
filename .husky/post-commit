@@ -1,0 +1,15 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running post-commit hook: Checking documentation checkpoints..."
+
+# Запуск детектора чекпоинтов после коммита
+# Флаг --git-hook может использоваться внутри скрипта для определения контекста запуска
+node scripts/docs/checkpoint-detector.js --git-hook
+
+# Post-commit хуки не должны прерывать процесс, поэтому не проверяем код выхода,
+# если только checkpoint-detector не предназначен для каких-то критических уведомлений.
+# Основная задача - запустить детектор, который может создать .ai/pending-documentation-updates.md
+# для последующей обработки ИИ-агентом или пользователем.
+
+echo "Post-commit hook finished."

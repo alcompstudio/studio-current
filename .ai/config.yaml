@@ -1,0 +1,21 @@
+# Файл конфигурации для ИИ-агентов
+# Может использоваться для хранения общих настроек, ключей API (через переменные окружения),
+# или других параметров, влияющих на поведение ИИ-агентов в данном проекте.
+
+# Пример возможных настроек:
+# default_model: "gpt-4"
+# temperature: 0.7
+# max_tokens_per_request: 2000
+
+# Настройки для конкретных инструментов или задач:
+# code_analysis:
+#   excluded_dirs:
+#     - "node_modules/"
+#     - ".next/"
+#   preferred_ast_parser: "typescript" # или "babel"
+
+# documentation_generation:
+#   default_maintainer: "AI Agent Team"
+#   adr_template_path: "docs/decisions/YYYYMMDD-template-adr.md"
+
+# Пока этот файл оставлен пустым. Заполните его по мере необходимости.

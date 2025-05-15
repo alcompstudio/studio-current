@@ -1,0 +1,102 @@
+{
+  "component": "AuthForm",
+  "version": "1.0.0",
+  "description": "Компонент для отображения формы аутентификации (логин и регистрация). Управляет состоянием ввода данных и взаимодействует с API аутентификации.",
+  "maintainer": "AI Agent Cline",
+  "type": "ReactFunctionalComponent",
+  "path": "./auth-form.tsx",
+  "dependencies": [
+    {
+      "name": "React",
+      "reason": "Основная библиотека для создания компонента."
+    },
+    {
+      "name": "react-hook-form",
+      "reason": "Для управления состоянием формы и валидации."
+    },
+    {
+      "name": "zod",
+      "reason": "Для валидации схемы данных формы."
+    },
+    {
+      "name": "@/components/ui/button",
+      "path": "../ui/button.tsx",
+      "reason": "Для отображения кнопок отправки формы."
+    },
+    {
+      "name": "@/components/ui/input",
+      "path": "../ui/input.tsx",
+      "reason": "Для полей ввода данных."
+    },
+    {
+      "name": "@/components/ui/label",
+      "path": "../ui/label.tsx",
+      "reason": "Для меток полей ввода."
+    },
+    {
+      "name": "API Authentication Service",
+      "reason": "Для отправки запросов на логин/регистрацию (например, /api/auth/login, /api/auth/register)."
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'login' | 'register'",
+      "description": "Определяет, отображается ли форма входа или регистрации.",
+      "required": true
+    },
+    {
+      "name": "onSubmit",
+      "type": "(data: AuthFormData) => Promise<void>",
+      "description": "Функция обратного вызова, вызываемая при успешной валидации и отправке формы.",
+      "required": true
+    },
+    {
+      "name": "isLoading",
+      "type": "boolean",
+      "description": "Флаг, указывающий на состояние загрузки (например, во время отправки запроса).",
+      "required": false,
+      "defaultValue": false
+    }
+  ],
+  "internalState": [
+    {
+      "name": "formState",
+      "description": "Состояние полей формы, ошибок валидации (управляется react-hook-form)."
+    }
+  ],
+  "api": {
+    "handleLogin": {
+      "description": "Обрабатывает логику входа пользователя. Вызывается при отправке формы в варианте 'login'.",
+      "inputs": [
+        {"name": "formData", "type": "object", "description": "Данные из формы (email, password)"}
+      ],
+      "outputs": {"type": "Promise<void>", "description": "Асинхронная операция, результат обрабатывается через коллбэки или состояние."}
+    },
+    "handleRegister": {
+      "description": "Обрабатывает логику регистрации пользователя. Вызывается при отправке формы в варианте 'register'.",
+      "inputs": [
+        {"name": "formData", "type": "object", "description": "Данные из формы (email, password, etc.)"}
+      ],
+      "outputs": {"type": "Promise<void>", "description": "Асинхронная операция."}
+    }
+  },
+  "usageExamples": [
+    {
+      "scenario": "Форма входа",
+      "code": "<AuthForm variant='login' onSubmit={handleLoginSubmit} isLoading={isSubmitting} />"
+    },
+    {
+      "scenario": "Форма регистрации",
+      "code": "<AuthForm variant='register' onSubmit={handleRegisterSubmit} />"
+    }
+  ],
+  "history": [
+    {
+      "date": "2025-05-14",
+      "author": "AI Agent Cline",
+      "changes": "Создан первоначальный файл метаданных."
+    }
+  ],
+  "notes": "Для более точного описания пропсов и API требуется анализ исходного кода src/components/auth/auth-form.tsx."
+}
