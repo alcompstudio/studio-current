@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Environment variables
 .env
+
+# Ignore large archive file
+studio_app.tar.gz
