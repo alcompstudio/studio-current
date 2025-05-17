@@ -29,7 +29,7 @@
 - **Управление состоянием (клиент):** React Query (TanStack Query)
 - **Формы:** React Hook Form с резолвером Zod
 - **UI Компоненты:** Radix UI, Lucide Icons, Recharts (для диаграмм)
-- **Аутентификация:** bcrypt (для хеширования паролей), Firebase (возможно, для аутентификации или других сервисов, судя по `@tanstack-query-firebase/react` и `firebase`)
+- **Аутентификация:** bcrypt (для хеширования паролей)
 - **ИИ:** Genkit AI (@genkit-ai/googleai, @genkit-ai/next)
 - **Инструменты сборки и управления пакетами:** npm, Webpack (встроен в Next.js)
 - **Прочее:** date-fns, clsx, tailwind-merge, dotenv

@@ -21,8 +21,8 @@
     "zod",
     "@/components/ui/form",
     "@/components/ui/input",
-    "@/components/ui/textarea",
     "@/components/ui/select",
+    "@/components/ui/textarea",
     "@/lib/types",
     "@/hooks/use-toast"
   ],

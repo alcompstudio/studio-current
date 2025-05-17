@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Развертывание — User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Руководство по развертыванию</h1>
+    <nav>
+      <ul>
+        <li><a href="#section1">1. Подготовка и создание сервера</a></li>
+        <li><a href="#section2">2. Первоначальная настройка сервера</a></li>
+        <li><a href="#section3">3. Установка необходимого ПО</a></li>
+        <li><a href="#section4">4. Загрузка и настройка приложения</a></li>
+        <li><a href="#section5">5. Запуск приложения и Firewall</a></li>
+        <li><a href="#section6">6. Дополнительные заметки</a></li>
+      </ul>
+    </nav>
+
+    <section id="section1">
+      <h2>1. Подготовка и создание сервера на Hetzner</h2>
+      <ol>
+        <li>Войдите в <a href="https://console.hetzner.cloud/" target="_blank">Hetzner Cloud Console</a> и создайте новый сервер.</li>
+        <li>Выберите местоположение (например, Helsinki).</li>
+        <li>Выберите образ ОС: Ubuntu 24.04.</li>
+        <li>Выберите тип сервера (например, CX22).</li>
+        <li>Добавьте SSH-ключ (можно сгенерировать через <code>ssh-keygen</code>).</li>
+        <li>Оставьте остальные настройки по умолчанию.</li>
+        <li>Задайте имя сервера и завершите создание.</li>
+      </ol>
+      <p><b>Пример:</b> Имя сервера: <code>studio-app-server</code>, IP: <code>157.180.87.32</code></p>
+    </section>
+
+    <section id="section2">
+      <h2>2. Первоначальная настройка сервера</h2>
+      <ol>
+        <li>Подключитесь по SSH: <code>ssh root@IP_СЕРВЕРА</code></li>
+        <li>При необходимости удалите старый ключ: <code>ssh-keygen -R IP_СЕРВЕРА</code></li>
+        <li>Обновите систему: <code>apt update && apt upgrade -y</code></li>
+        <li>(Рекомендуется) Создайте пользователя с sudo: <code>adduser deployuser</code>, <code>usermod -aG sudo deployuser</code></li>
+        <li>Скопируйте SSH-ключ для нового пользователя.</li>
+      </ol>
+    </section>
+
+    <section id="section3">
+      <h2>3. Установка необходимого ПО (Node.js, PostgreSQL)</h2>
+      <ol>
+        <li>Установите Node.js (v20.x) и npm.</li>
+        <li>Установите PostgreSQL.</li>
+        <li>Создайте пользователя и БД в PostgreSQL: <code>userstudio</code>, <code>userstudio</code>.</li>
+      </ol>
+    </section>
+
+    <section id="section4">
+      <h2>4. Загрузка и настройка приложения</h2>
+      <ol>
+        <li>Соберите проект локально: <code>npm run build</code></li>
+        <li>Заархивируйте проект и скопируйте на сервер.</li>
+        <li>Распакуйте в <code>/var/www/studio_app</code>.</li>
+        <li>Установите зависимости: <code>npm install</code></li>
+        <li>Создайте и настройте <code>.env</code> на сервере.</li>
+        <li>Выполните миграции: <code>npx tsx src/lib/migrate.ts</code></li>
+      </ol>
+    </section>
+
+    <section id="section5">
+      <h2>5. Запуск приложения и настройка Firewall</h2>
+      <ol>
+        <li>Установите и настройте <code>pm2</code>:</li>
+        <ul>
+          <li><code>sudo npm install pm2 -g</code></li>
+          <li><code>pm2 start npm --name "studio-app" -- run start</code></li>
+          <li><code>pm2 startup</code> и <code>pm2 save</code></li>
+        </ul>
+        <li>Настройте <code>ufw</code>:</li>
+        <ul>
+          <li><code>sudo ufw allow ssh</code></li>
+          <li><code>sudo ufw allow 3000/tcp</code></li>
+          <li><code>sudo ufw enable</code></li>
+        </ul>
+        <li>Проверьте доступность приложения по IP:3000.</li>
+      </ol>
+    </section>
+
+    <section id="section6">
+      <h2>6. Дополнительные заметки и решения проблем</h2>
+      <ul>
+        <li>Если возникла ошибка SSH-ключа — используйте <code>ssh-keygen -R IP_СЕРВЕРА</code>.</li>
+        <li>Для миграций используйте <code>npx tsx src/lib/migrate.ts</code>.</li>
+        <li>Проверяйте актуальность <code>.env</code> и зависимостей.</li>
+      </ul>
+    </section>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -58,7 +58,7 @@ export default function DashboardPage() {
         <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
         {userRole === "Заказчик" && (
            <Link href="/projects" passHref> {/* Assuming /projects is where you create projects */}
-              <Button>
+<Button variant="default">
                 <PlusCircle className="mr-2 h-4 w-4" /> Create New Project
               </Button>
             </Link>
@@ -74,7 +74,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+<Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
                 {userRole === 'Исполнитель' ? 'Active Assignments' : 'Active Projects'}
@@ -88,7 +88,7 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+<Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
                 {userRole === 'Исполнитель' ? 'Pending Tasks' : 'Tasks Overview'}
@@ -102,7 +102,7 @@ export default function DashboardPage() {
              {(userRole === "Администратор" || userRole === "Модератор") && <p className="text-xs text-muted-foreground">Total pending tasks on platform</p>}
           </CardContent>
         </Card>
-        <Card>
+<Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Account Balance</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -119,7 +119,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Placeholder for recent activity or project list */}
-      <Card>
+<Card>
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
           <CardDescription>Overview of recent actions and updates relevant to you.</CardDescription>
@@ -132,4 +132,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

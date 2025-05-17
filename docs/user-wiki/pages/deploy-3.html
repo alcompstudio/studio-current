@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Развертывание — Шаг 3: Установка ПО | User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html" class="active">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Шаг 3: Установка необходимого ПО (Node.js, PostgreSQL)</h1>
+    <ol>
+      <li>
+        <b>Установка Node.js и npm</b><br>
+        <span class="muted">Инструкция:</span> Установите Node.js v20.x (LTS) и npm.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Команды:</span>
+        <pre><code>
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+node -v
+npm -v
+        </code></pre>
+        <span class="muted">Результат:</span> Node.js v20.19.1, npm 10.8.2
+      </li>
+      <li>
+        <b>Установка PostgreSQL</b><br>
+        <span class="muted">Инструкция:</span> Установите PostgreSQL.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Команды:</span>
+        <pre><code>
+sudo apt-get install postgresql postgresql-contrib
+sudo systemctl status postgresql
+        </code></pre>
+        <span class="muted">Комментарий:</span> Сервер PostgreSQL (кластер 16-main) успешно запущен.
+      </li>
+      <li>
+        <b>Создание пользователя и базы данных</b><br>
+        <span class="muted">Инструкция:</span> Создайте пользователя <code>userstudio</code> с паролем и базу данных.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Команды:</span>
+        <pre><code>
+sudo -u postgres createuser userstudio --pwprompt
+sudo -u postgres createdb userstudio --owner=userstudio
+        </code></pre>
+      </li>
+    </ol>
+    <h2>Возможные проблемы и решения</h2>
+    <ul>
+      <li>
+        <b>PostgreSQL не запускается:</b><br>
+        <span class="muted">Решение:</span> Проверьте статус службы: <code>sudo systemctl status postgresql</code>
+      </li>
+      <li>
+        <b>Проблемы с доступом к БД:</b><br>
+        <span class="muted">Решение:</span> Проверьте настройки пользователя и пароля, убедитесь, что база создана.
+      </li>
+    </ul>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

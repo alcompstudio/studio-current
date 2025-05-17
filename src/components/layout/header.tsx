@@ -60,7 +60,7 @@ export function Header({ userEmail, userRole }: HeaderProps) {
   const pageTitle = routeTitles[pathname] || 'TaskVerse'; // Default title
 
   return (
-    <header className="sticky top-0 z-30 flex h-[70px] items-center gap-4 border-b border-border bg-card px-8"> {/* Adjusted height, bg, border, padding */}
+    <header className="sticky top-0 z-30 flex h-[70px] items-center gap-4 bg-card px-8"> {/* Adjusted height, bg, border, padding */}
        {/* Mobile Sidebar Trigger is now part of the Sidebar component */}
 
       {/* Page Title */}

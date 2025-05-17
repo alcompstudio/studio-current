@@ -48,5 +48,10 @@
     "**/.ai/sessions/**": true, // Исключить логи сессий из поиска по умолчанию
     "**/docs/progress/**": true, // Исключить старые отчеты о прогрессе
     "**/docs/validation_report.md": true
+  },
+  "piny.project_settings": {
+    "open-pages": [
+      "index.html"
+    ]
   }
 }

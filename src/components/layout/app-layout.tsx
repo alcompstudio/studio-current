@@ -169,7 +169,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
              F<span className="text-accent">C</span> {/* Updated 'C' to accent color */}
            </h1>
         </SidebarHeader>
-        <SidebarContent className="p-0">
+        <SidebarContent className="p-0 bg-white">
           <ScrollArea className="h-full">
             {navItems.main.length > 0 && (
                 <SidebarGroup className="px-4 py-6 mb-0">

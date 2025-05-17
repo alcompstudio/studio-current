@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Обновление — User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Руководство по обновлению приложения</h1>
+    <nav>
+      <ul>
+        <li><a href="#step1">1. Подготовка</a></li>
+        <li><a href="#step2">2. Проверка скрипта обновления</a></li>
+        <li><a href="#step3">3. Запуск автоматического обновления</a></li>
+        <li><a href="#step4">4. Проверка результата</a></li>
+        <li><a href="#step5">5. Документирование</a></li>
+        <li><a href="#problems">Возможные проблемы и решения</a></li>
+        <li><a href="#security">Безопасность</a></li>
+      </ul>
+    </nav>
+
+    <section id="step1">
+      <h2>1. Подготовка</h2>
+      <ol>
+        <li>Откройте терминал в директории проекта.</li>
+        <li>Убедитесь, что все изменения закоммичены и протестированы.</li>
+        <li>Подключитесь к серверу по SSH:
+          <pre><code>ssh deployuser@157.180.87.32</code></pre>
+        </li>
+        <li>Проверьте и при необходимости обновите файл <code>.env</code> на сервере.</li>
+      </ol>
+    </section>
+
+    <section id="step2">
+      <h2>2. Проверка скрипта обновления</h2>
+      <ol>
+        <li>Проверьте наличие <code>scripts/deploy.sh</code> в проекте.</li>
+        <li>Сделайте скрипт исполняемым (однократно):
+          <pre><code>chmod +x scripts/deploy.sh</code></pre>
+        </li>
+      </ol>
+    </section>
+
+    <section id="step3">
+      <h2>3. Запуск автоматического обновления</h2>
+      <ol>
+        <li>Запустите скрипт:
+          <pre><code>./scripts/deploy.sh</code></pre>
+        </li>
+        <li>Следите за выводом в терминале. При ошибках — скопируйте их и обратитесь к разделу "Возможные проблемы".</li>
+      </ol>
+    </section>
+
+    <section id="step4">
+      <h2>4. Проверка результата</h2>
+      <ol>
+        <li>Откройте приложение в браузере: <a href="http://157.180.87.32:3000" target="_blank">http://157.180.87.32:3000</a></li>
+        <li>Проверьте работоспособность основных функций.</li>
+        <li>При проблемах — попробуйте другой браузер или очистите кэш.</li>
+      </ol>
+    </section>
+
+    <section id="step5">
+      <h2>5. Документирование</h2>
+      <ul>
+        <li>После каждого шага фиксируйте результат (успех/ошибка, особенности).</li>
+        <li>Если возникли трудности — опишите их и решения.</li>
+      </ul>
+    </section>
+
+    <section id="problems">
+      <h2>Возможные проблемы и решения</h2>
+      <ul>
+        <li><b>Ошибка миграции:</b> Если поле уже существует — удалите или отметьте миграцию как выполненную.</li>
+        <li><b>Проблемы с зависимостями:</b> Проверьте актуальность <code>package.json</code> и <code>package-lock.json</code>.</li>
+        <li><b>Проблемы с SSH:</b> Проверьте настройки ключей и права доступа.</li>
+        <li><b>Ошибки сборки/копирования:</b> Проверьте вывод скрипта и устраните указанные причины.</li>
+      </ul>
+    </section>
+
+    <section id="security">
+      <h2>Безопасность</h2>
+      <ul>
+        <li>Не храните секретные данные в репозитории.</li>
+        <li>Используйте только защищённые соединения для деплоя.</li>
+      </ul>
+    </section>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

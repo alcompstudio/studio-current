@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Развертывание — Шаг 6: Проблемы и решения | User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html" class="active">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Шаг 6: Дополнительные заметки и решения проблем</h1>
+    <ul>
+      <li>
+        <b>Ошибка миграции:</b><br>
+        <span class="muted">Описание:</span> Если поле уже существует — удалите или отметьте миграцию как выполненную.<br>
+        <span class="muted">Решение:</span> Избегайте ошибок "column already exists".
+      </li>
+      <li>
+        <b>Проблемы с зависимостями:</b><br>
+        <span class="muted">Решение:</span> Проверьте актуальность <code>package.json</code> и <code>package-lock.json</code>.
+      </li>
+      <li>
+        <b>Проблемы с SSH:</b><br>
+        <span class="muted">Описание:</span> Ошибки подключения, проблемы с ключами.<br>
+        <span class="muted">Решение:</span> Проверьте настройки ключей, используйте <code>ssh-keygen -R IP_СЕРВЕРА</code>.
+      </li>
+      <li>
+        <b>Проблемы с .env:</b><br>
+        <span class="muted">Решение:</span> Проверьте переменные окружения, не включайте .env в архив.
+      </li>
+      <li>
+        <b>Проблемы с архивом:</b><br>
+        <span class="muted">Описание:</span> После обновления архив автоматически удаляется на сервере и локально.
+      </li>
+      <li>
+        <b>Ошибки сборки, копирования или миграций:</b><br>
+        <span class="muted">Решение:</span> Скрипт завершится с ошибкой и выведет причину. Проверьте вывод.
+      </li>
+      <li>
+        <b>Проверка логов:</b><br>
+        <span class="muted">Рекомендация:</span> Используйте <code>pm2 logs studio-app</code> для диагностики проблем запуска.
+      </li>
+      <li>
+        <b>Безопасность:</b><br>
+        <span class="muted">Рекомендация:</span> Не храните секретные данные в репозитории. Используйте только защищённые соединения для деплоя.
+      </li>
+      <li>
+        <b>Документирование:</b><br>
+        <span class="muted">Рекомендация:</span> После каждого шага фиксируйте результат (успех/ошибка, особенности) для будущих администраторов.
+      </li>
+    </ul>
+    <h2>История изменений</h2>
+    <p>Фиксируйте все изменения и особенности обновления в этом разделе для будущих администраторов.</p>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

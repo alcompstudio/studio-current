@@ -17,25 +17,36 @@ interface CheckboxProps extends Omit<React.ComponentPropsWithoutRef<typeof Check
 }
 
 
+interface ExtendedCheckboxProps extends CheckboxProps {
+  variant?: "default" | "m3";
+}
+
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps // Use the extended props interface
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={cn(
-      "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
-      className
-    )}
-    {...props}
-  >
-    <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
+  ExtendedCheckboxProps
+>(({ className, variant = "default", ...props }, ref) => {
+  const base =
+    "peer h-4 w-4 shrink-0 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+  const variants = {
+    default:
+      "rounded-sm border border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+    m3:
+      "rounded-[var(--md-sys-shape-corner-small)] border border-m3-outline bg-m3-surface data-[state=checked]:bg-m3-primary data-[state=checked]:text-m3-on-primary transition-all shadow-sm",
+  };
+  return (
+    <CheckboxPrimitive.Root
+      ref={ref}
+      className={cn(base, variants[variant], className)}
+      {...props}
     >
-      <Check className="h-4 w-4" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-))
-Checkbox.displayName = CheckboxPrimitive.Root.displayName
+      <CheckboxPrimitive.Indicator
+        className={cn("flex items-center justify-center text-current")}
+      >
+        <Check className="h-4 w-4" />
+      </CheckboxPrimitive.Indicator>
+    </CheckboxPrimitive.Root>
+  );
+});
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 export { Checkbox }

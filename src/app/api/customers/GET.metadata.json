@@ -38,7 +38,7 @@
       "required": true
     },
     {
-      "name": "__@INTERNALS@2749",
+      "name": "__@INTERNALS@2750",
       "type": "{\n        cookies: RequestCookies;\n        url: string;\n        nextUrl: NextURL;\n    }",
       "description": "",
       "required": true

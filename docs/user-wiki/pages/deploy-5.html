@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Развертывание — Шаг 5: Запуск и Firewall | User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html" class="active">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Шаг 5: Запуск приложения и настройка Firewall</h1>
+    <ol>
+      <li>
+        <b>Установка и запуск приложения с помощью pm2</b><br>
+        <span class="muted">Инструкция:</span>
+        <ol>
+          <li><code>sudo npm install pm2 -g</code></li>
+          <li><code>pm2 start npm --name "studio-app" -- run start</code></li>
+          <li><code>pm2 startup</code> (и выполните команду, которую выведет pm2)</li>
+          <li><code>pm2 save</code></li>
+        </ol>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Комментарий:</span> Приложение успешно запущено под управлением pm2.
+      </li>
+      <li>
+        <b>Настройка брандмауэра ufw</b><br>
+        <span class="muted">Инструкция:</span>
+        <ol>
+          <li><code>sudo ufw allow ssh</code></li>
+          <li><code>sudo ufw allow 3000/tcp</code></li>
+          <li><code>sudo ufw enable</code></li>
+          <li><code>sudo ufw status</code></li>
+        </ol>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Комментарий:</span> Разрешены порты 22/tcp и 3000/tcp, ufw активен.
+      </li>
+      <li>
+        <b>Проверка доступности приложения</b><br>
+        <span class="muted">Инструкция:</span> Откройте <a href="http://157.180.87.32:3000" target="_blank">http://157.180.87.32:3000</a> в браузере.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Комментарий:</span> Приложение успешно запущено и доступно, основной функционал работает.
+      </li>
+    </ol>
+    <h2>Возможные проблемы и решения</h2>
+    <ul>
+      <li>
+        <b>Приложение не запускается:</b><br>
+        <span class="muted">Решение:</span> Проверьте логи pm2: <code>pm2 logs studio-app</code>
+      </li>
+      <li>
+        <b>Порт 3000 недоступен:</b><br>
+        <span class="muted">Решение:</span> Проверьте настройки ufw, убедитесь, что порт открыт.
+      </li>
+      <li>
+        <b>Ошибка при запуске pm2 startup:</b><br>
+        <span class="muted">Решение:</span> Выполните команду, которую выведет pm2 для systemd.
+      </li>
+    </ul>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

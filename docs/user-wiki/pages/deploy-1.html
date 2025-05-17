@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Развертывание — Шаг 1: Подготовка и создание сервера | User Wiki</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">User Wiki</div>
+    <nav>
+      <ul>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="deploy-list">Развертывание</button>
+          <ul class="submenu" id="deploy-list" hidden>
+            <li><a href="deploy.html">Оглавление</a></li>
+            <li><a href="deploy-1.html" class="active">1. Подготовка и создание сервера</a></li>
+            <li><a href="deploy-2.html">2. Первоначальная настройка</a></li>
+            <li><a href="deploy-3.html">3. Установка ПО</a></li>
+            <li><a href="deploy-4.html">4. Загрузка и настройка приложения</a></li>
+            <li><a href="deploy-5.html">5. Запуск и Firewall</a></li>
+            <li><a href="deploy-6.html">6. Проблемы и решения</a></li>
+          </ul>
+        </li>
+        <li>
+          <button class="accordion-btn" aria-expanded="false" aria-controls="update-list">Обновление</button>
+          <ul class="submenu" id="update-list" hidden>
+            <li><a href="update.html">Оглавление</a></li>
+            <!-- Здесь можно добавить подробные страницы по шагам обновления -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main class="content">
+    <h1>Шаг 1: Подготовка и создание сервера на Hetzner</h1>
+    <ol>
+      <li>
+        <b>Вход в Hetzner Cloud Console</b><br>
+        <span class="muted">Инструкция:</span> Откройте <a href="https://console.hetzner.cloud/" target="_blank">Hetzner Cloud Console</a> и войдите в аккаунт.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Комментарии/Проблемы:</span> <a href="https://console.hetzner.cloud/projects/10637332/dashboard" target="_blank">Ссылка на дашборд проекта</a>
+      </li>
+      <li>
+        <b>Создание нового сервера</b><br>
+        <span class="muted">Инструкция:</span> В консоли Hetzner нажмите "Add Server" или "+".<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Комментарии/Проблемы:</span> <a href="https://console.hetzner.cloud/projects/10637332/servers/create" target="_blank">Страница создания сервера</a>
+      </li>
+      <li>
+        <b>Выбор местоположения</b><br>
+        <span class="muted">Инструкция:</span> Выберите локацию (например, Helsinki).<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Выбранное местоположение:</span> Helsinki
+      </li>
+      <li>
+        <b>Выбор образа ОС</b><br>
+        <span class="muted">Инструкция:</span> Выберите Ubuntu 24.04.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Выбранный образ:</span> Ubuntu 24.04
+      </li>
+      <li>
+        <b>Выбор типа сервера</b><br>
+        <span class="muted">Инструкция:</span> Выберите CX22 или аналогичный.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Выбранный тип:</span> CX22 (2 vCPU, 4GB RAM, 40GB SSD)
+      </li>
+      <li>
+        <b>Добавление SSH-ключа</b><br>
+        <span class="muted">Инструкция:</span> Добавьте публичный SSH-ключ.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Действие:</span> Ключ сгенерирован на Windows и добавлен в Hetzner.<br>
+        <span class="muted">Пошаговая инструкция:</span>
+        <ol>
+          <li>Откройте PowerShell или CMD.</li>
+          <li>Выполните: <code>ssh-keygen -t ed25519 -C "your_email@example.com"</code></li>
+          <li>Примите путь по умолчанию, задайте пароль (или оставьте пустым).</li>
+          <li>Скопируйте содержимое <code>C:\Users\ИМЯ_ПОЛЬЗОВАТЕЛЯ\.ssh\id_ed25519.pub</code> и вставьте в Hetzner.</li>
+        </ol>
+      </li>
+      <li>
+        <b>Настройка сети, томов, брандмауэров, бэкапов</b><br>
+        <span class="muted">Инструкция:</span> Оставьте по умолчанию.<br>
+        <span class="muted">Статус:</span> Выполнен.
+      </li>
+      <li>
+        <b>Имя сервера и завершение создания</b><br>
+        <span class="muted">Инструкция:</span> Придумайте имя, проверьте конфигурацию и создайте сервер.<br>
+        <span class="muted">Статус:</span> Выполнен.<br>
+        <span class="muted">Имя сервера:</span> studio-app-server<br>
+        <span class="muted">IP-адрес:</span> 157.180.87.32
+      </li>
+    </ol>
+  </main>
+  <script src="../script.js"></script>
+</body>
+</html>

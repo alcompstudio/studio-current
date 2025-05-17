@@ -29,10 +29,10 @@ flowchart TD
     page_tsx --> form
     input[@/components/ui/input]
     page_tsx --> input
-    textarea[@/components/ui/textarea]
-    page_tsx --> textarea
     select[@/components/ui/select]
     page_tsx --> select
+    textarea[@/components/ui/textarea]
+    page_tsx --> textarea
     types[@/lib/types]
     page_tsx --> types
     use_toast[@/hooks/use-toast]

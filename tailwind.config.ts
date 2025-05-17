@@ -13,9 +13,38 @@ export default {
       fontFamily: { // Add font family configuration
         sans: ["var(--font-inter)", ...fontFamily.sans],
       },
-  		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
+  colors: {
+  background: 'hsl(var(--background))',
+  foreground: 'hsl(var(--foreground))',
+
+  // Material 3 colors (по переменным из tokens.css)
+  'm3-primary': 'rgb(var(--md-sys-color-primary))',
+  'm3-on-primary': 'rgb(var(--md-sys-color-on-primary))',
+  'm3-primary-container': 'rgb(var(--md-sys-color-primary-container))',
+  'm3-on-primary-container': 'rgb(var(--md-sys-color-on-primary-container))',
+  'm3-secondary': 'rgb(var(--md-sys-color-secondary))',
+  'm3-on-secondary': 'rgb(var(--md-sys-color-on-secondary))',
+  'm3-secondary-container': 'rgb(var(--md-sys-color-secondary-container))',
+  'm3-on-secondary-container': 'rgb(var(--md-sys-color-on-secondary-container))',
+  'm3-tertiary': 'rgb(var(--md-sys-color-tertiary))',
+  'm3-on-tertiary': 'rgb(var(--md-sys-color-on-tertiary))',
+  'm3-tertiary-container': 'rgb(var(--md-sys-color-tertiary-container))',
+  'm3-on-tertiary-container': 'rgb(var(--md-sys-color-on-tertiary-container))',
+  'm3-error': 'rgb(var(--md-sys-color-error))',
+  'm3-on-error': 'rgb(var(--md-sys-color-on-error))',
+  'm3-error-container': 'rgb(var(--md-sys-color-error-container))',
+  'm3-on-error-container': 'rgb(var(--md-sys-color-on-error-container))',
+  'm3-background': 'rgb(var(--md-sys-color-background))',
+  'm3-on-background': 'rgb(var(--md-sys-color-on-background))',
+  'm3-surface': 'rgb(var(--md-sys-color-surface))',
+  'm3-on-surface': 'rgb(var(--md-sys-color-on-surface))',
+  'm3-surface-variant': 'rgb(var(--md-sys-color-surface-variant))',
+  'm3-on-surface-variant': 'rgb(var(--md-sys-color-on-surface-variant))',
+  'm3-outline': 'rgb(var(--md-sys-color-outline))',
+  'm3-outline-variant': 'rgb(var(--md-sys-color-outline-variant))',
+  'm3-inverse-surface': 'rgb(var(--md-sys-color-inverse-surface))',
+  'm3-inverse-on-surface': 'rgb(var(--md-sys-color-inverse-on-surface))',
+  'm3-inverse-primary': 'rgb(var(--md-sys-color-inverse-primary))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
