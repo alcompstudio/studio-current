@@ -21,7 +21,7 @@
     },
     {
       "name": "onOptionAdded",
-      "type": "(\n    newOptionData: Omit<\n      EtapOption,\n      \"id\" | \"etapId\" | \"createdAt\" | \"updatedAt\" | \"calculatedPlanPrice\"\n    >,\n  ) => void",
+      "type": "(\r\n    newOptionData: Omit<\r\n      EtapOption,\r\n      \"id\" | \"etapId\" | \"createdAt\" | \"updatedAt\" | \"calculatedPlanPrice\"\r\n    >,\r\n  ) => void",
       "description": "",
       "required": true
     },

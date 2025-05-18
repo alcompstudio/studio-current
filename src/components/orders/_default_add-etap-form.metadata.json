@@ -21,7 +21,7 @@
     },
     {
       "name": "onEtapAdded",
-      "type": "(\n    newEtapData: Omit<Etap, \"id\" | \"createdAt\" | \"updatedAt\" | \"options\">,\n  ) => void",
+      "type": "(\r\n    newEtapData: Omit<Etap, \"id\" | \"createdAt\" | \"updatedAt\" | \"options\">,\r\n  ) => void",
       "description": "",
       "required": true
     },
