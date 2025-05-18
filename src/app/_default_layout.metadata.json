@@ -18,14 +18,14 @@
   "returnType": "React.JSX.Element",
   "dependencies": [
     "next",
-    "next/font/google",
     "./globals.css",
     "@/components/layout/toaster-client",
-    "@/lib/utils"
+    "@/lib/utils",
+    "@/utils/fonts"
   ],
   "history": [
     {
-      "date": "2025-05-15",
+      "date": "2025-05-18",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

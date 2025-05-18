@@ -1,5 +1,4 @@
-
-import AppLayout from '@/components/layout/app-layout';
+import AppLayout from "@/components/layout/app-layout";
 
 // This layout wraps all pages inside the (app) group
 export default function AuthenticatedAppLayout({
@@ -11,5 +10,5 @@ export default function AuthenticatedAppLayout({
   // No need for an additional check here.
 
   // The AppLayout component itself handles fetching user data and rendering the main structure.
-  return <AppLayout>{children}</AppLayout>;
+  return <AppLayout data-oid="bhc8epr">{children}</AppLayout>;
 }

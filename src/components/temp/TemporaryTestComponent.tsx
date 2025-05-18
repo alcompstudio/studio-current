@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Это временный тестовый компонент для проверки системы документации.
@@ -6,8 +6,8 @@ import React from 'react';
  */
 const TemporaryTestComponent = () => {
   return (
-    <div>
-      <p>Это временный тестовый компонент.</p>
+    <div data-oid="snex6_g">
+      <p data-oid="txfqo9p">Это временный тестовый компонент.</p>
     </div>
   );
 };

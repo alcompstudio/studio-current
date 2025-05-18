@@ -41,7 +41,12 @@ flowchart TD
 |---|---|---|---|
 | `etapId` | `string` | Да |  |
 | `currency` | `string` | Да |  |
-| `onOptionAdded` | `(newOptionData: Omit<EtapOption, 'id' \| 'etapId' \| 'createdAt' \| 'updatedAt' \| 'calculatedPlanPrice'>) => void` | Да |  |
+| `onOptionAdded` | `(
+    newOptionData: Omit<
+      EtapOption,
+      "id" \| "etapId" \| "createdAt" \| "updatedAt" \| "calculatedPlanPrice"
+    >,
+  ) => void` | Да |  |
 | `onCancel` | `() => void` | Да |  |
 
 **Возвращает:** `React.JSX.Element`

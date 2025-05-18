@@ -9,14 +9,14 @@ flowchart TD
     layout_tsx[layout.tsx]
     next[next]
     layout_tsx --> next
-    google[next/font/google]
-    layout_tsx --> google
     globals_css[./globals.css]
     layout_tsx --> globals_css
     toaster_client[@/components/layout/toaster-client]
     layout_tsx --> toaster_client
     utils[@/lib/utils]
     layout_tsx --> utils
+    fonts[@/utils/fonts]
+    layout_tsx --> fonts
 ```
 
 ### `default` (ReactComponent)

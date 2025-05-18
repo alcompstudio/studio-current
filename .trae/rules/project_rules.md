@@ -1,1 +1,0 @@
- Always visit the documentation located in the directory #Folder:docs (/docs) and subfolders regarding the latest updates in project development and take note of what has been done and at what stage of the project.

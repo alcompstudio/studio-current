@@ -21,7 +21,7 @@
     },
     {
       "name": "onOptionAdded",
-      "type": "(newOptionData: Omit<EtapOption, 'id' | 'etapId' | 'createdAt' | 'updatedAt' | 'calculatedPlanPrice'>) => void",
+      "type": "(\n    newOptionData: Omit<\n      EtapOption,\n      \"id\" | \"etapId\" | \"createdAt\" | \"updatedAt\" | \"calculatedPlanPrice\"\n    >,\n  ) => void",
       "description": "",
       "required": true
     },
@@ -50,7 +50,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-15",
+      "date": "2025-05-18",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

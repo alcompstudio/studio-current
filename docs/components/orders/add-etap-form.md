@@ -41,7 +41,9 @@ flowchart TD
 |---|---|---|---|
 | `orderId` | `string` | Да |  |
 | `currency` | `string` | Да |  |
-| `onEtapAdded` | `(newEtapData: Omit<Etap, 'id' \| 'createdAt' \| 'updatedAt' \| 'options'>) => void` | Да |  |
+| `onEtapAdded` | `(
+    newEtapData: Omit<Etap, "id" \| "createdAt" \| "updatedAt" \| "options">,
+  ) => void` | Да |  |
 | `onCancel` | `() => void` | Да |  |
 | `isSaveDisabled` | `boolean` | Да |  |
 
