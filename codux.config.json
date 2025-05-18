@@ -1,0 +1,12 @@
+{
+  "moduleResolution": {
+    "alias": {
+      "next/router": "./_codux/mocks/next-router.js",
+      "next/navigation": "./_codux/mocks/next-navigation.js",
+      "next/image": "./_codux/mocks/next-image.js"
+    }
+  },
+  "setup": {
+    "client": "./_codux/setup.js"
+  }
+}
