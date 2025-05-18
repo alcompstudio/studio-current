@@ -1,28 +1,4 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import Toaster from '@/components/layout/toaster-client';
-import { cn } from '@/lib/utils'; // Import cn utility
-
-// Initialize the Inter font
-
-export const metadata: Metadata = {
-  title: 'TaskVerse',
-  // Update title
-  description: 'Freelance platform for projects, tasks, and finance.' // Update description
-};
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    // Ensure no whitespace or comments are direct children of <html> before <body>
-    <html lang="en" suppressHydrationWarning>
-      {/* Use cn to apply font variable and other base classes */}
-      <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  );
-}
+import type { Metadata } from "next";
+import "./globals.css";
+import Toaster from "@/components/layout/toaster-client";
+import { cn } from "@/lib/utils"; // Import cn utility import { inter } from '@/utils/fonts'; // Import the inter font ======= export const metadata: Metadata = { title: 'TaskVerse', // Update title description: 'Freelance platform for projects, tasks, and finance.' // Update description }; export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) { return ( // Ensure no whitespace or comments are direct children of <html> before <body> <html lang="en" suppressHydrationWarning> {/* Use cn to apply font variable and other base classes */} <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}> {children} <Toaster /> </body> </html> ); }
