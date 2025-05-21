@@ -7,17 +7,15 @@
 ```mermaid
 flowchart TD
     page_tsx[page.tsx]
-    react[react]
-    page_tsx --> react
     navigation[next/navigation]
     page_tsx --> navigation
-    types[@/lib/types]
-    page_tsx --> types
+    headers[next/headers]
+    page_tsx --> headers
 ```
 
-### `default` (ReactComponent)
+### `default` (Function)
 
-**Возвращает:** `React.JSX.Element \| null`
+**Возвращает:** `Promise<never>`
 
 *Источник: `src/app\page.tsx`*
 

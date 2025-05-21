@@ -41,6 +41,11 @@ flowchart TD
 *Источник: `src/lib\db.ts`*
 
 ---
+### `ProjectStatusOS` (BindingElement)
+
+*Источник: `src/lib\db.ts`*
+
+---
 ### `connectDB` (Variable (Identifier))
 
 *Источник: `src/lib\db.ts`*

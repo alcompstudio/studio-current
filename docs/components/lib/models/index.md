@@ -21,6 +21,8 @@ flowchart TD
     index_ts --> Project
     Order[./Order]
     index_ts --> Order
+    ProjectStatusOS[./ProjectStatusOS]
+    index_ts --> ProjectStatusOS
 ```
 
 ### `connectDB` (Function)

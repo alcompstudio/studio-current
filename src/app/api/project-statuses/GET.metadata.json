@@ -1,0 +1,26 @@
+{
+  "component": "GET",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\api\\project-statuses\\route.ts",
+  "props": [],
+  "params": [],
+  "returnType": "Promise<import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<import(\"E:/Business/Projects/studio/src/lib/models/ProjectStatusOS\").ProjectStatusOSAttributes[]> | import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<{ error: string; details: string; }>>",
+  "dependencies": [
+    "next/server",
+    "@/lib/models",
+    "@/lib/models/ProjectStatusOS",
+    "@/lib/models/ProjectStatusOS"
+  ],
+  "history": [
+    {
+      "date": "2025-05-21",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

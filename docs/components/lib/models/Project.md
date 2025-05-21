@@ -9,6 +9,8 @@ flowchart TD
     Project_ts[Project.ts]
     sequelize[sequelize]
     Project_ts --> sequelize
+    ProjectStatusOS[./ProjectStatusOS]
+    Project_ts --> ProjectStatusOS
 ```
 
 ### `default` (Function)

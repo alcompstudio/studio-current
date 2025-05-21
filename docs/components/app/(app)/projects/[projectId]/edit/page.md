@@ -35,7 +35,7 @@ flowchart TD
     page_tsx --> label
     select[@/components/ui/select]
     page_tsx --> select
-    types[@/lib/types]
+    types[@/types]
     page_tsx --> types
     use_toast[@/hooks/use-toast]
     page_tsx --> use_toast

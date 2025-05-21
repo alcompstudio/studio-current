@@ -17,11 +17,12 @@
   ],
   "returnType": "ModelStatic<ProjectInstance>",
   "dependencies": [
-    "sequelize"
+    "sequelize",
+    "./ProjectStatusOS"
   ],
   "history": [
     {
-      "date": "2025-05-18",
+      "date": "2025-05-21",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

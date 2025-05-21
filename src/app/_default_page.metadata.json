@@ -4,19 +4,18 @@
   "description": "",
   "tags": [],
   "maintainer": "AI Agent / Auto-generated",
-  "type": "ReactComponent",
+  "type": "Function",
   "path": "app\\page.tsx",
   "props": [],
   "params": [],
-  "returnType": "React.JSX.Element | null",
+  "returnType": "Promise<never>",
   "dependencies": [
-    "react",
     "next/navigation",
-    "@/lib/types"
+    "next/headers"
   ],
   "history": [
     {
-      "date": "2025-05-18",
+      "date": "2025-05-21",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

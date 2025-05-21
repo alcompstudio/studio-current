@@ -6,27 +6,26 @@
   "maintainer": "AI Agent / Auto-generated",
   "type": "ReactComponent",
   "path": "app\\(app)\\projects\\[projectId]\\page.tsx",
-  "props": [],
+  "props": [
+    {
+      "name": "params",
+      "type": "{\n    projectId: string;\n  }",
+      "description": "",
+      "required": true
+    }
+  ],
   "params": [],
-  "returnType": "React.JSX.Element",
+  "returnType": "Promise<React.JSX.Element>",
   "dependencies": [
-    "react",
-    "@/components/ui/card",
-    "@/components/ui/badge",
-    "@/components/ui/button",
-    "lucide-react",
-    "next/link",
     "next/navigation",
-    "@/lib/types",
-    "../mockProjects",
-    "../../orders/mockOrders",
-    "@/hooks/use-toast",
-    "@/lib/utils",
-    "@/components/ui/tabs"
+    "next/link",
+    "lucide-react",
+    "@/components/ui/button",
+    "./project-details-tabs"
   ],
   "history": [
     {
-      "date": "2025-05-18",
+      "date": "2025-05-21",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }
