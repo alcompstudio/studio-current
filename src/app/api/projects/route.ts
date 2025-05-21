@@ -1,19 +1,23 @@
 import { NextResponse } from 'next/server';
-import { Project, Customer, Order } from '@/lib/db'; // Импортируем инициализированные модели из db.ts
+import { Project, Customer, Order, ProjectStatusOS } from '@/lib/db'; // Импортируем ProjectStatusOS // Импортируем инициализированные модели из db.ts
 
 export async function GET() {
   try {
     const projects = await Project.findAll({
-      include: [
-        {
-          model: Customer,
-          as: 'customer',
-        },
-        {
-          model: Order,
-          as: 'orders',
-        },
-      ],
+      // include: [
+      //   {
+      //     model: Customer,
+      //     as: 'customer',
+      //   },
+      //   {
+      //     model: Order,
+      //     as: 'orders',
+      //   },
+      //   {
+      //     model: ProjectStatusOS,
+      //     as: 'projectStatus', // Должно совпадать с 'as' в модели Project
+      //   },
+      // ],
     });
     return NextResponse.json(projects);
   } catch (error) {
@@ -50,7 +54,7 @@ export async function POST(request: Request) {
     const projectDataToCreate: any = {
       title: name, // Map name to title
       customer_id: parseInt(customerId, 10), // Map customerId to customer_id and parse to int
-      status: status,
+      status: parseInt(status, 10), // Убедимся, что статус это число
     };
 
     if (description !== undefined) {

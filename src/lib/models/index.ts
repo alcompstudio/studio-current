@@ -8,6 +8,7 @@ import defineUser from './User'; // <<< ДОБАВЛЕНО
 import defineCustomer from './Customer';
 import defineProject from './Project';
 import defineOrder from './Order';
+import defineProjectStatusOS from './ProjectStatusOS'; // Импорт новой модели
 // TODO: Импортировать другие модели по мере необходимости
 
 dotenv.config(); // Загружает переменные из .env файла
@@ -44,6 +45,7 @@ db.User = defineUser(sequelize); // <<< ДОБАВЛЕНО
 db.Customer = defineCustomer(sequelize);
 db.Project = defineProject(sequelize);
 db.Order = defineOrder(sequelize);
+db.ProjectStatusOS = defineProjectStatusOS(sequelize); // Инициализация и добавление новой модели
 // TODO: Добавить другие модели
 
 // Вызываем методы associate для настройки связей, если они определены

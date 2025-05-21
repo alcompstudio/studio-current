@@ -35,26 +35,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Project } from "@/lib/types";
+import type { Project, ProjectStatus, Customer, Order } from "@/types"; 
 // REMOVE MOCK DATA IMPORT
 // import { mockProjects } from '../../mockProjects';
 import { useToast } from "@/hooks/use-toast";
 
-// Define project statuses and currencies
-const projectStatuses = [
-  "Planning",
-  "In Progress",
-  "On Hold",
-  "Completed",
-  "Archived",
-] as const;
+// projectCurrencies остается, projectStatuses будет загружаться
+  // Старая константа projectStatuses удалена
 const projectCurrencies = ["USD", "EUR", "RUB"] as const;
 
 // Define the form schema using Zod - matching API expectations for update
 const projectFormSchema = z.object({
   name: z.string().min(1, { message: "Project name is required." }),
   description: z.string().nullable().optional(), // Allow null or undefined
-  status: z.enum(projectStatuses, { required_error: "Status is required." }),
+  status: z.string({ required_error: "Status is required and must be a string initially." })
+    .pipe(z.coerce.number({ invalid_type_error: "Status ID must be a number." })
+    .positive({ message: "Status ID must be a positive number." })),
   currency: z.enum(projectCurrencies, {
     required_error: "Currency is required.",
   }),
@@ -76,6 +72,7 @@ export default function ProjectEditPage() {
   const projectId = params?.projectId;
   const router = useRouter();
   const { toast } = useToast();
+  const [availableStatuses, setAvailableStatuses] = React.useState<ProjectStatus[]>([]);
 
   const [project, setProject] = React.useState<Project | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -86,7 +83,7 @@ export default function ProjectEditPage() {
     defaultValues: {
       name: "",
       description: "",
-      status: "Planning", // Or undefined if placeholder preferred
+      status: undefined, // Будет выбрано через Select, покажет placeholder
       currency: "USD", // Or undefined if placeholder preferred
       budget: null, // Use null for optional number field when empty
     },
@@ -130,7 +127,7 @@ export default function ProjectEditPage() {
           form.reset({
             name: data.title || "", // String or empty string
             description: data.description || "", // String or empty string
-            status: (data.status as ProjectFormValues["status"]) || "Planning",
+            status: data.status, // data.status это ID (число), соответствует типу ProjectFormValues.status (number | undefined)
             currency: (data.currency as ProjectFormValues["currency"]) || "USD",
             budget: budgetValue, // Number or null
           });
@@ -158,6 +155,28 @@ export default function ProjectEditPage() {
     }
   }, [projectId, form, router, toast]); // Added toast to deps
 
+  useEffect(() => {
+    // Fetch project statuses
+    fetch('/api/project-statuses-os')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch project statuses');
+        }
+        return res.json();
+      })
+      .then((data: ProjectStatus[]) => {
+        setAvailableStatuses(data);
+      })
+      .catch(error => {
+        console.error("Error fetching project statuses:", error);
+        toast({
+          title: "Error Loading Statuses",
+          description: error.message || "Could not load project statuses.",
+          variant: "destructive",
+        });
+      });
+  }, [toast]); // Зависимость от toast, если он используется в catch
+
   const onSubmit = async (data: ProjectFormValues) => {
     if (!projectId) {
       toast({
@@ -173,7 +192,10 @@ export default function ProjectEditPage() {
     // Data is already validated by Zod schema with preprocess
     // Ensure budget is null if it's NaN after preprocess (e.g., user typed non-numeric)
     const dataToSend = {
-      ...data,
+      title: data.name,         // переименовываем name в title для соответствия API
+      description: data.description,
+      status: data.status,
+      currency: data.currency,
       budget:
         data.budget === undefined ||
         data.budget === null ||
@@ -262,7 +284,7 @@ export default function ProjectEditPage() {
           </Link>
           {/* Display project name from fetched data */}
           <h2 className="text-2xl font-bold tracking-tight" data-oid="92hyun1">
-            Edit Project: {project.name}
+            Edit Project: {project.title}
           </h2>
         </div>
         <Button
@@ -349,7 +371,7 @@ export default function ProjectEditPage() {
                       <FormLabel data-oid="8ses6-g">Status</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value !== undefined ? String(field.value) : undefined}
                         data-oid="uqe5cpk"
                       >
                         <FormControl data-oid="_whqop0">
@@ -361,13 +383,9 @@ export default function ProjectEditPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent data-oid="sxb9kk0">
-                          {projectStatuses.map((status) => (
-                            <SelectItem
-                              key={status}
-                              value={status}
-                              data-oid=":po0b.q"
-                            >
-                              {status}
+                          {availableStatuses.map((statusItem: ProjectStatus) => (
+                            <SelectItem key={statusItem.id} value={String(statusItem.id)}>
+                              {statusItem.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -386,7 +404,7 @@ export default function ProjectEditPage() {
                       <FormLabel data-oid="_ogb9iq">Currency</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value !== undefined ? String(field.value) : undefined}
                         data-oid="v9tx3:k"
                       >
                         <FormControl data-oid="vje292j">

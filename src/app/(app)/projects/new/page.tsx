@@ -35,26 +35,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"; // Import Select components
 import type { Project } from "@/lib/types"; // Assuming Project type exists
+import type { ProjectStatus } from "@/types"; // Import ProjectStatus
 // import { mockProjects } from '../mockProjects'; // Corrected import path - REMOVE MOCK
 import { useToast } from "@/hooks/use-toast"; // Import useToast
 
 // Define project statuses and currencies (same as edit page)
-const projectStatuses = [
-  "Planning",
-  "In Progress",
-  "On Hold",
-  "Completed",
-  "Archived",
-] as const;
+// const projectStatuses = [...] // Removed hardcoded statuses
 const projectCurrencies = ["USD", "EUR", "RUB"] as const;
 
 // Define the form schema using Zod (same as edit page, but client might be different)
 const projectFormSchema = z.object({
   name: z.string().min(1, { message: "Project name is required." }),
   description: z.string().optional(),
-  status: z
-    .enum(projectStatuses, { required_error: "Status is required." })
-    .default("Planning"), // Default to Planning
+  status: z.coerce
+    .number({ required_error: "Status is required." })
+    .min(1, { message: "Please select a valid status." }), // Default will be set by useEffect
   currency: z
     .enum(projectCurrencies, { required_error: "Currency is required." })
     .default("USD"), // Default to USD
@@ -81,6 +76,8 @@ export default function ProjectCreatePage() {
   // Состояние для хранения customerId (предполагаем, что это число)
   const [customerId, setCustomerId] = useState<number | null>(null);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [projectStatuses, setProjectStatuses] = useState<ProjectStatus[]>([]);
+  const [isLoadingStatuses, setIsLoadingStatuses] = useState(true);
 
   // Load user data (including customerId) from localStorage on mount
   useEffect(() => {
@@ -139,7 +136,7 @@ export default function ProjectCreatePage() {
     defaultValues: {
       name: "",
       description: "",
-      status: "Planning",
+      status: undefined, // Will be set by useEffect after fetching statuses
       currency: "USD",
       budget: undefined,
       // clientName: "",
@@ -148,6 +145,42 @@ export default function ProjectCreatePage() {
     },
     mode: "onChange",
   });
+
+  // Fetch project statuses on mount
+  useEffect(() => {
+    const fetchProjectStatuses = async () => {
+      setIsLoadingStatuses(true);
+      try {
+        const response = await fetch("/api/project-statuses");
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: "Failed to fetch project statuses" }));
+          throw new Error(errorData.message || "Failed to fetch project statuses");
+        }
+        const data: ProjectStatus[] = await response.json();
+        setProjectStatuses(data);
+        
+        if (data.length > 0) {
+          const defaultStatus = data.find(s => s.name === "Новый") || data[0];
+          if (defaultStatus) {
+            if (form && form.setValue) { 
+              form.setValue("status", defaultStatus.id, { shouldValidate: true });
+            }
+          }
+        }
+      } catch (error: any) {
+        console.error("Error fetching project statuses:", error);
+        toast({
+          title: "Error Loading Statuses",
+          description: error.message || "Could not load project statuses.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingStatuses(false);
+      }
+    };
+
+    fetchProjectStatuses();
+  }, [toast, form.setValue, setProjectStatuses, setIsLoadingStatuses]);
 
   const onSubmit = async (data: ProjectFormValues) => {
     // Проверяем, загружен ли customerId
@@ -355,20 +388,40 @@ export default function ProjectCreatePage() {
                     <FormItem>
                       <FormLabel>Status</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        onValueChange={field.onChange} // Pass string ID from SelectItem's value, Zod will coerce
+                        value={field.value?.toString()} // Form state (number) to string for Select value prop
+                        disabled={isLoadingUser || isLoadingStatuses}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
+                            <SelectValue placeholder="Select project status" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {projectStatuses.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {status}
-                            </SelectItem>
-                          ))}
+                          {isLoadingStatuses && !projectStatuses.length ? (
+                            <div style={{ padding: '10px 12px', color: '#718096', fontSize: '0.875rem' }}>Loading statuses...</div>
+                          ) : projectStatuses.length === 0 && !isLoadingStatuses ? (
+                            <div style={{ padding: '10px 12px', color: '#718096', fontSize: '0.875rem' }}>No statuses available.</div>
+                          ) : (
+                            projectStatuses.map((s) => (
+                              <SelectItem key={s.id} value={s.id.toString()}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <span
+                                    style={{
+                                      display: 'inline-block',
+                                      width: '10px',
+                                      height: '10px',
+                                      borderRadius: '50%',
+                                      backgroundColor: s.backgroundColor,
+                                      marginRight: '8px',
+                                      border: `1px solid ${s.textColor}`,
+                                    }}
+                                  />
+                                  <span style={{ color: s.textColor }}>{s.name}</span>
+                                </div>
+                              </SelectItem>
+                            ))
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />

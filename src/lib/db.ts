@@ -1,7 +1,7 @@
 import defaultDbObject, { connectDB as connectDBFromModels } from './models'; // Импортируем объект по умолчанию и именованный connectDB
 
 // Ре-экспортируем свойства объекта db
-export const { sequelize, Sequelize, User, Customer, Project, Order } = defaultDbObject; // <<< Добавили User
+export const { sequelize, Sequelize, User, Customer, Project, Order, ProjectStatusOS } = defaultDbObject; // <<< Добавили User и ProjectStatusOS
 
 // Ре-экспортируем connectDB как именованный экспорт
 export const connectDB = connectDBFromModels;

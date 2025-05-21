@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize, ModelStatic } from 'sequelize';
+import type { ProjectStatusOSAttributes } from './ProjectStatusOS'; // Для типизации связи
 
 // Определение интерфейса атрибутов
 export interface ProjectAttributes {
@@ -6,7 +7,8 @@ export interface ProjectAttributes {
   customer_id: number;
   title: string;
   description?: string | null;
-  status: string;
+  status: number; // Теперь это ID статуса
+  projectStatus?: ProjectStatusOSAttributes; // Для eager loading
   budget?: number | null;      // Добавлено поле budget
   currency?: string | null;   // Добавлено поле currency
 }
@@ -20,7 +22,7 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
     public customer_id!: number;
     public title!: string;
     public description?: string | null;
-    public status!: string;
+    public status!: number; // Теперь это ID статуса
     public budget?: number | null;     // Добавлено поле budget
     public currency?: string | null;  // Добавлено поле currency
 
@@ -36,6 +38,12 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
       Project.hasMany(models.Order, {
         foreignKey: 'project_id',
         as: 'orders',
+      });
+      // Новая связь со статусом проекта
+      Project.belongsTo(models.ProjectStatusOS, {
+        foreignKey: 'status', // Имя поля в таблице projects, которое хранит ID статуса
+        as: 'projectStatus', // Псевдоним для доступа к связанному статусу
+        targetKey: 'id' // Поле в таблице project_status_os, на которое ссылаемся
       });
     }
   }
@@ -60,9 +68,14 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
         allowNull: true,
       },
       status: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 'active',
+        references: {
+          model: 'project_status_os', // Имя таблицы, на которую ссылаемся
+          key: 'id',
+        },
+        // defaultValue убираем, т.к. NOT NULL и FK обеспечат корректность
+        // или можно установить defaultValue на ID существующего статуса, если это необходимо бизнес-логикой
       },
       budget: {
         type: DataTypes.DECIMAL(12, 2), // Пример: 12 цифр всего, 2 после запятой
