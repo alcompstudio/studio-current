@@ -144,11 +144,12 @@
   "returnType": "Promise<import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<any>>",
   "dependencies": [
     "next/server",
-    "@/lib/db"
+    "@/lib/db",
+    "sequelize"
   ],
   "history": [
     {
-      "date": "2025-05-21",
+      "date": "2025-05-24",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

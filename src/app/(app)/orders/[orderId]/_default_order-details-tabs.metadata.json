@@ -1,0 +1,47 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\order-details-tabs.tsx",
+  "props": [
+    {
+      "name": "order",
+      "type": "Order",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "orderStatuses",
+      "type": "OrderStatusOS[]",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "projects",
+      "type": "{ id: number; title: string; currency?: string }[]",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/badge",
+    "lucide-react",
+    "@/lib/types",
+    "@/lib/types/order"
+  ],
+  "history": [
+    {
+      "date": "2025-05-24",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

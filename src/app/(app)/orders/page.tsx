@@ -11,38 +11,57 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Eye, Filter } from "lucide-react"; // Import Eye and Filter icons
-import type { Order } from "@/lib/types"; // Import Order type
+import type { Order } from "@/lib/types"; 
+import type { OrderStatusOS, OrderStatusId } from "@/lib/types/order";
 import Link from "next/link";
-import { getOrderStatusVariant } from "./mockOrders"; // Import only the helper
+import { getOrderStatusVariant, getOrderStatusStyle } from "./getOrderStatusVariant"; // Импорт новых функций
 import { cn } from "@/lib/utils"; // Import cn for conditional classes
+import { DeleteOrderDialog } from "@/components/orders/delete-order-dialog"; // Импорт компонента для удаления заказа
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [projects, setProjects] = useState<{ id: number; title: string }[]>([]);
+  const [projects, setProjects] = useState<{ id: number; title: string; currency?: string }[]>([]);
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatusOS[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userRole = "Заказчик";
+  // Роль пользователя (в будущем может быть получена из контекста аутентификации)
+  type UserRole = "Заказчик" | "Исполнитель";
+  const userRole: UserRole = "Заказчик"; // Явно указываем тип
+  
+  // Строковые константы ролей для сравнения
+  const CUSTOMER_ROLE = "Заказчик" as const;
+  const FREELANCER_ROLE = "Исполнитель" as const;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [ordersRes, projectsRes] = await Promise.all([
+        // Загружаем одновременно заказы, проекты и статусы заказов
+        const [ordersRes, projectsRes, statusesRes] = await Promise.all([
           fetch("/api/orders"),
           fetch("/api/projects"),
+          fetch("/api/order-statuses-os"),
         ]);
+        
         if (!ordersRes.ok)
-          throw new Error(`Error fetching orders: ${ordersRes.statusText}`);
+          throw new Error(`Ошибка при загрузке заказов: ${ordersRes.statusText}`);
         if (!projectsRes.ok)
-          throw new Error(`Error fetching projects: ${projectsRes.statusText}`);
+          throw new Error(`Ошибка при загрузке проектов: ${projectsRes.statusText}`);
+        if (!statusesRes.ok)
+          throw new Error(`Ошибка при загрузке статусов заказов: ${statusesRes.statusText}`);
+          
         const ordersData: Order[] = await ordersRes.json();
         const projectsData: { id: number; title: string; currency?: string }[] =
           await projectsRes.json();
+        const statusesData: OrderStatusOS[] = await statusesRes.json();
+        
+        // Форматируем даты для заказов
         const ordersWithFormattedDates = ordersData.map((order) => ({
           ...order,
           createdAt: order.createdAt ? new Date(order.createdAt) : null,
           updatedAt: order.updatedAt ? new Date(order.updatedAt) : null,
         }));
+        
         setOrders(ordersWithFormattedDates);
         setProjects(
           Array.isArray(projectsData)
@@ -53,9 +72,10 @@ export default function OrdersPage() {
               }))
             : [],
         );
+        setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
       } catch (err) {
-        console.error("Failed to fetch orders or projects:", err);
-        setError("Failed to load orders or projects.");
+        console.error("Ошибка при загрузке данных:", err);
+        setError("Не удалось загрузить заказы, проекты или статусы.");
       } finally {
         setLoading(false);
       }
@@ -77,14 +97,15 @@ export default function OrdersPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold tracking-tight">Orders</h2>
-        {userRole === "Заказчик" && (
+        {/* Используем константы для сравнения */}
+        {userRole === CUSTOMER_ROLE && (
           <Link href="/orders/new" passHref>
             <Button>
               <PlusCircle className="mr-2 h-4 w-4" /> Create New Order
             </Button>
           </Link>
         )}
-        {userRole === "Исполнитель" && (
+        {userRole === FREELANCER_ROLE && (
           <Button variant="outline">
             <Filter className="mr-2 h-4 w-4" /> Filter Orders
           </Button>
@@ -124,12 +145,31 @@ export default function OrdersPage() {
                         `ID: ${order.project_id}`}
                     </CardDescription>
                   </div>
-                  <Badge
-                    variant={getOrderStatusVariant(order.status)}
-                    className="flex-shrink-0"
-                  >
-                    {order.status}
-                  </Badge>
+                  {orderStatuses.length > 0 ? (
+                    <div
+                      className="rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 flex items-center"
+                      style={{
+                        backgroundColor: orderStatuses.find(s => s.id === Number(order.status))?.backgroundColor || '#f4f4f5',
+                        color: orderStatuses.find(s => s.id === Number(order.status))?.textColor || '#71717a',
+                        borderColor: orderStatuses.find(s => s.id === Number(order.status))?.textColor || '#71717a'
+                      }}
+                    >
+                      <span 
+                        className="h-2 w-2 rounded-full mr-1.5" 
+                        style={{
+                          backgroundColor: orderStatuses.find(s => s.id === Number(order.status))?.textColor || '#71717a'
+                        }}
+                      />
+                      {orderStatuses.find(s => s.id === Number(order.status))?.name || 'Неизвестный'}
+                    </div>
+                  ) : (
+                    <Badge
+                      variant="secondary"
+                      className="flex-shrink-0"
+                    >
+                      Загрузка...
+                    </Badge>
+                  )}
                 </div>
               </CardHeader>
               <CardContent>
@@ -142,18 +182,34 @@ export default function OrdersPage() {
                     Цена:{" "}
                     {order.price !== null &&
                     order.price !== undefined &&
-                    order.price !== ""
+                    String(order.price).trim() !== ""
                       ? Number(order.price).toLocaleString()
                       : "-"}{" "}
-                    {projects.find((p) => p.id === order.project_id)
-                      ?.currency ?? ""}
+                    {/* Конвертируем project_id в число для сравнения */}
+                    {projects.find((p) => 
+                      typeof order.project_id === 'string' 
+                        ? p.id === Number(order.project_id) 
+                        : p.id === order.project_id
+                    )?.currency ?? ""}
                   </span>
                   {/* Link to the new order detail page */}
-                  <Link href={`/orders/${order.id}`} passHref>
-                    <Button variant="outline" size="sm">
-                      <Eye className="mr-2 h-4 w-4" /> View Details
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link href={`/orders/${order.id}`} passHref>
+                      <Button variant="outline" size="sm">
+                        <Eye className="mr-2 h-4 w-4" /> Детали
+                      </Button>
+                    </Link>
+                    <DeleteOrderDialog 
+                      orderId={String(order.id)} 
+                      size="sm"
+                      variant="outline"
+                      buttonClassName="text-destructive hover:bg-destructive hover:text-destructive-foreground h-9 px-3"
+                      onDeleteSuccess={() => {
+                        // Обновляем список заказов после удаления
+                        setOrders(orders.filter(o => o.id !== order.id));
+                      }}
+                    />
+                  </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
                   Created:{" "}

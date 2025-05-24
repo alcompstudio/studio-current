@@ -34,17 +34,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Order, OrderStatus } from "@/lib/types"; // Import Order and OrderStatus types
+import type { Order } from "@/lib/types";
+import type { OrderStatusOS } from "@/lib/types/order"; // Импорт типа статуса заказа
 import { useToast } from "@/hooks/use-toast";
 
-// Define order statuses and currencies (should match backend/types)
-const orderStatuses: OrderStatus[] = [
-  "Новый",
-  "Сбор ставок",
-  "На паузе",
-  "Сбор Завершен",
-  "Отменен",
-];
+// Статусы заказов будут загружены из базы данных через API
 
 const orderFormSchema = z.object({
   title: z.string().min(1, { message: "Order title is required." }),
@@ -52,11 +46,10 @@ const orderFormSchema = z.object({
   project_id: z.coerce
     .number({ required_error: "Project ID is required." })
     .positive({ message: "Project ID must be a positive number." }),
-  status: z
-    .enum(orderStatuses as [OrderStatus, ...OrderStatus[]], {
-      required_error: "Status is required.",
-    })
-    .default("Новый"),
+  status: z.coerce
+    .number({ required_error: "Status is required." })
+    .positive({ message: "Status ID must be a positive number." })
+    .default(1), // Устанавливаем значение по умолчанию 1 (первый статус)
   price: z.coerce
     .number()
     .positive({ message: "Price must be a positive number." })
@@ -76,7 +69,7 @@ export default function OrderCreatePage() {
       title: "",
       description: "",
       project_id: undefined,
-      status: "Новый",
+      status: 1, // Устанавливаем значение по умолчанию на первый статус (id=1)
       price: undefined,
     },
     mode: "onChange",
@@ -85,31 +78,47 @@ export default function OrderCreatePage() {
   const [projects, setProjects] = useState<
     { id: number; title: string; currency?: string }[]
   >([]);
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatusOS[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
+  const [loadingStatuses, setLoadingStatuses] = useState(true);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/projects");
-        if (!res.ok) throw new Error("Ошибка загрузки проектов");
-        const data = await res.json();
+        // Загружаем проекты
+        const projectsRes = await fetch("/api/projects");
+        if (!projectsRes.ok) throw new Error("Ошибка загрузки проектов");
+        const projectsData = await projectsRes.json();
         setProjects(
-          Array.isArray(data)
-            ? data.map((p) => ({
+          Array.isArray(projectsData)
+            ? projectsData.map((p) => ({
                 id: p.id,
                 title: p.title,
                 currency: p.currency,
               }))
             : [],
         );
-      } catch (e) {
-        setProjects([]);
-      } finally {
         setLoadingProjects(false);
+        
+        // Загружаем статусы заказов
+        const statusesRes = await fetch("/api/order-statuses-os");
+        if (!statusesRes.ok) throw new Error("Ошибка загрузки статусов заказов");
+        const statusesData = await statusesRes.json();
+        setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
+        setLoadingStatuses(false);
+        
+        // Не устанавливаем значение статуса, т.к. оно уже установлено по умолчанию
+        setLoadingStatuses(false);
+      } catch (e) {
+        console.error("Ошибка при загрузке данных:", e);
+        setProjects([]);
+        setOrderStatuses([]);
+        setLoadingProjects(false);
+        setLoadingStatuses(false);
       }
     }
-    fetchProjects();
-  }, []);
+    fetchData();
+  }, [form]);
 
   const onSubmit = async (data: OrderFormValues) => {
     console.log("Form data:", data);
@@ -138,7 +147,12 @@ export default function OrderCreatePage() {
         description: `Order "${data.title}" has been successfully created.`,
       });
 
-      router.push(`/orders`);
+      // Перенаправляем на страницу созданного заказа
+      if (newOrder && newOrder.id) {
+        router.push(`/orders/${newOrder.id}`);
+      } else {
+        router.push('/orders');
+      }
       router.refresh();
     } catch (error) {
       console.error("Failed to create order:", error);
@@ -298,14 +312,15 @@ export default function OrderCreatePage() {
                     <FormItem data-oid="fxge0q2">
                       <FormLabel data-oid="d4wu4pa">Status</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        disabled={loadingStatuses}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        value={field.value ? String(field.value) : undefined}
                         data-oid="l2nh7gd"
                       >
                         <FormControl data-oid="3qj.8qh">
                           <SelectTrigger data-oid="zihwqt3">
                             <SelectValue
-                              placeholder="Select status"
+                              placeholder={loadingStatuses ? "Загрузка..." : "Выберите статус"}
                               data-oid="21oybs2"
                             />
                           </SelectTrigger>
@@ -313,11 +328,17 @@ export default function OrderCreatePage() {
                         <SelectContent data-oid="gcayxj4">
                           {orderStatuses.map((status) => (
                             <SelectItem
-                              key={status}
-                              value={status}
+                              key={status.id}
+                              value={String(status.id)}
                               data-oid="y74mklq"
                             >
-                              {status}
+                              <div className="flex items-center gap-2">
+                                <div 
+                                  className="w-3 h-3 rounded-full" 
+                                  style={{ backgroundColor: status.backgroundColor }}
+                                />
+                                {status.name}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>

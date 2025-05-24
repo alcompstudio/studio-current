@@ -11,19 +11,20 @@
   "returnType": "React.JSX.Element",
   "dependencies": [
     "react",
-    "@/components/ui/card",
-    "@/components/ui/badge",
     "@/components/ui/button",
+    "@/components/ui/badge",
     "lucide-react",
     "next/link",
     "next/navigation",
     "@/lib/types",
+    "@/lib/types/order",
     "@/hooks/use-toast",
-    "../mockOrders"
+    "@/components/orders/delete-order-dialog",
+    "./order-details-tabs"
   ],
   "history": [
     {
-      "date": "2025-05-21",
+      "date": "2025-05-24",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

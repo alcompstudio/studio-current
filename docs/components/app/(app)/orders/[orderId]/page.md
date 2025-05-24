@@ -9,12 +9,10 @@ flowchart TD
     page_tsx[page.tsx]
     react[react]
     page_tsx --> react
-    card[@/components/ui/card]
-    page_tsx --> card
-    badge[@/components/ui/badge]
-    page_tsx --> badge
     button[@/components/ui/button]
     page_tsx --> button
+    badge[@/components/ui/badge]
+    page_tsx --> badge
     lucide_react[lucide-react]
     page_tsx --> lucide_react
     link[next/link]
@@ -23,10 +21,14 @@ flowchart TD
     page_tsx --> navigation
     types[@/lib/types]
     page_tsx --> types
+    order[@/lib/types/order]
+    page_tsx --> order
     use_toast[@/hooks/use-toast]
     page_tsx --> use_toast
-    mockOrders[../mockOrders]
-    page_tsx --> mockOrders
+    delete_order_dialog[@/components/orders/delete-order-dialog]
+    page_tsx --> delete_order_dialog
+    order_details_tabs[./order-details-tabs]
+    page_tsx --> order_details_tabs
 ```
 
 ### `default` (ReactComponent)

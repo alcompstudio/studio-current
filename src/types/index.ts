@@ -10,6 +10,17 @@ export interface ProjectStatus {
   updatedAt: string; // или Date
 }
 
+// Интерфейс для валюты
+export interface Currency {
+  id: number;
+  isoCode: string;     // Буквенный код валюты (USD, EUR, RUB и т.д.)
+  name: string;        // Текстовое наименование (Доллар США, Евро и т.д.)
+  symbol: string;      // Символьное обозначение ($, €, ₽ и т.д.)
+  exchangeRate: number; // Текущий курс валюты
+  createdAt: string;   // или Date
+  updatedAt: string;   // или Date
+}
+
 // Интерфейс для заказчика
 export interface Customer {
   id: number;
@@ -35,7 +46,7 @@ export interface Project {
   description?: string | null;
   status: number; // ID статуса (число)
   budget?: number | null;
-  currency?: string | null;
+  currency?: number | null; // Теперь это ID валюты (число)
   createdAt: string; // или Date
   updatedAt: string; // или Date
 
@@ -43,4 +54,5 @@ export interface Project {
   customer?: Customer;          // Связанный объект заказчика
   orders?: Order[];             // Массив связанных заказов
   projectStatus?: ProjectStatus; // Связанный объект статуса проекта
+  currencyDetails?: Currency;   // Связанный объект валюты
 }

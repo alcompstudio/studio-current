@@ -35,6 +35,8 @@ flowchart TD
     page_tsx --> textarea
     types[@/lib/types]
     page_tsx --> types
+    order[@/lib/types/order]
+    page_tsx --> order
     use_toast[@/hooks/use-toast]
     page_tsx --> use_toast
 ```

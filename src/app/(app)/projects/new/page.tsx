@@ -1,25 +1,24 @@
 // src/app/(app)/projects/new/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react"; // Import useState and useEffect
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,179 +32,119 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Import Select components
-import type { Project } from "@/lib/types"; // Assuming Project type exists
-import type { ProjectStatus } from "@/types"; // Import ProjectStatus
-// import { mockProjects } from '../mockProjects'; // Corrected import path - REMOVE MOCK
-import { useToast } from "@/hooks/use-toast"; // Import useToast
+} from "@/components/ui/select";
+import type { ProjectStatus, Currency } from "@/types";
+import { useToast } from "@/hooks/use-toast";
 
-// Define project statuses and currencies (same as edit page)
-// const projectStatuses = [...] // Removed hardcoded statuses
-const projectCurrencies = ["USD", "EUR", "RUB"] as const;
+// Валюты будут загружаться из API
 
-// Define the form schema using Zod (same as edit page, but client might be different)
+// Определяем схему формы с помощью Zod
 const projectFormSchema = z.object({
-  name: z.string().min(1, { message: "Project name is required." }),
+  name: z.string().min(1, { message: "Название проекта обязательно" }),
   description: z.string().optional(),
   status: z.coerce
-    .number({ required_error: "Status is required." })
-    .min(1, { message: "Please select a valid status." }), // Default will be set by useEffect
-  currency: z
-    .enum(projectCurrencies, { required_error: "Currency is required." })
-    .default("USD"), // Default to USD
+    .number({ required_error: "Статус обязателен" })
+    .min(1, { message: "Выберите допустимый статус" }),
+  currency: z.coerce
+    .number({ required_error: "Валюта обязательна" })
+    .min(1, { message: "Выберите допустимую валюту" }),  
   budget: z.coerce
     .number()
-    .positive({ message: "Budget must be a positive number." })
+    .positive({ message: "Бюджет должен быть положительным числом" })
     .optional(),
-  // clientName: z.string().min(1, { message: "Client name is required." }), // Keep if you want to send it
-  // clientId: z.string().min(1, { message: "Client ID is required (mock)" }), // Keep if you want to send it and backend handles it
-  // For now, let's assume customerId will be selected or handled differently.
-  // If your API expects customerId, you'll need a way to select/input it.
-  // For simplicity, I'll remove clientName and clientId from direct form submission for now,
-  // assuming the backend might handle customer association differently or it's not a direct creation field.
-  // If they ARE required by your POST /api/projects, re-add them and ensure your API handles them.
-  // customerId: z.string().min(1, { message: "Customer ID is required." }) // REMOVED: Will be added automatically
 });
 
-// Тип данных формы теперь не включает customerId
-type ProjectFormValues = Omit<z.infer<typeof projectFormSchema>, "customerId">;
+type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
 export default function ProjectCreatePage() {
-  const router = useRouter(); // Initialize useRouter
-  const { toast } = useToast(); // Initialize useToast
-  // Состояние для хранения customerId (предполагаем, что это число)
-  const [customerId, setCustomerId] = useState<number | null>(null);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [projectStatuses, setProjectStatuses] = useState<ProjectStatus[]>([]);
-  const [isLoadingStatuses, setIsLoadingStatuses] = useState(true);
+  const [currencies, setCurrencies] = useState<Currency[]>([]);
+  
+  // Используем фиксированное значение для customerId (1) вместо чтения из localStorage
+  // В реальном приложении здесь должен быть код получения ID из сессии/контекста авторизации
+  const fixedCustomerId = 1;
 
-  // Load user data (including customerId) from localStorage on mount
-  useEffect(() => {
-    setIsLoadingUser(true);
-    const storedUser = localStorage.getItem("authUser");
-    if (storedUser) {
-      try {
-        const userAuthData = JSON.parse(storedUser);
-        // Ожидаем, что customerId был сохранен при логине/регистрации
-        if (userAuthData && typeof userAuthData.customerId === "number") {
-          setCustomerId(userAuthData.customerId);
-          console.log(
-            `[ProjectCreatePage] Customer ID loaded from localStorage: ${userAuthData.customerId}`,
-          );
-        } else {
-          console.error(
-            "[ProjectCreatePage] customerId not found or not a number in localStorage.",
-            userAuthData,
-          );
-          // Возможно, пользователь - не Заказчик, или произошла ошибка при логине/регистрации
-          toast({
-            title: "User Profile Error",
-            description: "Could not find necessary customer profile ID.",
-            variant: "destructive",
-          });
-          // Здесь можно перенаправить на дашборд или другую страницу
-          // router.push('/dashboard');
-        }
-      } catch (error) {
-        console.error(
-          "[ProjectCreatePage] Failed to parse user from localStorage",
-          error,
-        );
-        toast({
-          title: "Error",
-          description: "Failed to load user data.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      console.warn("[ProjectCreatePage] No user found in localStorage.");
-      toast({
-        title: "Not Logged In",
-        description: "Please log in to create a project.",
-        variant: "destructive",
-      });
-      // Перенаправляем на логин, если пользователь не найден
-      router.push("/auth");
-    }
-    setIsLoadingUser(false);
-  }, [router, toast]); // Добавили router обратно, так как используем его для редиректа
-
-  // Initialize the form with defaults
+  // Инициализируем форму с значениями по умолчанию
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
       name: "",
       description: "",
-      status: undefined, // Will be set by useEffect after fetching statuses
-      currency: "USD",
+      status: undefined,
+      currency: undefined,
       budget: undefined,
-      // clientName: "",
-      // clientId: "",
-      // customerId: "", // REMOVED: No longer part of the form schema/defaults
     },
     mode: "onChange",
   });
 
-  // Fetch project statuses on mount
+  // Загрузка статусов проектов и валют при монтировании компонента
   useEffect(() => {
-    const fetchProjectStatuses = async () => {
-      setIsLoadingStatuses(true);
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch("/api/project-statuses");
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: "Failed to fetch project statuses" }));
-          throw new Error(errorData.message || "Failed to fetch project statuses");
+        // Загрузка статусов
+        const statusResponse = await fetch("/api/project-statuses");
+        if (!statusResponse.ok) {
+          const errorData = await statusResponse.json().catch(() => ({ message: "Не удалось загрузить статусы проектов" }));
+          throw new Error(errorData.message || "Не удалось загрузить статусы проектов");
         }
-        const data: ProjectStatus[] = await response.json();
-        setProjectStatuses(data);
+        const statusData: ProjectStatus[] = await statusResponse.json();
+        setProjectStatuses(statusData);
         
-        if (data.length > 0) {
-          const defaultStatus = data.find(s => s.name === "Новый") || data[0];
-          if (defaultStatus) {
-            if (form && form.setValue) { 
-              form.setValue("status", defaultStatus.id, { shouldValidate: true });
-            }
+        // Устанавливаем статус "Новый" по умолчанию или первый доступный статус
+        if (statusData.length > 0) {
+          const defaultStatus = statusData.find(s => s.name === "Новый") || statusData[0];
+          if (defaultStatus && form.setValue) { 
+            form.setValue("status", defaultStatus.id, { shouldValidate: true });
+          }
+        }
+        
+        // Загрузка валют
+        const currencyResponse = await fetch("/api/currencies");
+        if (!currencyResponse.ok) {
+          const errorData = await currencyResponse.json().catch(() => ({ message: "Не удалось загрузить валюты" }));
+          throw new Error(errorData.message || "Не удалось загрузить валюты");
+        }
+        const currencyData: Currency[] = await currencyResponse.json();
+        setCurrencies(currencyData);
+        
+        // Устанавливаем USD по умолчанию или первую доступную валюту
+        if (currencyData.length > 0) {
+          const defaultCurrency = currencyData.find(c => c.isoCode === "USD") || currencyData[0];
+          if (defaultCurrency && form.setValue) { 
+            form.setValue("currency", defaultCurrency.id, { shouldValidate: true });
           }
         }
       } catch (error: any) {
-        console.error("Error fetching project statuses:", error);
+        console.error("Ошибка при загрузке данных:", error);
         toast({
-          title: "Error Loading Statuses",
-          description: error.message || "Could not load project statuses.",
+          title: "Ошибка загрузки данных",
+          description: error.message || "Не удалось загрузить необходимые данные.",
           variant: "destructive",
         });
       } finally {
-        setIsLoadingStatuses(false);
+        setIsLoading(false);
       }
     };
 
-    fetchProjectStatuses();
-  }, [toast, form.setValue, setProjectStatuses, setIsLoadingStatuses]);
+    fetchData();
+  }, [toast, form.setValue]);
 
   const onSubmit = async (data: ProjectFormValues) => {
-    // Проверяем, загружен ли customerId
-    if (customerId === null) {
-      toast({
-        title: "Error",
-        description: "Customer ID not available. Cannot create project.",
-        variant: "destructive",
-      });
-      console.error("Submit prevented: customerId is null");
-      return;
-    }
-
-    console.log("Form data before adding customerId:", data);
+    setIsLoading(true);
+    
+    console.log("Данные формы перед отправкой:", data);
 
     const dataToSend = {
       ...data,
-      // API ожидает customerId, берем его из состояния currentUser
-      // *** ВАЖНО: Убедитесь, что тип currentUser.id (string/number) соответствует ожиданиям API! ***
-      // customerId теперь берется из состояния, которое уже должно быть числом
-      customerId: customerId,
+      // Используем фиксированное значение для customerId
+      customerId: fixedCustomerId,
     };
 
-    console.log("Attempting to create project with dataToSend:", dataToSend);
-    // form.formState.isSubmitting = true; // REMOVED: react-hook-form handles this automatically
+    console.log("Отправка данных для создания проекта:", dataToSend);
 
     try {
       const response = await fetch("/api/projects", {
@@ -213,166 +152,111 @@ export default function ProjectCreatePage() {
         headers: {
           "Content-Type": "application/json",
         },
-        // Отправляем данные с добавленным customerId
         body: JSON.stringify(dataToSend),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.error || `Failed to create project: ${response.statusText}`,
+          errorData.error || `Ошибка создания проекта: ${response.statusText}`
         );
       }
 
       const newProject = await response.json();
-      console.log("Project created successfully:", newProject);
+      console.log("Проект успешно создан:", newProject);
 
       toast({
-        title: "Project Created",
-        description: `Project "${data.name}" has been successfully created.`,
+        title: "Проект создан",
+        description: `Проект "${data.name}" успешно создан.`,
       });
 
-      // Redirect back to the project list page
-      router.push(`/projects`);
-      router.refresh(); // Refresh to show the new project in the list
+      // Перенаправляем на страницу созданного проекта
+      if (newProject && newProject.id) {
+        router.push(`/projects/${newProject.id}`);
+      } else {
+        router.push("/projects");
+      }
+      router.refresh(); 
     } catch (error) {
-      console.error("Failed to create project:", error);
+      console.error("Не удалось создать проект:", error);
       const errorMessage =
-        error instanceof Error ? error.message : "An unknown error occurred";
+        error instanceof Error ? error.message : "Произошла неизвестная ошибка";
       toast({
-        title: "Error Creating Project",
+        title: "Ошибка создания проекта",
         description: errorMessage,
         variant: "destructive",
       });
     } finally {
-      // form.formState.isSubmitting = false; // REMOVED: react-hook-form handles this automatically
+      setIsLoading(false);
     }
   };
 
-  // Показываем индикатор загрузки, пока читаем localStorage
-  if (isLoadingUser) {
-    return (
-      <div className="flex justify-center items-center min-h-[300px]">
-        <p>Loading user data...</p>
-      </div>
-    );
-  }
-
-  // Если customerId не был найден или установлен (ошибка уже была показана через toast)
-  if (customerId === null) {
-    return (
-      <div className="flex justify-center items-center min-h-[300px]">
-        <p className="text-destructive">
-          Could not load customer profile ID. Cannot create project.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Заголовок и кнопки на прозрачном фоне над карточкой */}
+      <div className="flex items-center justify-between" data-component-name="ProjectCreatePage">
         <div className="flex items-center gap-4">
-          <Link href="/projects" passHref>
-            <Button variant="outline" size="icon">
+          <Link href="/projects">
+            <Button variant="outline" className="h-10 w-10 rounded-full">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
           <h2 className="text-2xl font-bold tracking-tight">
-            Create New Project
+            Создание нового проекта
           </h2>
         </div>
         <Button
           type="submit"
-          form="project-create-form"
-          disabled={form.formState.isSubmitting}
+          form="new-project-form"
+          disabled={isLoading}
+          className="rounded-full"
         >
-          {form.formState.isSubmitting ? (
-            "Saving..."
-          ) : (
-            <>
-              <Save className="mr-2 h-4 w-4" /> Create Project
-            </>
-          )}
+          <Save className="mr-2 h-4 w-4" /> Сохранить
         </Button>
       </div>
 
-      {/* Create Form Card */}
+      {/* Карточка с формой */}
       <Card>
         <CardHeader>
-          <CardTitle>Project Details</CardTitle>
+          <CardTitle>Детали проекта</CardTitle>
           <CardDescription>
-            Enter the details for the new project.
+            Введите информацию о новом проекте
           </CardDescription>
         </CardHeader>
+        
         <CardContent>
           <Form {...form}>
             <form
-              id="project-create-form"
+              id="new-project-form"
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6"
+              className="space-y-8"
             >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Project Name</FormLabel>
+                    <FormLabel>Название проекта</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter project name" {...field} />
+                      <Input placeholder="Введите название проекта" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Remove Client Name Input if not used or handled by customerId */}
-              {/* <FormField
-                   control={form.control}
-                   name="clientName"
-                   render={({ field }) => (
-                       <FormItem>
-                           <FormLabel>Client Name</FormLabel>
-                           <FormControl>
-                               <Input placeholder="Enter client name" {...field} />
-                           </FormControl>
-                           <FormMessage />
-                       </FormItem>
-                   )}
-                 /> */}
-
-              {/* Remove Client ID Input if not used or handled by customerId */}
-              {/* <FormField
-                    control={form.control}
-                    name="clientId"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Client ID (Mock)</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enter client ID (e.g., client_1)" {...field} />
-                            </FormControl>
-                            <FormDescription>For mock data purposes.</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                 /> */}
-
-              {/* REMOVED Customer ID input field */}
-              {/* <FormField ... name="customerId" ... /> */}
-
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Описание</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Describe the project..."
-                        className="min-h-[100px]"
+                        placeholder="Введите описание проекта"
+                        className="min-h-32"
                         {...field}
-                        value={field.value ?? ""}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -380,50 +264,25 @@ export default function ProjectCreatePage() {
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="flex gap-6">
                 <FormField
                   control={form.control}
-                  name="status"
+                  name="budget"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Status</FormLabel>
-                      <Select
-                        onValueChange={field.onChange} // Pass string ID from SelectItem's value, Zod will coerce
-                        value={field.value?.toString()} // Form state (number) to string for Select value prop
-                        disabled={isLoadingUser || isLoadingStatuses}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select project status" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {isLoadingStatuses && !projectStatuses.length ? (
-                            <div style={{ padding: '10px 12px', color: '#718096', fontSize: '0.875rem' }}>Loading statuses...</div>
-                          ) : projectStatuses.length === 0 && !isLoadingStatuses ? (
-                            <div style={{ padding: '10px 12px', color: '#718096', fontSize: '0.875rem' }}>No statuses available.</div>
-                          ) : (
-                            projectStatuses.map((s) => (
-                              <SelectItem key={s.id} value={s.id.toString()}>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                  <span
-                                    style={{
-                                      display: 'inline-block',
-                                      width: '10px',
-                                      height: '10px',
-                                      borderRadius: '50%',
-                                      backgroundColor: s.backgroundColor,
-                                      marginRight: '8px',
-                                      border: `1px solid ${s.textColor}`,
-                                    }}
-                                  />
-                                  <span style={{ color: s.textColor }}>{s.name}</span>
-                                </div>
-                              </SelectItem>
-                            ))
-                          )}
-                        </SelectContent>
-                      </Select>
+                    <FormItem className="flex-1">
+                      <FormLabel>Бюджет</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="Введите бюджет"
+                          {...field}
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value === "" ? undefined : Number(value));
+                          }}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -433,21 +292,21 @@ export default function ProjectCreatePage() {
                   control={form.control}
                   name="currency"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Currency</FormLabel>
+                    <FormItem className="flex-1">
+                      <FormLabel>Валюта</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value?.toString() || ""}
+                        onValueChange={(value) => field.onChange(Number(value))}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select currency" />
+                            <SelectValue placeholder="Выберите валюту" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {projectCurrencies.map((currency) => (
-                            <SelectItem key={currency} value={currency}>
-                              {currency}
+                          {currencies.map((currency) => (
+                            <SelectItem key={currency.id} value={currency.id.toString()}>
+                              {currency.isoCode}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -459,31 +318,32 @@ export default function ProjectCreatePage() {
 
                 <FormField
                   control={form.control}
-                  name="budget"
+                  name="status"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Budget</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Enter budget amount"
-                          step="0.01"
-                          {...field}
-                          value={field.value ?? ""}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            field.onChange(
-                              value === "" ? undefined : parseFloat(value),
-                            );
-                          }}
-                        />
-                      </FormControl>
+                    <FormItem className="flex-1">
+                      <FormLabel>Статус</FormLabel>
+                      <Select
+                        value={field.value?.toString() || ""}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Выберите статус" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {projectStatuses.map((status) => (
+                            <SelectItem key={status.id} value={status.id.toString()}>
+                              {status.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              {/* Submit button is now in the header */}
             </form>
           </Form>
         </CardContent>

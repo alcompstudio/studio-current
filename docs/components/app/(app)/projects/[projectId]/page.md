@@ -17,6 +17,8 @@ flowchart TD
     page_tsx --> button
     project_details_tabs[./project-details-tabs]
     page_tsx --> project_details_tabs
+    delete_project_dialog[@/components/projects/delete-project-dialog]
+    page_tsx --> delete_project_dialog
 ```
 
 ### `default` (ReactComponent)

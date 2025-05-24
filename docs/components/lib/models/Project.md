@@ -11,6 +11,8 @@ flowchart TD
     Project_ts --> sequelize
     ProjectStatusOS[./ProjectStatusOS]
     Project_ts --> ProjectStatusOS
+    CurrencyOS[./CurrencyOS]
+    Project_ts --> CurrencyOS
 ```
 
 ### `default` (Function)

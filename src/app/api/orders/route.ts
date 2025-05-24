@@ -8,14 +8,28 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get('project_id');
+    const orderId = searchParams.get('id');
     console.log(`[API/ORDERS] Project ID from search params: ${projectId}`);
+    console.log(`[API/ORDERS] Order ID from search params: ${orderId}`);
 
     let orders;
-    if (projectId) {
+    if (orderId) {
+      // Если указан конкретный ID заказа
+      console.log(`[API/ORDERS] Fetching order with id: ${orderId}`);
+      const order = await Order.findByPk(parseInt(orderId, 10));
+      if (!order) {
+        console.log(`[API/ORDERS] Order with id ${orderId} not found`);
+        return NextResponse.json({ error: `Order with id ${orderId} not found` }, { status: 404 });
+      }
+      console.log(`[API/ORDERS] Found order with id: ${orderId}`);
+      return NextResponse.json(order);
+    } else if (projectId) {
+      // Если указан ID проекта
       console.log(`[API/ORDERS] Fetching orders for project_id: ${projectId}`);
       orders = await Order.findAll({ where: { project_id: parseInt(projectId, 10) } });
       console.log(`[API/ORDERS] Found ${orders.length} orders for project_id: ${projectId}`);
     } else {
+      // Получаем все заказы
       console.log('[API/ORDERS] Fetching all orders');
       orders = await Order.findAll();
       console.log(`[API/ORDERS] Found ${orders.length} total orders`);

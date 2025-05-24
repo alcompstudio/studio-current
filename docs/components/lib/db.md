@@ -46,6 +46,11 @@ flowchart TD
 *Источник: `src/lib\db.ts`*
 
 ---
+### `CurrencyOS` (BindingElement)
+
+*Источник: `src/lib\db.ts`*
+
+---
 ### `connectDB` (Variable (Identifier))
 
 *Источник: `src/lib\db.ts`*

@@ -23,6 +23,10 @@ flowchart TD
     index_ts --> Order
     ProjectStatusOS[./ProjectStatusOS]
     index_ts --> ProjectStatusOS
+    OrderStatusOS[./OrderStatusOS]
+    index_ts --> OrderStatusOS
+    CurrencyOS[./CurrencyOS]
+    index_ts --> CurrencyOS
 ```
 
 ### `connectDB` (Function)

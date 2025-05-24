@@ -9,6 +9,8 @@ flowchart TD
     Order_ts[Order.ts]
     sequelize[sequelize]
     Order_ts --> sequelize
+    OrderStatusOS[./OrderStatusOS]
+    Order_ts --> OrderStatusOS
 ```
 
 ### `default` (Function)

@@ -13,6 +13,7 @@
     "@/components/ui/button",
     "@/components/ui/card",
     "lucide-react",
+    "@/components/projects/delete-project-dialog",
     "@/components/ui/badge",
     "next/link",
     "@/lib/utils",
@@ -21,7 +22,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-21",
+      "date": "2025-05-24",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

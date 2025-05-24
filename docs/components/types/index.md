@@ -10,6 +10,11 @@
 *Источник: `src/types\index.ts`*
 
 ---
+### `Currency` (Interface)
+
+*Источник: `src/types\index.ts`*
+
+---
 ### `Customer` (Interface)
 
 *Источник: `src/types\index.ts`*

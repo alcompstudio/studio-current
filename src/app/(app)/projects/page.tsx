@@ -15,6 +15,7 @@ import {
   Clock,
   AlertTriangle,
 } from "lucide-react";
+import { DeleteProjectDialog } from "@/components/projects/delete-project-dialog";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 // import { mockProjects } from './mockProjects'; // Remove mock data import
@@ -22,49 +23,53 @@ import { cn } from "@/lib/utils"; // Import cn for conditional classes
 import React, { useEffect, useState } from "react"; // Added useEffect, useState
 import type { Project } from "@/lib/types"; // Assuming Project type exists and is compatible
 
-// Define a more specific type for projects fetched from the API, including customer
-interface ProjectWithCustomer extends Project {
+// Определение интерфейса для проектов, полученных с API
+interface ProjectWithCustomer {
+  id: number;
+  title: string;
+  name?: string; // Некоторые проекты могут иметь поле name вместо title
+  description: string | null;
+  status: number;
+  currency: number;
+  budget: number;
+  created_at: string;
+  updated_at: string;
   customer?: {
-    // Customer might be optional or could be guaranteed by API include
-    id: string | number; // Adjust based on your Customer model
+    id: number | string;
     name: string;
-    // other customer fields if needed
+    email?: string;
+    // Другие возможные поля
   };
-  // orders might also be included, define if needed
+  projectStatus?: {
+    id: number;
+    name: string;
+    textColor: string;
+    backgroundColor: string;
+  };
+  currencyDetails?: {
+    id: number;
+    isoCode: string;
+    name: string;
+    symbol: string;
+    exchangeRate: number;
+  };
+  // Возможно также включаются orders
 }
 
-// Helper function to get status badge variant
-const getStatusVariant = (
-  status: string,
-): "default" | "secondary" | "destructive" | "outline" => {
-  switch (status) {
-    case "In Progress":
-      return "default"; // Primary color for active
-    case "Completed":
-      return "secondary"; // Secondary color for completed
-    case "Planning":
-      return "outline"; // Outline for planning
-    case "On Hold":
-      return "destructive"; // Destructive/Reddish for on hold
-    default:
-      return "secondary";
-  }
-};
-
-// Helper function to get status icon
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case "In Progress":
-      return <Clock className="mr-1 h-3 w-3" />;
-    case "Completed":
-      return <CheckCircle className="mr-1 h-3 w-3" />;
-    case "Planning":
-      return <Briefcase className="mr-1 h-3 w-3" />;
-    case "On Hold":
-      return <Clock className="mr-1 h-3 w-3 text-destructive-foreground" />;
-
-    default:
-      return null;
+// Helper function to select icon based on status name
+const getStatusIcon = (statusName: string) => {
+  // Упрощенная логика выбора иконки на основе имени статуса
+  // Можно настроить более точное соответствие
+  if (statusName.toLowerCase().includes('прогресс') || statusName.toLowerCase().includes('progress')) {
+    return <Clock className="mr-1 h-3 w-3" />;
+  } else if (statusName.toLowerCase().includes('заверш') || statusName.toLowerCase().includes('complet')) {
+    return <CheckCircle className="mr-1 h-3 w-3" />;
+  } else if (statusName.toLowerCase().includes('план') || statusName.toLowerCase().includes('plan')) {
+    return <Briefcase className="mr-1 h-3 w-3" />;
+  } else if (statusName.toLowerCase().includes('ожида') || statusName.toLowerCase().includes('hold')) {
+    return <Clock className="mr-1 h-3 w-3" />;
+  } else {
+    return null;
   }
 };
 
@@ -165,27 +170,42 @@ export default function ProjectsPage() {
                       {project.title ?? project.name}
                     </CardTitle>
                     <Badge
-                      variant={getStatusVariant(project.status)}
                       className="flex items-center"
+                      style={{
+                        backgroundColor: project.projectStatus?.backgroundColor || '#e2e8f0',
+                        color: project.projectStatus?.textColor || '#1f2937',
+                        borderColor: project.projectStatus?.textColor || '#1f2937'
+                      }}
                     >
-                      {getStatusIcon(project.status)}
-                      {project.status}
+                      {project.projectStatus && getStatusIcon(project.projectStatus.name)}
+                      {project.projectStatus?.name || `Статус #${project.status}`}
                     </Badge>
                   </div>
                   <CardDescription>
                     Client: {project.customer?.name || "N/A"} • Budget:{" "}
-                    {project.currency} {project.budget?.toLocaleString()}
+                    {project.budget ? `${project.budget.toLocaleString()} ${project.currencyDetails?.isoCode || ""}` : "N/A"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                     {project.description}
                   </p>
-                  <Link href={`/projects/${project.id}`} passHref>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link href={`/projects/${project.id}`} passHref>
+                      <Button variant="outline" size="sm">
+                        View Details
+                      </Button>
+                    </Link>
+                    <DeleteProjectDialog 
+                      projectId={project.id} 
+                      size="sm"
+                      variant="outline"
+                      onDeleteSuccess={() => {
+                        // Обновляем список после удаления, удаляя проект из текущего состояния
+                        setProjects(projects.filter(p => p.id !== project.id));
+                      }}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             ))

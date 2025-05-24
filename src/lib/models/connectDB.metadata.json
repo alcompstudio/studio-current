@@ -17,11 +17,13 @@
     "./Customer",
     "./Project",
     "./Order",
-    "./ProjectStatusOS"
+    "./ProjectStatusOS",
+    "./OrderStatusOS",
+    "./CurrencyOS"
   ],
   "history": [
     {
-      "date": "2025-05-21",
+      "date": "2025-05-24",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

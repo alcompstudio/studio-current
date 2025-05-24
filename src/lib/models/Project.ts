@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize, ModelStatic } from 'sequelize';
 import type { ProjectStatusOSAttributes } from './ProjectStatusOS'; // Для типизации связи
+import type { CurrencyOSAttributes } from './CurrencyOS'; // Для типизации связи с валютой
 
 // Определение интерфейса атрибутов
 export interface ProjectAttributes {
@@ -10,7 +11,8 @@ export interface ProjectAttributes {
   status: number; // Теперь это ID статуса
   projectStatus?: ProjectStatusOSAttributes; // Для eager loading
   budget?: number | null;      // Добавлено поле budget
-  currency?: string | null;   // Добавлено поле currency
+  currency?: number | null;   // Теперь это ID валюты
+  currencyDetails?: CurrencyOSAttributes; // Для eager loading валюты
 }
 
 export interface ProjectInstance extends Model<ProjectAttributes>, ProjectAttributes {}
@@ -24,7 +26,7 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
     public description?: string | null;
     public status!: number; // Теперь это ID статуса
     public budget?: number | null;     // Добавлено поле budget
-    public currency?: string | null;  // Добавлено поле currency
+    public currency?: number | null;  // Теперь это ID валюты
 
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -39,11 +41,17 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
         foreignKey: 'project_id',
         as: 'orders',
       });
-      // Новая связь со статусом проекта
+      // Связь со статусом проекта
       Project.belongsTo(models.ProjectStatusOS, {
         foreignKey: 'status', // Имя поля в таблице projects, которое хранит ID статуса
         as: 'projectStatus', // Псевдоним для доступа к связанному статусу
         targetKey: 'id' // Поле в таблице project_status_os, на которое ссылаемся
+      });
+      // Связь с валютой проекта
+      Project.belongsTo(models.CurrencyOS, {
+        foreignKey: 'currency', // Имя поля в таблице projects, которое хранит ID валюты
+        as: 'currencyDetails', // Псевдоним для доступа к связанной валюте
+        targetKey: 'id' // Поле в таблице currency_os, на которое ссылаемся
       });
     }
   }
@@ -82,8 +90,12 @@ export default function defineProject(sequelize: Sequelize): ModelStatic<Project
         allowNull: true,
       },
       currency: {
-        type: DataTypes.STRING(10),      // Пример: 'USD', 'EUR'
+        type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: 'currency_os', // Имя таблицы, на которую ссылаемся
+          key: 'id',
+        },
       },
     },
     {

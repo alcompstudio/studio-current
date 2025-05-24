@@ -105,7 +105,8 @@ function groupCommits(commits) {
   Object.keys(COMMIT_TYPES).forEach(type => grouped[type] = []);
 
   commits.forEach(commit => {
-    const subject = commit.subject.toLowerCase();
+    // Проверка на undefined или null перед вызовом toLowerCase()
+    const subject = commit.subject ? commit.subject.toLowerCase() : '';
     let typeFound = false;
     for (const type in COMMIT_TYPES) {
       if (subject.startsWith(type + ':') || subject.startsWith(type + '(')) {

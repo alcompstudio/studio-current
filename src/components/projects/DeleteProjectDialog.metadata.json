@@ -1,0 +1,70 @@
+{
+  "component": "DeleteProjectDialog",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\projects\\delete-project-dialog.tsx",
+  "props": [
+    {
+      "name": "projectId",
+      "type": "string | number",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "\"outline\" | \"ghost\" | \"link\" | \"default\" | \"destructive\" | \"secondary\" | null | undefined",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "\"default\" | \"sm\" | \"lg\" | \"icon\" | null | undefined",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "buttonClassName",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "onDeleteSuccess",
+      "type": "() => void",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "lucide-react",
+    "next/navigation",
+    "@/components/ui/button",
+    "@/components/ui/alert-dialog"
+  ],
+  "history": [
+    {
+      "date": "2025-05-24",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

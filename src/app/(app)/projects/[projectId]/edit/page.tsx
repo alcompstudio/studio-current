@@ -35,25 +35,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Project, ProjectStatus, Customer, Order } from "@/types"; 
+import type { Project, ProjectStatus, Customer, Order, Currency } from "@/types"; 
 // REMOVE MOCK DATA IMPORT
 // import { mockProjects } from '../../mockProjects';
 import { useToast } from "@/hooks/use-toast";
 
-// projectCurrencies остается, projectStatuses будет загружаться
-  // Старая константа projectStatuses удалена
-const projectCurrencies = ["USD", "EUR", "RUB"] as const;
+// Статусы и валюты будут загружаться из API
 
 // Define the form schema using Zod - matching API expectations for update
 const projectFormSchema = z.object({
   name: z.string().min(1, { message: "Project name is required." }),
   description: z.string().nullable().optional(), // Allow null or undefined
-  status: z.string({ required_error: "Status is required and must be a string initially." })
-    .pipe(z.coerce.number({ invalid_type_error: "Status ID must be a number." })
-    .positive({ message: "Status ID must be a positive number." })),
-  currency: z.enum(projectCurrencies, {
-    required_error: "Currency is required.",
-  }),
+  status: z.coerce.number({ required_error: "Статус обязателен" })
+    .min(1, { message: "Выберите допустимый статус" }),
+  currency: z.coerce.number({ required_error: "Валюта обязательна" })
+    .min(1, { message: "Выберите допустимую валюту" }),
   // budget comes as number or null, form input gives string or ""
   budget: z.preprocess(
     (val) => (val === "" ? null : Number(val)), // Convert "" to null, and string to number
@@ -73,6 +69,7 @@ export default function ProjectEditPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [availableStatuses, setAvailableStatuses] = React.useState<ProjectStatus[]>([]);
+  const [availableCurrencies, setAvailableCurrencies] = React.useState<Currency[]>([]);
 
   const [project, setProject] = React.useState<Project | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -84,7 +81,7 @@ export default function ProjectEditPage() {
       name: "",
       description: "",
       status: undefined, // Будет выбрано через Select, покажет placeholder
-      currency: "USD", // Or undefined if placeholder preferred
+      currency: undefined, // Будет выбрано через Select, покажет placeholder
       budget: null, // Use null for optional number field when empty
     },
     mode: "onChange",
@@ -128,7 +125,7 @@ export default function ProjectEditPage() {
             name: data.title || "", // String or empty string
             description: data.description || "", // String or empty string
             status: data.status, // data.status это ID (число), соответствует типу ProjectFormValues.status (number | undefined)
-            currency: (data.currency as ProjectFormValues["currency"]) || "USD",
+            currency: data.currency || undefined, // Теперь это ID валюты (число)
             budget: budgetValue, // Number or null
           });
         })
@@ -156,26 +153,36 @@ export default function ProjectEditPage() {
   }, [projectId, form, router, toast]); // Added toast to deps
 
   useEffect(() => {
-    // Fetch project statuses
-    fetch('/api/project-statuses-os')
-      .then(res => {
-        if (!res.ok) {
+    // Загрузка статусов и валют
+    const fetchData = async () => {
+      try {
+        // Загрузка статусов
+        const statusResponse = await fetch('/api/project-statuses');
+        if (!statusResponse.ok) {
           throw new Error('Failed to fetch project statuses');
         }
-        return res.json();
-      })
-      .then((data: ProjectStatus[]) => {
-        setAvailableStatuses(data);
-      })
-      .catch(error => {
-        console.error("Error fetching project statuses:", error);
+        const statusData: ProjectStatus[] = await statusResponse.json();
+        setAvailableStatuses(statusData);
+        
+        // Загрузка валют
+        const currencyResponse = await fetch('/api/currencies');
+        if (!currencyResponse.ok) {
+          throw new Error('Failed to fetch currencies');
+        }
+        const currencyData: Currency[] = await currencyResponse.json();
+        setAvailableCurrencies(currencyData);
+      } catch (error: any) {
+        console.error("Error fetching data:", error);
         toast({
-          title: "Error Loading Statuses",
-          description: error.message || "Could not load project statuses.",
+          title: "Error Loading Data",
+          description: error.message || "Could not load necessary data.",
           variant: "destructive",
         });
-      });
-  }, [toast]); // Зависимость от toast, если он используется в catch
+      }
+    };
+    
+    fetchData();
+  }, [toast]);
 
   const onSubmit = async (data: ProjectFormValues) => {
     if (!projectId) {
@@ -403,7 +410,7 @@ export default function ProjectEditPage() {
                     <FormItem data-oid="ojscmhj">
                       <FormLabel data-oid="_ogb9iq">Currency</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
+                        onValueChange={(value) => field.onChange(Number(value))}
                         value={field.value !== undefined ? String(field.value) : undefined}
                         data-oid="v9tx3:k"
                       >
@@ -416,13 +423,13 @@ export default function ProjectEditPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent data-oid="z_u_9_:">
-                          {projectCurrencies.map((currency) => (
+                          {availableCurrencies.map((currency) => (
                             <SelectItem
-                              key={currency}
-                              value={currency}
+                              key={currency.id}
+                              value={String(currency.id)}
                               data-oid="_stvvm2"
                             >
-                              {currency}
+                              {currency.isoCode}
                             </SelectItem>
                           ))}
                         </SelectContent>

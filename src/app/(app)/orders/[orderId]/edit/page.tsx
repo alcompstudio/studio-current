@@ -35,17 +35,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import type { Order, OrderStatus } from "@/lib/types";
+import type { Order } from "@/lib/types";
+import type { OrderStatusOS } from "@/lib/types/order"; // Импорт типа статуса заказа
 import { useToast } from "@/hooks/use-toast";
 
-// Define order statuses (should match backend/types)
-const orderStatuses: OrderStatus[] = [
-  "Новый",
-  "Сбор ставок",
-  "На паузе",
-  "Сбор Завершен",
-  "Отменен",
-];
+// Статусы заказов будут загружены из базы данных через API
 
 // Define the form schema using Zod
 const orderFormSchema = z.object({
@@ -54,9 +48,10 @@ const orderFormSchema = z.object({
   project_id: z.coerce
     .number({ required_error: "Project ID is required." })
     .positive({ message: "Project ID must be a positive number." }),
-  status: z.enum(orderStatuses as [OrderStatus, ...OrderStatus[]], {
-    required_error: "Status is required.",
-  }),
+  status: z.coerce
+    .number({ required_error: "Status is required." })
+    .positive({ message: "Status ID must be a positive number." })
+    .default(1), // Устанавливаем значение по умолчанию 1 (первый статус),
   price: z.preprocess(
     (val) => (val === "" ? null : Number(val)),
     z
@@ -84,7 +79,7 @@ export default function OrderEditPage() {
       title: "",
       description: "",
       project_id: undefined,
-      status: "Новый",
+      status: 1, // Значение по умолчанию, будет переопределено при загрузке заказа
       price: null,
     },
     mode: "onChange",
@@ -93,30 +88,43 @@ export default function OrderEditPage() {
   const [projects, setProjects] = React.useState<
     { id: number; title: string; currency?: string }[]
   >([]);
+  const [orderStatuses, setOrderStatuses] = React.useState<OrderStatusOS[]>([]);
   const [loadingProjects, setLoadingProjects] = React.useState(true);
+  const [loadingStatuses, setLoadingStatuses] = React.useState(true);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchData() {
       try {
-        const res = await fetch("/api/projects");
-        if (!res.ok) throw new Error("Ошибка загрузки проектов");
-        const data = await res.json();
+        // Загружаем проекты
+        const projectsRes = await fetch("/api/projects");
+        if (!projectsRes.ok) throw new Error("Ошибка загрузки проектов");
+        const projectsData = await projectsRes.json();
         setProjects(
-          Array.isArray(data)
-            ? data.map((p) => ({
+          Array.isArray(projectsData)
+            ? projectsData.map((p) => ({
                 id: p.id,
                 title: p.title,
                 currency: p.currency,
               }))
             : [],
         );
-      } catch (e) {
-        setProjects([]);
-      } finally {
         setLoadingProjects(false);
+        
+        // Загружаем статусы заказов
+        const statusesRes = await fetch("/api/order-statuses-os");
+        if (!statusesRes.ok) throw new Error("Ошибка загрузки статусов заказов");
+        const statusesData = await statusesRes.json();
+        setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
+        setLoadingStatuses(false);
+      } catch (e) {
+        console.error("Ошибка при загрузке данных:", e);
+        setProjects([]);
+        setOrderStatuses([]);
+        setLoadingProjects(false);
+        setLoadingStatuses(false);
       }
     }
-    fetchProjects();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -159,12 +167,20 @@ export default function OrderEditPage() {
                     orderData.project_id === undefined
                   ? undefined
                   : Number(orderData.project_id);
+                  
+            // Обработка статуса как числа вместо строки
+            const statusValue = 
+              typeof orderData.status === "string" && !isNaN(parseInt(orderData.status, 10))
+                ? parseInt(orderData.status, 10)
+                : typeof orderData.status === "number"
+                  ? orderData.status
+                  : 1; // Используем 1 как значение по умолчанию вместо undefined
+                  
             form.reset({
               title: orderData.title || "",
               description: orderData.description || "",
               project_id: projectIdValue,
-              status:
-                (orderData.status as OrderFormValues["status"]) || "Новый",
+              status: statusValue,
               price: priceValue,
             });
           } else {
@@ -204,8 +220,19 @@ export default function OrderEditPage() {
       return;
     }
 
+    // Гарантируем, что ID заказа — это число
+    const numericOrderId = parseInt(orderId, 10);
+    if (isNaN(numericOrderId)) {
+      toast({
+        title: "Error Saving",
+        description: "Invalid Order ID format. Cannot save changes.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const dataToSend = {
-      id: orderId,
+      id: numericOrderId, // Используем числовой ID
       ...data,
       price:
         data.price === undefined ||
@@ -216,6 +243,9 @@ export default function OrderEditPage() {
     };
 
     try {
+      console.log("Sending update request for order ID:", numericOrderId);
+      console.log("Data to send:", dataToSend);
+      
       const response = await fetch(`/api/orders`, {
         method: "PUT",
         headers: {
@@ -235,11 +265,14 @@ export default function OrderEditPage() {
       }
 
       const updatedOrder = await response.json();
+      console.log("Updated order:", updatedOrder);
+      
       toast({
         title: "Order Updated",
         description: `Changes for "${data.title}" have been successfully saved.`,
       });
 
+      // Явно сохраняем orderId в строковом формате для маршрутизации
       router.push(`/orders/${orderId}`);
       router.refresh();
     } catch (error) {
@@ -424,14 +457,15 @@ export default function OrderEditPage() {
                     <FormItem data-oid="85q92m7">
                       <FormLabel data-oid="bcdnxiz">Status</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
+                        disabled={loadingStatuses}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        value={field.value ? String(field.value) : undefined}
                         data-oid="fn9f8f:"
                       >
                         <FormControl data-oid="t_ty822">
                           <SelectTrigger data-oid="3w-973w">
                             <SelectValue
-                              placeholder="Select status"
+                              placeholder={loadingStatuses ? "Загрузка..." : "Выберите статус"}
                               data-oid="avz11mz"
                             />
                           </SelectTrigger>
@@ -439,11 +473,17 @@ export default function OrderEditPage() {
                         <SelectContent data-oid="hgsjhpz">
                           {orderStatuses.map((status) => (
                             <SelectItem
-                              key={status}
-                              value={status}
+                              key={status.id}
+                              value={String(status.id)}
                               data-oid="c12c_ij"
                             >
-                              {status}
+                              <div className="flex items-center gap-2">
+                                <div 
+                                  className="w-3 h-3 rounded-full" 
+                                  style={{ backgroundColor: status.backgroundColor }}
+                                />
+                                {status.name}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>

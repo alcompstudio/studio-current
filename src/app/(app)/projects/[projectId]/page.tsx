@@ -4,21 +4,38 @@ import Link from 'next/link';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ProjectDetailsTabs from './project-details-tabs'; // Импорт нового клиентского компонента
+import { DeleteProjectDialog } from '@/components/projects/delete-project-dialog'; // Импорт компонента диалога удаления проекта
 
 // Тип Project остается здесь, так как он используется серверным компонентом для получения данных
 type Project = {
   id: number;
   title: string;
   description: string | null;
-  status: string;
-  currency: string;
+  status: number;
+  currency: number;
   budget: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string | null;
+  updatedAt: string | null;
+  // Для совместимости с API
+  created_at?: string;
+  updated_at?: string;
   customer?: {
     id: number;
     name: string;
     email: string;
+  };
+  projectStatus?: {
+    id: number;
+    name: string;
+    textColor: string;
+    backgroundColor: string;
+  };
+  currencyDetails?: {
+    id: number;
+    isoCode: string;
+    name: string;
+    symbol: string;
+    exchangeRate: number;
   };
 };
 
@@ -33,7 +50,8 @@ export default async function ProjectPage(props: ProjectPageProps) {
   const { projectId } = await props.params;
   // Получаем данные проекта
   const response = await fetch(
-    `http://localhost:3000/api/projects/${projectId}`
+    `http://localhost:3000/api/projects/${projectId}`,
+    { cache: 'no-store' } // Добавляем опцию, чтобы данные всегда были актуальными
   );
 
   if (!response.ok) {
@@ -61,21 +79,39 @@ export default async function ProjectPage(props: ProjectPageProps) {
               </Link>
             </Button>
             <h2 className="text-2xl font-bold tracking-tight">{project.title}</h2>
-            <div className="rounded-full border px-2.5 py-0.5 font-semibold text-foreground border-current flex items-center text-sm">
-              <span className="h-2 w-2 rounded-full bg-blue-500 mr-1.5"></span>
-              {project.status}
+            <div 
+              className="rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 flex items-center"
+              style={{
+                backgroundColor: project.projectStatus?.backgroundColor || '#e2e8f0',
+                color: project.projectStatus?.textColor || '#1f2937',
+                borderColor: project.projectStatus?.textColor || '#1f2937'
+              }}
+            >
+              <span className="h-2 w-2 rounded-full mr-1.5" 
+                style={{
+                  backgroundColor: project.projectStatus?.textColor || '#1f2937'
+                }}
+              ></span>
+              {project.projectStatus?.name || `Статус #${project.status}`}
             </div>
           </div>
-          <Button 
-            asChild 
-            variant="outline"
-            className="h-10 px-4 py-2 rounded-full border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-          >
-            <Link href={`/projects/${projectId}/edit`}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Редактировать
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              asChild 
+              variant="outline"
+              className="h-10 px-4 py-2 rounded-full border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+            >
+              <Link href={`/projects/${projectId}/edit`}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Редактировать
+              </Link>
+            </Button>
+            <DeleteProjectDialog 
+              projectId={projectId} 
+              size="icon"
+              buttonClassName="h-10 w-10 rounded-full border border-input bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors"
+            />
+          </div>
         </div>
       </div>
 

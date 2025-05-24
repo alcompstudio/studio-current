@@ -1,0 +1,31 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Function",
+  "path": "lib\\models\\CurrencyOS.ts",
+  "props": [],
+  "params": [
+    {
+      "name": "sequelize",
+      "type": "SequelizeInstance",
+      "description": "",
+      "optional": false
+    }
+  ],
+  "returnType": "typeof CurrencyOS",
+  "dependencies": [
+    "sequelize",
+    "sequelize"
+  ],
+  "history": [
+    {
+      "date": "2025-05-24",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

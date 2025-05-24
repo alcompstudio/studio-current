@@ -9,15 +9,28 @@ export type Project = {
   id: number;
   title: string;
   description: string | null;
-  status: string;
-  currency: string;
+  status: number; // Теперь это ID статуса
+  currency: number;
   budget: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string | null; // Изменено на camelCase и добавлен null, так как сервер может вернуть null
+  updatedAt: string | null; // Изменено на camelCase и добавлен null, так как сервер может вернуть null
   customer?: {
     id: number;
     name: string;
     email: string;
+  };
+  projectStatus?: {
+    id: number;
+    name: string;
+    textColor: string;
+    backgroundColor: string;
+  }
+  currencyDetails?: {
+    id: number;
+    isoCode: string;
+    name: string;
+    symbol: string;
+    exchangeRate: number;
   };
 };
 
@@ -82,11 +95,10 @@ export default function ProjectDetailsTabs({ project }: { project: Project }) {
                       {project.budget ? (
                         <>
                           {new Intl.NumberFormat('ru-RU', {
-                            style: 'currency',
-                            currency: project.currency || 'RUB',
+                            style: 'decimal',
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0
-                          }).format(project.budget)}
+                          }).format(project.budget)} {project.currencyDetails?.isoCode || 'RUB'}
                         </>
                       ) : 'Не указан'}
                     </p>
@@ -102,24 +114,26 @@ export default function ProjectDetailsTabs({ project }: { project: Project }) {
                   <div>
                     <p className="text-sm text-muted-foreground">Дата обновления</p>
                     <p className="font-medium text-sm">
-                      {new Date(project.updated_at).toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
+                      {project.updatedAt && !isNaN(new Date(project.updatedAt).getTime()) ? 
+                        new Date(project.updatedAt).toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        }) : 'Не указана'}
                     </p>
                   </div>
                   
                   <div>
                     <p className="text-sm text-muted-foreground">Дата создания</p>
                     <p className="font-medium text-sm">
-                      {new Date(project.created_at).toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      })}
+                      {project.createdAt && !isNaN(new Date(project.createdAt).getTime()) ? 
+                        new Date(project.createdAt).toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        }) : 'Не указана'}
                     </p>
                   </div>
                 </div>

@@ -16,13 +16,15 @@
     "@/components/ui/badge",
     "lucide-react",
     "@/lib/types",
+    "@/lib/types/order",
     "next/link",
-    "./mockOrders",
-    "@/lib/utils"
+    "./getOrderStatusVariant",
+    "@/lib/utils",
+    "@/components/orders/delete-order-dialog"
   ],
   "history": [
     {
-      "date": "2025-05-21",
+      "date": "2025-05-24",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

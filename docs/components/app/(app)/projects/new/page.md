@@ -33,8 +33,6 @@ flowchart TD
     page_tsx --> textarea
     select[@/components/ui/select]
     page_tsx --> select
-    types[@/lib/types]
-    page_tsx --> types
     types[@/types]
     page_tsx --> types
     use_toast[@/hooks/use-toast]

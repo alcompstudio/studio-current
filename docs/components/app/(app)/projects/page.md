@@ -13,6 +13,8 @@ flowchart TD
     page_tsx --> card
     lucide_react[lucide-react]
     page_tsx --> lucide_react
+    delete_project_dialog[@/components/projects/delete-project-dialog]
+    page_tsx --> delete_project_dialog
     badge[@/components/ui/badge]
     page_tsx --> badge
     link[next/link]

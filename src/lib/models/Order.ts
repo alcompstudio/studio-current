@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize, ModelStatic } from 'sequelize';
+import { OrderStatusOS } from './OrderStatusOS';
 
 // Определение интерфейса атрибутов
 export interface OrderAttributes {
@@ -6,12 +7,14 @@ export interface OrderAttributes {
   project_id: number;
   title: string;
   description?: string | null;
-  status: string;
+  status: number;
   deadline?: Date | null;
   price?: string | number | null;
 }
 
-export interface OrderInstance extends Model<OrderAttributes>, OrderAttributes {}
+export interface OrderInstance extends Model<OrderAttributes>, OrderAttributes {
+  orderStatus?: OrderStatusOS;
+}
 
 // Функция-дефайнер модели
 export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInstance> {
@@ -20,7 +23,7 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
     public project_id!: number;
     public title!: string;
     public description?: string | null;
-    public status!: string;
+    public status!: number;
     public deadline?: Date | null;
     public price?: string | number | null;
 
@@ -32,6 +35,12 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
       Order.belongsTo(models.Project, {
         foreignKey: 'project_id',
         as: 'project',
+      });
+      
+      // Добавляем связь со статусом заказа
+      Order.belongsTo(models.OrderStatusOS, {
+        foreignKey: 'status',
+        as: 'orderStatus',
       });
     }
   }
@@ -56,8 +65,12 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
         allowNull: true,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'order_status_os',
+          key: 'id'
+        }
       },
       deadline: {
         type: DataTypes.DATE,

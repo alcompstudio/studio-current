@@ -1,23 +1,27 @@
 import { NextResponse } from 'next/server';
-import { Project, Customer, Order, ProjectStatusOS } from '@/lib/db'; // Импортируем ProjectStatusOS // Импортируем инициализированные модели из db.ts
+import { Project, Customer, Order, ProjectStatusOS, CurrencyOS } from '@/lib/db'; // Импортируем необходимые модели из db.ts
 
 export async function GET() {
   try {
     const projects = await Project.findAll({
-      // include: [
-      //   {
-      //     model: Customer,
-      //     as: 'customer',
-      //   },
-      //   {
-      //     model: Order,
-      //     as: 'orders',
-      //   },
-      //   {
-      //     model: ProjectStatusOS,
-      //     as: 'projectStatus', // Должно совпадать с 'as' в модели Project
-      //   },
-      // ],
+      include: [
+        {
+          model: Customer,
+          as: 'customer',
+        },
+        {
+          model: Order,
+          as: 'orders',
+        },
+        {
+          model: ProjectStatusOS,
+          as: 'projectStatus', // Должно совпадать с 'as' в модели Project
+        },
+        {
+          model: CurrencyOS,
+          as: 'currencyDetails', // Должно совпадать с 'as' в модели Project
+        },
+      ],
     });
     return NextResponse.json(projects);
   } catch (error) {
