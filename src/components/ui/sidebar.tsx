@@ -3,7 +3,8 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
-import { PanelLeftOpen } from "lucide-react"; // Ensure PanelLeftOpen is imported
+import { PanelLeftOpen, Settings, ListChecks, ClipboardList, Coins, ChevronDown, ChevronUp } from "lucide-react"; // Ensure PanelLeftOpen is imported
+import Link from "next/link"; // Import Link for navigation
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";

@@ -28,6 +28,8 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   ClipboardList,
 } from "lucide-react";
 import Link from "next/link";
@@ -52,6 +54,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = React.useState(true);
   // Default communication panel to collapsed (width 70px)
   const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false);
+  // Состояние для раскрывающегося списка "Набор опций"
+  const [isOptionsSetExpanded, setIsOptionsSetExpanded] = React.useState(() => {
+    // Инициализируем состояние из localStorage, если оно доступно
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('optionsSetExpanded') === 'true';
+    }
+    return false;
+  });
 
   React.useEffect(() => {
     // Check auth status from localStorage on mount
@@ -112,11 +122,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     // router.refresh();
   };
 
-  const getNavItems = (role: UserRole | undefined) => {
-    if (!role) return [];
+  // Определение типа для элемента меню
+  type NavItem = {
+    href: string;
+    label: string;
+    icon: React.FC<{ className?: string }>;
+    roles?: UserRole[];
+  };
+
+  // Определение типа для групп меню
+  type NavGroups = {
+    main: NavItem[];
+    users: NavItem[];
+    finance: NavItem[];
+    settings: NavItem[];
+    optionsSet: NavItem[];
+  };
+
+  const getNavItems = (role: UserRole | undefined): NavGroups => {
+    if (!role) return {
+      main: [],
+      users: [],
+      finance: [],
+      settings: [],
+      optionsSet: []
+    };
 
     // Define navigation groups
-    const mainGroup = [
+    const mainGroup: NavItem[] = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       {
         href: "/projects",
@@ -138,7 +171,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       }, // Example: Add Tasks page
     ];
 
-    const userGroup = [
+    const userGroup: NavItem[] = [
       {
         href: "/users",
         label: "Manage Users",
@@ -165,7 +198,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       }, // Freelancer only
     ];
 
-    const financeGroup = [
+    const financeGroup: NavItem[] = [
       {
         href: "/finance",
         label: "Finance",
@@ -180,12 +213,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       }, // Admin only
     ];
 
-    const settingsGroup = [
+    const settingsGroup: NavItem[] = [
       { href: "/settings", label: "Settings", icon: Settings },
     ];
 
+    // Группа "Набор опций" - видима только для администраторов
+    const optionsSetGroup: NavItem[] = [
+      {
+        href: "/settings/project-statuses",
+        label: "Статусы проектов",
+        icon: Briefcase,
+        roles: ["Администратор"],
+      },
+      {
+        href: "/settings/order-statuses",
+        label: "Статусы заказов",
+        icon: FileText,
+        roles: ["Администратор"],
+      },
+      {
+        href: "/settings/currencies",
+        label: "Валюты",
+        icon: DollarSign,
+        roles: ["Администратор"],
+      },
+    ];
+
     // Filter items based on role
-    const filterByRole = (items: any[]) =>
+    const filterByRole = <T extends NavItem>(items: T[]): T[] =>
       items.filter((item) => !item.roles || item.roles.includes(role));
 
     return {
@@ -193,6 +248,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       users: filterByRole(userGroup),
       finance: filterByRole(financeGroup),
       settings: filterByRole(settingsGroup),
+      optionsSet: filterByRole(optionsSetGroup),
     };
   };
 
@@ -251,16 +307,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </h1>
         </SidebarHeader>
         <SidebarContent className="p-0 bg-white" data-oid="8zsjjpy">
-          <ScrollArea className="h-full" data-oid="b.3qdle">
+
+          <ScrollArea className="h-full px-1" data-oid="b.3qdle">
             {navItems.main.length > 0 && (
-              <SidebarGroup className="px-4 py-6 mb-0" data-oid="7po_ei9">
+              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="7po_ei9">
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
                   data-oid="17d8ngt"
                 >
                   Main
                 </SidebarGroupLabel>
-                <SidebarMenu data-oid="pjtbz5:">
+                {/* Hidden spacer for collapsed state */}
+                <div className="h-8 group-data-[state=expanded]:hidden" />
+                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="pjtbz5:">
                   {navItems.main.map((item) => (
                     <SidebarMenuItem key={item.href} data-oid="_2t.34j">
                       <Link
@@ -282,7 +341,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                           data-oid="0zvejxr"
                         >
-                          <a className="rounded-[16px]" data-oid="9scs5-2">
+                          <a className="rounded-[16px] w-full flex items-center justify-center group-data-[state=expanded]:justify-start group-data-[state=collapsed]:p-2 group-data-[state=collapsed]:mx-auto" data-oid="9scs5-2">
                             <item.icon data-oid="uy:dx-m" />
                             <span
                               className="group-data-[state=expanded]:inline hidden"
@@ -299,14 +358,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.users.length > 0 && (
-              <SidebarGroup className="px-4 py-6 mb-0" data-oid="pbl2:cq">
+              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="pbl2:cq">
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
                   data-oid="wrmd-hv"
                 >
                   Users
                 </SidebarGroupLabel>
-                <SidebarMenu data-oid="uz9l9v2">
+                {/* Hidden spacer for collapsed state */}
+                <div className="h-8 group-data-[state=expanded]:hidden" />
+                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="uz9l9v2">
                   {navItems.users.map((item) => (
                     <SidebarMenuItem key={item.href} data-oid="rxc4x8k">
                       <Link
@@ -340,14 +401,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.finance.length > 0 && (
-              <SidebarGroup className="px-4 py-6 mb-0" data-oid="g80.855">
+              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="g80.855">
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
                   data-oid="eiof:m2"
                 >
                   Finance
                 </SidebarGroupLabel>
-                <SidebarMenu data-oid="ko2qs56">
+                {/* Hidden spacer for collapsed state */}
+                <div className="h-8 group-data-[state=expanded]:hidden" />
+                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="ko2qs56">
                   {navItems.finance.map((item) => (
                     <SidebarMenuItem key={item.href} data-oid="qflfqw4">
                       <Link
@@ -381,14 +444,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.settings.length > 0 && (
-              <SidebarGroup className="px-4 py-6 mb-0" data-oid="hb_1j3m">
+              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="hb_1j3m">
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
                   data-oid="s5wsuk-"
                 >
                   Settings
                 </SidebarGroupLabel>
-                <SidebarMenu data-oid="2d_m8wv">
+                {/* Hidden spacer for collapsed state */}
+                <div className="h-8 group-data-[state=expanded]:hidden" />
+                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="2d_m8wv">
+                  {/* Пункт меню Settings */}
                   {navItems.settings.map((item) => (
                     <SidebarMenuItem key={item.href} data-oid="pp3tdhp">
                       <Link
@@ -418,6 +484,64 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       </Link>
                     </SidebarMenuItem>
                   ))}
+                  
+                  {/* Раскрывающаяся группа "Набор опций" внутри группы Settings */}
+                  {navItems.optionsSet && navItems.optionsSet.length > 0 && (
+                    <>
+                      <SidebarMenuItem data-oid="options-set-dropdown-item">
+                        <div 
+                          onClick={() => {
+                            const isExpanded = localStorage.getItem('optionsSetExpanded') === 'true';
+                            localStorage.setItem('optionsSetExpanded', (!isExpanded).toString());
+                            setIsOptionsSetExpanded(!isExpanded);
+                          }}
+                          className="flex w-full items-center justify-between gap-2 overflow-hidden rounded-2xl p-2 text-left cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-10 text-sm text-sidebar-foreground"
+                          data-oid="options-set-dropdown-header"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Settings className="h-4 w-4" />
+                            <span className="group-data-[state=expanded]:inline hidden">Набор опций</span>
+                          </div>
+                          {isOptionsSetExpanded ? (
+                            <ChevronUp className="h-4 w-4" data-oid="options-set-chevron-up" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" data-oid="options-set-chevron-down" />
+                          )}
+                        </div>
+                      </SidebarMenuItem>
+                      
+                      {/* Пункты меню внутри раскрывающегося списка */}
+                      {isOptionsSetExpanded && navItems.optionsSet.map((item) => (
+                        <SidebarMenuItem key={item.href} data-oid={`options-set-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}>
+                          <Link
+                            href={item.href}
+                            passHref
+                            legacyBehavior
+                            data-oid={`options-set-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            <SidebarMenuButton
+                              asChild
+                              isActive={pathname.startsWith(item.href)}
+                              tooltip={item.label}
+                              variant="default"
+                              className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground pl-6"
+                              data-oid={`options-set-button-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                            >
+                              <a data-oid={`options-set-anchor-${item.label.toLowerCase().replace(/\s+/g, '-')}`}>
+                                <item.icon data-oid={`options-set-icon-${item.label.toLowerCase().replace(/\s+/g, '-')}`} />
+                                <span
+                                  className="group-data-[state=expanded]:inline hidden"
+                                  data-oid={`options-set-text-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                                >
+                                  {item.label}
+                                </span>
+                              </a>
+                            </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                      ))}
+                    </>
+                  )}
                 </SidebarMenu>
               </SidebarGroup>
             )}
@@ -428,44 +552,35 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           data-oid="4jmrjw9"
         >
           <div
-            className="flex items-center gap-2 flex-grow min-w-0"
-            data-oid="92m:hwd"
+            className="flex items-center justify-between w-full gap-2"
+            data-oid="user-info-container"
           >
-            {" "}
-            {/* Added flex-grow and min-w-0 */}
-            <Avatar className="h-10 w-10 shrink-0" data-oid=":0ptezt">
-              {" "}
-              {/* Added shrink-0 */}
-              <AvatarFallback
-                className="bg-white/20 text-sidebar-primary-foreground"
-                data-oid="_muzr.x"
-              >
-                {userInitial}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-grow min-w-0" data-oid="ub95w4q">
-              {" "}
-              {/* Added flex-grow and min-w-0 */}
-              <p className="text-sm font-light truncate" data-oid="zfyg.g2">
-                {authUser.email}
-              </p>{" "}
-              {/* Added truncate */}
-              <p className="text-xs text-muted-foreground" data-oid="w3axjnx">
-                {authUser.role}
-              </p>{" "}
-              {/* Use text-muted-foreground */}
+            <div className="flex items-center gap-2 flex-grow min-w-0">
+              <Avatar className="h-10 w-10 shrink-0" data-oid=":0ptezt">
+                <AvatarFallback
+                  className="bg-white/20 text-sidebar-primary-foreground"
+                  data-oid="_muzr.x"
+                >
+                  {userInitial}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-grow min-w-0" data-oid="ub95w4q">
+                <p className="text-base font-medium text-white truncate" data-oid="w3axjnx">
+                  {authUser.role}
+                </p>
+              </div>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-sidebar-primary-foreground hover:bg-white/10 h-10 w-10 rounded-full"
+              onClick={handleLogout}
+              aria-label="Logout"
+              data-oid="q90b:0u"
+            >
+              <LogOut className="h-5 w-5" data-oid="yi-jqfs" />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-sidebar-primary-foreground hover:bg-white/10 shrink-0" // Added shrink-0
-            onClick={handleLogout}
-            aria-label="Logout"
-            data-oid="q90b:0u"
-          >
-            <LogOut className="h-5 w-5" data-oid="yi-jqfs" />
-          </Button>
         </SidebarFooter>
         <SidebarFooter
           className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center"

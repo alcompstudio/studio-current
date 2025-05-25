@@ -1,0 +1,45 @@
+{
+  "component": "StatusTable",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\status\\status-table.tsx",
+  "props": [
+    {
+      "name": "items",
+      "type": "StatusItem[]",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "basePath",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onDelete",
+      "type": "(id: number) => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/table",
+    "@/components/ui/button",
+    "lucide-react",
+    "next/link"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -14,6 +14,7 @@
     "@radix-ui/react-slot",
     "class-variance-authority",
     "lucide-react",
+    "next/link",
     "@/hooks/use-mobile",
     "@/lib/utils",
     "@/components/ui/button",
@@ -25,7 +26,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-24",
+      "date": "2025-05-25",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

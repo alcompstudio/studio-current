@@ -1,0 +1,59 @@
+{
+  "component": "DataTable",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\ui\\data-table.tsx",
+  "props": [
+    {
+      "name": "columns",
+      "type": "ColumnDef<TData, TValue>[]",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "data",
+      "type": "TData[]",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "searchKey",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "pagination",
+      "type": "boolean",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "pageSize",
+      "type": "number",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/table",
+    "@/components/ui/input",
+    "@/components/ui/button",
+    "lucide-react",
+    "@tanstack/react-table"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

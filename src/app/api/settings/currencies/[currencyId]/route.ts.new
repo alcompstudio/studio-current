@@ -1,0 +1,60 @@
+import { NextRequest, NextResponse } from "next/server";
+import { CurrencyOS } from "@/lib/models/CurrencyOS";
+
+// Получение конкретной валюты по ID
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { currencyId: string } }
+) {
+  try {
+    const currency = await CurrencyOS.findByPk(params.currencyId);
+    
+    if (!currency) {
+      return NextResponse.json(
+        { error: "Валюта не найдена" },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json(currency);
+  } catch (error) {
+    console.error("Ошибка при получении валюты:", error);
+    return NextResponse.json(
+      { error: "Не удалось получить информацию о валюте" },
+      { status: 500 }
+    );
+  }
+}
+
+// Обновление валюты по ID
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { currencyId: string } }
+) {
+  try {
+    const currency = await CurrencyOS.findByPk(params.currencyId);
+    
+    if (!currency) {
+      return NextResponse.json(
+        { error: "Валюта не найдена" },
+        { status: 404 }
+      );
+    }
+    
+    const data = await request.json();
+    await currency.update({
+      isoCode: data.isoCode,
+      name: data.name,
+      symbol: data.symbol,
+      exchangeRate: data.exchangeRate
+    });
+    
+    return NextResponse.json(currency);
+  } catch (error) {
+    console.error("Ошибка при обновлении валюты:", error);
+    return NextResponse.json(
+      { error: "Не удалось обновить информацию о валюте" },
+      { status: 500 }
+    );
+  }
+}

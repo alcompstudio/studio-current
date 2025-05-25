@@ -1,0 +1,29 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\order-statuses\\page.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/button",
+    "@/components/ui/card",
+    "lucide-react",
+    "next/link",
+    "react",
+    "@/components/status/view-toggle",
+    "@/components/status/status-table"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,37 @@
+{
+  "component": "ViewToggle",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\status\\view-toggle.tsx",
+  "props": [
+    {
+      "name": "view",
+      "type": "\"grid\" | \"table\"",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onViewChange",
+      "type": "(view: \"grid\" | \"table\") => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/button",
+    "lucide-react"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

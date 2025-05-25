@@ -1,0 +1,35 @@
+{
+  "component": "CurrencyCardView",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\currencies\\components\\currency-card-view.tsx",
+  "props": [
+    {
+      "name": "currencies",
+      "type": "Currency[]",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/button",
+    "lucide-react",
+    "next/link",
+    "@/types/currency"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,39 @@
+{
+  "component": "CurrencyList",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\currencies\\components\\currency-list.tsx",
+  "props": [
+    {
+      "name": "initialCurrencies",
+      "type": "Currency[]",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "next/link",
+    "@/components/ui/button",
+    "@/components/ui/card",
+    "@/components/ui/table",
+    "lucide-react",
+    "@/types/currency",
+    "./currency-error",
+    "@/components/status/view-toggle",
+    "./currency-card-view"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,31 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+
+export default function EditCurrencyPage() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Link href="/settings/currencies">
+          <Button variant="outline" size="sm">
+            <ArrowLeft className="h-4 w-4 mr-2" /> Назад
+          </Button>
+        </Link>
+        <h1 className="text-xl font-semibold">Редактирование валюты</h1>
+      </div>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Базовая страница</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Эта страница находится в разработке</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

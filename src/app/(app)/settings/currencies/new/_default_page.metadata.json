@@ -1,0 +1,35 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\currencies\\new\\page.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/button",
+    "lucide-react",
+    "next/link",
+    "next/navigation",
+    "react-hook-form",
+    "@hookform/resolvers/zod",
+    "zod",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/hooks/use-toast",
+    "@/types/currency"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

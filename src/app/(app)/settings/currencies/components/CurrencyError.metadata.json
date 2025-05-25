@@ -1,0 +1,46 @@
+{
+  "component": "CurrencyError",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\currencies\\components\\currency-error.tsx",
+  "props": [
+    {
+      "name": "error",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "retryLink",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "retryText",
+      "type": "string",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "lucide-react",
+    "@/components/ui/card",
+    "@/components/ui/button",
+    "next/link"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

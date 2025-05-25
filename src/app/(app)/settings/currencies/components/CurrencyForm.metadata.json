@@ -1,0 +1,45 @@
+{
+  "component": "CurrencyForm",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\settings\\currencies\\components\\currency-form.tsx",
+  "props": [
+    {
+      "name": "currency",
+      "type": "Currency",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "isEditing",
+      "type": "boolean",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "next/navigation",
+    "@hookform/resolvers/zod",
+    "react-hook-form",
+    "zod",
+    "@/components/ui/button",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/components/ui/use-toast",
+    "@/types/currency"
+  ],
+  "history": [
+    {
+      "date": "2025-05-25",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

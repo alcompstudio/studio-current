@@ -15,6 +15,8 @@ flowchart TD
     sidebar_tsx --> class_variance_authority
     lucide_react[lucide-react]
     sidebar_tsx --> lucide_react
+    link[next/link]
+    sidebar_tsx --> link
     use_mobile[@/hooks/use-mobile]
     sidebar_tsx --> use_mobile
     utils[@/lib/utils]
