@@ -11,6 +11,8 @@ import defineOrder from './Order';
 import defineProjectStatusOS from './ProjectStatusOS'; // Импорт модели статусов проекта
 import defineOrderStatusOS from './OrderStatusOS'; // Импорт модели статусов заказа
 import defineCurrencyOS from './CurrencyOS'; // Импорт модели валют
+import defineStage from './Stage'; // Импорт модели этапов заказа
+import defineStageOption from './StageOption'; // Импорт модели опций этапов
 // TODO: Импортировать другие модели по мере необходимости
 
 dotenv.config(); // Загружает переменные из .env файла
@@ -50,9 +52,12 @@ db.Order = defineOrder(sequelize);
 db.ProjectStatusOS = defineProjectStatusOS(sequelize); // Инициализация модели статусов проекта
 db.OrderStatusOS = defineOrderStatusOS(sequelize); // Инициализация модели статусов заказа
 db.CurrencyOS = defineCurrencyOS(sequelize); // Инициализация модели валют
-// TODO: Добавить другие модели
+db.Stage = defineStage(sequelize); // Инициализация модели этапов заказа
+db.StageOption = defineStageOption(sequelize); // Инициализация модели опций этапов
 
+// Настройка связей между моделями
 // Вызываем методы associate для настройки связей, если они определены
+// ВАЖНО: вызывать associate только один раз для каждой модели!
 Object.keys(db).forEach(modelName => {
   if (db[modelName] && db[modelName].associate) {
     db[modelName].associate(db);

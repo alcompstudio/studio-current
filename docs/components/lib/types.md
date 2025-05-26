@@ -30,11 +30,6 @@
 *Источник: `src/lib\types.ts`*
 
 ---
-### `EtapWorkType` (TypeAlias)
-
-*Источник: `src/lib\types.ts`*
-
----
 ### `User` (Interface)
 
 *Источник: `src/lib\types.ts`*
@@ -56,16 +51,6 @@
 
 ---
 ### `Order` (Interface)
-
-*Источник: `src/lib\types.ts`*
-
----
-### `Etap` (Interface)
-
-*Источник: `src/lib\types.ts`*
-
----
-### `EtapOption` (Interface)
 
 *Источник: `src/lib\types.ts`*
 
@@ -126,6 +111,41 @@
 
 ---
 ### `PlatformTransaction` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `WorkType` (TypeAlias)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `Stage` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `StageOption` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `CreateStageDto` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `UpdateStageDto` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `CreateStageOptionDto` (Interface)
+
+*Источник: `src/lib\types.ts`*
+
+---
+### `UpdateStageOptionDto` (Interface)
 
 *Источник: `src/lib\types.ts`*
 

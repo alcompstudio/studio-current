@@ -51,6 +51,16 @@ flowchart TD
 *Источник: `src/lib\db.ts`*
 
 ---
+### `Stage` (BindingElement)
+
+*Источник: `src/lib\db.ts`*
+
+---
+### `StageOption` (BindingElement)
+
+*Источник: `src/lib\db.ts`*
+
+---
 ### `connectDB` (Variable (Identifier))
 
 *Источник: `src/lib\db.ts`*

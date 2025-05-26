@@ -42,6 +42,13 @@ export default function defineOrder(sequelize: Sequelize): ModelStatic<OrderInst
         foreignKey: 'status',
         as: 'orderStatus',
       });
+
+      // Добавляем связь с этапами заказа
+      Order.hasMany(models.Stage, {
+        foreignKey: 'order_id',
+        as: 'stages',
+        onDelete: 'CASCADE',
+      });
     }
   }
 

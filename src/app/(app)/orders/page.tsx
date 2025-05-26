@@ -26,12 +26,10 @@ export default function OrdersPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Роль пользователя (в будущем может быть получена из контекста аутентификации)
-  type UserRole = "Заказчик" | "Исполнитель";
-  const userRole: UserRole = "Заказчик"; // Явно указываем тип
-  
-  // Строковые константы ролей для сравнения
   const CUSTOMER_ROLE = "Заказчик" as const;
   const FREELANCER_ROLE = "Исполнитель" as const;
+  type UserRole = typeof CUSTOMER_ROLE | typeof FREELANCER_ROLE;
+  const userRole: UserRole = CUSTOMER_ROLE;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -185,12 +183,30 @@ export default function OrdersPage() {
                     String(order.price).trim() !== ""
                       ? Number(order.price).toLocaleString()
                       : "-"}{" "}
-                    {/* Конвертируем project_id в число для сравнения */}
-                    {projects.find((p) => 
-                      typeof order.project_id === 'string' 
-                        ? p.id === Number(order.project_id) 
-                        : p.id === order.project_id
-                    )?.currency ?? ""}
+                    {/* Преобразуем ID валюты в её код */}
+                    {(() => {
+                      const project = projects.find((p) => 
+                        typeof order.project_id === 'string' 
+                          ? p.id === Number(order.project_id) 
+                          : p.id === order.project_id
+                      );
+                      
+                      if (!project?.currency) return "";
+                      
+                      // Если это число, получаем код валюты по ID
+                      if (typeof project.currency === 'number' || !isNaN(Number(project.currency))) {
+                        const currencyMap: Record<string, string> = {
+                          '1': 'USD',
+                          '2': 'EUR',
+                          '3': 'RUB'
+                        };
+                        const id = String(project.currency);
+                        return currencyMap[id] || `Валюта ${id}`;
+                      }
+                      
+                      // Если это строка, преобразуем в верхний регистр
+                      return String(project.currency).toUpperCase();
+                    })()} 
                   </span>
                   {/* Link to the new order detail page */}
                   <div className="flex items-center gap-2">

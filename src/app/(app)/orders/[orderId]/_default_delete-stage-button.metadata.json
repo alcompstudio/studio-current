@@ -1,0 +1,52 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\delete-stage-button.tsx",
+  "props": [
+    {
+      "name": "stageId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "stageName",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "orderId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onSuccess",
+      "type": "() => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "lucide-react",
+    "@/components/ui/button",
+    "@/hooks/use-toast",
+    "@/components/ui/alert-dialog"
+  ],
+  "history": [
+    {
+      "date": "2025-05-26",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

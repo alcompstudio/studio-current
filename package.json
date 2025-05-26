@@ -80,6 +80,7 @@
     "@types/pg": "^8.15.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/sequelize": "^4.28.20",
     "@wixc3/react-board": "^4.6.2",
     "genkit-cli": "^1.0.4",
     "husky": "^9.1.7",

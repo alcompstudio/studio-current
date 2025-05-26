@@ -27,6 +27,10 @@ flowchart TD
     index_ts --> OrderStatusOS
     CurrencyOS[./CurrencyOS]
     index_ts --> CurrencyOS
+    Stage[./Stage]
+    index_ts --> Stage
+    StageOption[./StageOption]
+    index_ts --> StageOption
 ```
 
 ### `connectDB` (Function)

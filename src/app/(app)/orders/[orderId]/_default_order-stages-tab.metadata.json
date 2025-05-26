@@ -1,0 +1,45 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\order-stages-tab.tsx",
+  "props": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "projectCurrency",
+      "type": "string",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/card",
+    "@/components/ui/badge",
+    "@/components/ui/button",
+    "@/lib/types/stage",
+    "@/hooks/use-toast",
+    "lucide-react",
+    "./stage-form",
+    "./delete-stage-button",
+    "@/lib/utils"
+  ],
+  "history": [
+    {
+      "date": "2025-05-26",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

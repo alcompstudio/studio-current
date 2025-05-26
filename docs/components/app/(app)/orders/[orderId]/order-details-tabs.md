@@ -19,6 +19,8 @@ flowchart TD
     order_details_tabs_tsx --> types
     order[@/lib/types/order]
     order_details_tabs_tsx --> order
+    order_stages_tab[./order-stages-tab]
+    order_details_tabs_tsx --> order_stages_tab
 ```
 
 ### `default` (ReactComponent)

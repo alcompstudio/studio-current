@@ -34,11 +34,12 @@
     "@/components/ui/badge",
     "lucide-react",
     "@/lib/types",
-    "@/lib/types/order"
+    "@/lib/types/order",
+    "./order-stages-tab"
   ],
   "history": [
     {
-      "date": "2025-05-25",
+      "date": "2025-05-26",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

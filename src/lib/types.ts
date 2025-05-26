@@ -17,7 +17,9 @@ export type OrderStatus = "Новый" | "Сбор ставок" | "На пау�
 export type BidStatus = "Черновик" | "Отправлено" | "Отозвано" | "Утверждено" | "Отказано";
 export type WorkItemStatus = "Новое" | "В работе" | "Проверка" | "Исправление" | "Завершено" | "Отменено";
 export type PaymentStatus = "Ожидание" | "Оплачен" | "Подтвержден" | "Отменен";
-export type EtapWorkType = "Параллельный" | "Последовательный";
+
+// Re-export stage types
+export * from './types/stage';
 
 // User Interface
 export interface User extends BaseEntity {
@@ -72,29 +74,7 @@ export interface Order {
   // workPositions?: WorkPosition[];
 }
 
-// Etap Interface (Этап Заказа)
-export interface Etap extends BaseEntity {
-  orderId: string;
-  options?: EtapOption[];
-  sequence?: number; // For sequential work
-  color?: string; // For visualization
-  workType: EtapWorkType; // Parallel or Sequential
-  estimatedPrice?: number; // Price set by Заказчик
-}
-
-// Etap Option Interface (Опция Этапа)
-export interface EtapOption extends BaseEntity {
-  etapId: string;
-  name: string; // Ensure name is mandatory
-  description?: string;
-  isCalculable: boolean; // Калькулируемая опция
-  includedInPrice: boolean; // Включена в цену (informational, or if calculable)
-  calculationFormula?: string; // e.g., "units / unitDivider * pricePerUnit"
-  planUnits?: number; // e.g., 2500 (characters)
-  unitDivider?: number; // e.g., 1000
-  pricePerUnit?: number; // e.g., 2 (USD per 1000 characters)
-  calculatedPlanPrice?: number; // (planUnits / unitDivider) * pricePerUnit = 5 USD
-}
+// Etap and EtapOption interfaces have been moved to src/lib/types/stage.ts
 
 // Bid Interface (Ставка-предложение)
 export interface Bid extends BaseEntity {
