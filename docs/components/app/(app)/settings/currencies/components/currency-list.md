@@ -11,6 +11,8 @@ flowchart TD
     currency_list_tsx --> react
     link[next/link]
     currency_list_tsx --> link
+    navigation[next/navigation]
+    currency_list_tsx --> navigation
     button[@/components/ui/button]
     currency_list_tsx --> button
     card[@/components/ui/card]
@@ -27,6 +29,12 @@ flowchart TD
     currency_list_tsx --> view_toggle
     currency_card_view[./currency-card-view]
     currency_list_tsx --> currency_card_view
+    currency_form[./currency-form]
+    currency_list_tsx --> currency_form
+    use_toast[@/hooks/use-toast]
+    currency_list_tsx --> use_toast
+    dialog[@/components/ui/dialog]
+    currency_list_tsx --> dialog
 ```
 
 ### `CurrencyList` (ReactComponent)

@@ -21,3 +21,36 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+// POST запрос для создания нового статуса заказа
+export async function POST(request: NextRequest) {
+  try {
+    // Получаем данные из тела запроса
+    const body = await request.json();
+    
+    // Валидация данных
+    if (!body.name || !body.textColor || !body.backgroundColor) {
+      return NextResponse.json(
+        { error: "Отсутствуют обязательные поля" },
+        { status: 400 }
+      );
+    }
+    
+    // Создаем новый статус заказа в БД
+    const newStatus = await OrderStatusOS.create({
+      name: body.name,
+      textColor: body.textColor,
+      backgroundColor: body.backgroundColor,
+      allowBids: body.allowBids || false,
+      isDefault: body.isDefault || false
+    });
+    
+    return NextResponse.json(newStatus, { status: 201 });
+  } catch (error) {
+    console.error("Ошибка при создании статуса заказа:", error);
+    return NextResponse.json(
+      { error: "Внутренняя ошибка сервера" },
+      { status: 500 }
+    );
+  }
+}

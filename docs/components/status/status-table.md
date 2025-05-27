@@ -15,6 +15,8 @@ flowchart TD
     status_table_tsx --> lucide_react
     link[next/link]
     status_table_tsx --> link
+    card[@/components/ui/card]
+    status_table_tsx --> card
 ```
 
 ### `StatusTable` (ReactComponent)
@@ -26,6 +28,7 @@ flowchart TD
 | `items` | `StatusItem[]` | Да |  |
 | `basePath` | `string` | Да |  |
 | `onDelete` | `(id: number) => void` | Да |  |
+| `onEdit` | `(item: StatusItem) => void` | Да |  |
 
 **Возвращает:** `React.JSX.Element`
 

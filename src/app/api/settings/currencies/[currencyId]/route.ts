@@ -94,3 +94,52 @@ export async function PUT(
     );
   }
 }
+
+// DELETE запрос для удаления валюты
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { currencyId: string } }
+) {
+  try {
+    const currencyId = parseInt(params.currencyId);
+    
+    if (isNaN(currencyId)) {
+      return NextResponse.json(
+        { error: "Некорректный ID валюты" },
+        { status: 400 }
+      );
+    }
+    
+    // Проверяем, существует ли валюта
+    const currency = await CurrencyOS.findByPk(currencyId);
+    
+    if (!currency) {
+      return NextResponse.json(
+        { error: "Валюта не найдена" },
+        { status: 404 }
+      );
+    }
+    
+    // Проверяем, не является ли валюта базовой (по умолчанию)
+    if (currency.isBase) {
+      return NextResponse.json(
+        { error: "Нельзя удалить базовую валюту" },
+        { status: 400 }
+      );
+    }
+    
+    // Удаляем валюту из БД
+    await currency.destroy();
+    
+    return NextResponse.json(
+      { success: true, message: "Валюта успешно удалена" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Ошибка при удалении валюты:", error);
+    return NextResponse.json(
+      { error: "Внутренняя ошибка сервера" },
+      { status: 500 }
+    );
+  }
+}

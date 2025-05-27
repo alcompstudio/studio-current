@@ -115,7 +115,7 @@
 *Источник: `src/lib\types.ts`*
 
 ---
-### `WorkType` (TypeAlias)
+### `WorkTypeOption` (Interface)
 
 *Источник: `src/lib\types.ts`*
 

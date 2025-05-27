@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
-import { WorkType } from '@/lib/types/stage';
+import type { StageWorkTypeOSAttributes } from './StageWorkTypeOS';
 
 export interface StageAttributes {
   id: number;
@@ -8,7 +8,8 @@ export interface StageAttributes {
   description: string | null;
   sequence: number | null;
   color: string | null;
-  work_type: WorkType | null;
+  work_type: number | null;
+  workTypeDetails?: StageWorkTypeOSAttributes; // Для eager loading
   estimated_price: number | null;
   created_at: Date;
   updated_at: Date;
@@ -27,7 +28,7 @@ class Stage extends Model<StageAttributes, StageCreationAttributes>
   public description!: string | null;
   public sequence!: number | null;
   public color!: string | null;
-  public work_type!: WorkType | null;
+  public work_type!: number | null;
   public estimated_price!: number | null;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -47,6 +48,13 @@ class Stage extends Model<StageAttributes, StageCreationAttributes>
     Stage.belongsTo(models.Order, {
       foreignKey: 'order_id',
       as: 'order',
+    });
+
+    // Связь с типом работы
+    Stage.belongsTo(models.StageWorkTypeOS, {
+      foreignKey: 'work_type',
+      as: 'workTypeDetails',
+      targetKey: 'id'
     });
   }
 }
@@ -85,8 +93,12 @@ const defineStage = (sequelize: Sequelize) => {
         allowNull: true,
       },
       work_type: {
-        type: DataTypes.ENUM('Параллельный', 'Последовательный'),
+        type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: 'stage_work_type_os',
+          key: 'id',
+        },
       },
       estimated_price: {
         type: DataTypes.DECIMAL(10, 2),

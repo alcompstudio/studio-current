@@ -94,3 +94,52 @@ export async function PUT(
     );
   }
 }
+
+// DELETE запрос для удаления статуса заказа
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { statusId: string } }
+) {
+  try {
+    const statusId = parseInt(params.statusId);
+    
+    if (isNaN(statusId)) {
+      return NextResponse.json(
+        { error: "Некорректный ID статуса" },
+        { status: 400 }
+      );
+    }
+    
+    // Проверяем, существует ли статус
+    const status = await OrderStatusOS.findByPk(statusId);
+    
+    if (!status) {
+      return NextResponse.json(
+        { error: "Статус не найден" },
+        { status: 404 }
+      );
+    }
+    
+    // Проверяем, не является ли статус статусом по умолчанию
+    if (status.isDefault) {
+      return NextResponse.json(
+        { error: "Нельзя удалить статус по умолчанию" },
+        { status: 400 }
+      );
+    }
+    
+    // Удаляем статус из БД
+    await status.destroy();
+    
+    return NextResponse.json(
+      { success: true, message: "Статус заказа успешно удален" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Ошибка при удалении статуса заказа:", error);
+    return NextResponse.json(
+      { error: "Внутренняя ошибка сервера" },
+      { status: 500 }
+    );
+  }
+}

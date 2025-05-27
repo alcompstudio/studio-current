@@ -5,20 +5,23 @@ export interface StageOptionAttributes {
   order_stage_id: number;
   name: string;
   description: string | null;
-  is_calculable: boolean;
-  included_in_price: boolean;
-  calculation_formula: string | null;
-  plan_units: number | null;
-  unit_divider: number | null;
-  price_per_unit: number | null;
-  calculated_plan_price: number | null;
+  pricing_type: 'calculable' | 'included'; // Тип ценообразования: Калькулируемая или Входит в стоимость
+  // Поля для диапазона объема
+  volume_min: number | null;
+  volume_max: number | null;
+  volume_unit: string | null; // Единица измерения объема (шт., симв., %, слов, ч и т.д.)
+  nominal_volume: number | null; // Номинальный объем для расчета
+  price_per_unit: number | null; // Цена за единицу объема
+  // Рассчитанная стоимость (мин и макс)
+  calculated_price_min: number | null;
+  calculated_price_max: number | null;
   created_at: Date;
   updated_at: Date;
 }
 
 export type StageOptionCreationAttributes = Optional<
   StageOptionAttributes,
-  'id' | 'created_at' | 'updated_at' | 'calculated_plan_price'
+  'id' | 'created_at' | 'updated_at' | 'calculated_price_min' | 'calculated_price_max'
 >;
 
 class StageOption extends Model<StageOptionAttributes, StageOptionCreationAttributes> 
@@ -27,13 +30,14 @@ class StageOption extends Model<StageOptionAttributes, StageOptionCreationAttrib
   public order_stage_id!: number;
   public name!: string;
   public description!: string | null;
-  public is_calculable!: boolean;
-  public included_in_price!: boolean;
-  public calculation_formula!: string | null;
-  public plan_units!: number | null;
-  public unit_divider!: number | null;
+  public pricing_type!: 'calculable' | 'included';
+  public volume_min!: number | null;
+  public volume_max!: number | null;
+  public volume_unit!: string | null;
+  public nominal_volume!: number | null;
   public price_per_unit!: number | null;
-  public calculated_plan_price!: number | null;
+  public calculated_price_min!: number | null;
+  public calculated_price_max!: number | null;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
 
@@ -41,19 +45,32 @@ class StageOption extends Model<StageOptionAttributes, StageOptionCreationAttrib
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  // Calculate the plan price if needed
-  public calculatePlanPrice(): void {
+  // Расчет стоимости на основе объема и цены
+  public calculatePrices(): void {
     if (
-      this.is_calculable &&
-      this.plan_units !== null &&
-      this.unit_divider !== null &&
-      this.unit_divider !== 0 &&
+      this.pricing_type === 'calculable' &&
+      this.nominal_volume !== null &&
+      this.nominal_volume !== 0 &&
       this.price_per_unit !== null
     ) {
-      this.calculated_plan_price = 
-        (Number(this.plan_units) / Number(this.unit_divider)) * Number(this.price_per_unit);
+      // Если указан минимальный объем, рассчитываем минимальную стоимость
+      if (this.volume_min !== null) {
+        this.calculated_price_min = 
+          (Number(this.volume_min) / Number(this.nominal_volume)) * Number(this.price_per_unit);
+      } else {
+        this.calculated_price_min = null;
+      }
+      
+      // Если указан максимальный объем, рассчитываем максимальную стоимость
+      if (this.volume_max !== null) {
+        this.calculated_price_max = 
+          (Number(this.volume_max) / Number(this.nominal_volume)) * Number(this.price_per_unit);
+      } else {
+        this.calculated_price_max = null;
+      }
     } else {
-      this.calculated_plan_price = null;
+      this.calculated_price_min = null;
+      this.calculated_price_max = null;
     }
   }
 
@@ -92,33 +109,36 @@ const defineStageOption = (sequelize: Sequelize) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      is_calculable: {
-        type: DataTypes.BOOLEAN,
+      pricing_type: {
+        type: DataTypes.ENUM('calculable', 'included'),
         allowNull: false,
-        defaultValue: false,
+        defaultValue: 'included',
       },
-      included_in_price: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
-      calculation_formula: {
-        type: DataTypes.STRING(255),
+      volume_min: {
+        type: DataTypes.DECIMAL(12, 4),
         allowNull: true,
       },
-      plan_units: {
-        type: DataTypes.DECIMAL(10, 2),
+      volume_max: {
+        type: DataTypes.DECIMAL(12, 4),
         allowNull: true,
       },
-      unit_divider: {
-        type: DataTypes.DECIMAL(10, 2),
+      volume_unit: {
+        type: DataTypes.STRING(20),
+        allowNull: true,
+      },
+      nominal_volume: {
+        type: DataTypes.DECIMAL(12, 4),
         allowNull: true,
       },
       price_per_unit: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
       },
-      calculated_plan_price: {
+      calculated_price_min: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: true,
+      },
+      calculated_price_max: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true,
       },
@@ -142,7 +162,7 @@ const defineStageOption = (sequelize: Sequelize) => {
       updatedAt: 'updated_at',
       hooks: {
         beforeSave: (option: StageOption) => {
-          option.calculatePlanPrice();
+          option.calculatePrices();
         },
       },
     }

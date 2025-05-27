@@ -21,11 +21,12 @@
     "./OrderStatusOS",
     "./CurrencyOS",
     "./Stage",
-    "./StageOption"
+    "./StageOption",
+    "./StageWorkTypeOS"
   ],
   "history": [
     {
-      "date": "2025-05-26",
+      "date": "2025-05-27",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

@@ -1,15 +1,16 @@
 // src/app/(app)/orders/[orderId]/order-stages-tab.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Stage } from '@/lib/types/stage';
 import { useToast } from '@/hooks/use-toast';
-import { AlertTriangle, Loader2, Plus, Edit } from 'lucide-react';
+import { AlertTriangle, Loader2, Plus, Edit, ChevronDown, ChevronUp } from 'lucide-react';
 import StageForm from './stage-form';
 import DeleteStageButton from './delete-stage-button';
+import StageOptionsList from './stage-options-list';
 import { cn } from '@/lib/utils';
 
 interface OrderStagesTabProps {
@@ -23,47 +24,66 @@ const OrderStagesTab = ({ orderId, projectCurrency = 'руб.' }: OrderStagesTab
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingStage, setEditingStage] = useState<Stage | null>(null);
+  const [workTypes, setWorkTypes] = useState<{id: number, name: string}[]>([]);
+  const [isLoadingWorkTypes, setIsLoadingWorkTypes] = useState(false);
   const { toast } = useToast();
 
   // Функция для загрузки этапов
   const fetchStages = async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const response = await fetch(`/api/orders/${orderId}/stages`);
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Ошибка загрузки этапов: ${response.status}`);
+        throw new Error(`Ошибка HTTP: ${response.status}`);
       }
-      const data: Stage[] = await response.json();
+      const data = await response.json();
       setStages(data);
-    } catch (err: any) {
-      console.error('Ошибка при загрузке этапов заказа:', err);
-      setError(err.message || 'Произошла неизвестная ошибка при загрузке этапов.');
-      toast({
-        title: 'Ошибка загрузки этапов',
-        description: err.message || 'Не удалось загрузить список этапов для этого заказа.',
-        variant: 'destructive',
-      });
+    } catch (error) {
+      console.error('Ошибка при загрузке этапов:', error);
+      // Можно добавить уведомление об ошибке через toast
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
+  };
+
+  // Функция загрузки типов работы
+  const fetchWorkTypes = async () => {
+    setIsLoadingWorkTypes(true);
+    try {
+      const response = await fetch('/api/stage-work-types-os');
+      if (!response.ok) {
+        throw new Error(`Ошибка HTTP: ${response.status}`);
+      }
+      const data = await response.json();
+      setWorkTypes(data);
+    } catch (error) {
+      console.error('Ошибка при загрузке типов работы:', error);
+    } finally {
+      setIsLoadingWorkTypes(false);
+    }
   };
 
   useEffect(() => {
-    if (!orderId) {
-      setError('ID заказа отсутствует.');
-      setIsLoading(false);
-      return;
+    if (orderId) {
+      fetchStages();
+      fetchWorkTypes();
     }
+  }, [orderId]);
 
-    fetchStages();
-  }, [orderId, toast]);
-
-  // Обработчик успешного создания/редактирования этапа
+  // Функция обработки успешного добавления/редактирования этапа
   const handleFormSuccess = () => {
-    setShowAddForm(false);
-    setEditingStage(null);
-    fetchStages();
+    setShowAddForm(false); // Скрываем форму
+    setEditingStage(null); // Сбрасываем редактируемый этап
+    fetchStages(); // Обновляем список этапов
+  };
+
+  // Функция для получения названия типа работы по ID
+  const getWorkTypeName = (typeId: number | string | null) => {
+    if (!typeId) return null;
+
+    const id = typeof typeId === 'string' ? parseInt(typeId, 10) : typeId;
+    const workType = workTypes.find(type => type.id === id);
+    return workType ? workType.name : id.toString();
   };
 
   // Обработчик отмены формы
@@ -188,7 +208,7 @@ const OrderStagesTab = ({ orderId, projectCurrency = 'руб.' }: OrderStagesTab
         <div className="space-y-4">
           {stages.map((stage) => (
             <Card key={stage.id} className={cn(
-              "transition-all duration-200 border shadow-sm hover:shadow-md",
+              "transition-all duration-200 border-0 shadow-none hover:shadow-md",
               editingStage?.id === stage.id && "ring-2 ring-primary"
             )}>
               <CardHeader>
@@ -198,10 +218,10 @@ const OrderStagesTab = ({ orderId, projectCurrency = 'руб.' }: OrderStagesTab
                   </CardTitle>
                   {stage.workType && (
                     <Badge 
-                      variant={stage.workType === 'Параллельный' ? 'default' : 'secondary'}
+                      variant={getWorkTypeName(stage.workType) === 'Параллельный' ? 'default' : 'secondary'}
                       style={{backgroundColor: stage.color || undefined}}
                     >
-                      {stage.workType}
+                      {getWorkTypeName(stage.workType) || stage.workType}
                     </Badge>
                   )}
                 </div>
@@ -226,35 +246,13 @@ const OrderStagesTab = ({ orderId, projectCurrency = 'руб.' }: OrderStagesTab
                     </p>
                   </div>
                 </div>
-                {/* Временно скрыто до реализации опций
-                {stage.options && stage.options.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-semibold mb-2">Опции этапа:</h4>
-                    <ul className="space-y-2">
-                      {stage.options.map((option) => (
-                        <li key={option.id} className="p-3 border rounded-md bg-muted/50">
-                          <p className="font-medium text-sm">{option.name}</p>
-                          {option.description && <p className="text-xs text-muted-foreground mt-1">{option.description}</p>}
-                          <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2 text-xs">
-                            <span>Расчетная: {option.isCalculable ? 'Да' : 'Нет'}</span>
-                            <span>Включена в цену: {option.includedInPrice ? 'Да' : 'Нет'}</span>
-                            {option.isCalculable && (
-                              <>
-                                <span>Формула: {option.calculationFormula || '-'}</span>
-                                <span>План. единицы: {option.planUnits ?? '-'}</span>
-                                <span>Делитель: {option.unitDivider ?? '-'}</span>
-                                <span>Цена за ед.: {option.pricePerUnit ?? '-'}</span>
-                                <span>План. цена: {option.calculatedPlanPrice ?? '-'}</span>
-                              </>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                */}
-                <p className="text-sm text-muted-foreground">Опции для этого этапа временно отключены.</p>
+                
+                {/* Компонент для работы с опциями этапа */}
+                <StageOptionsList 
+                  orderId={orderId} 
+                  stageId={stage.id} 
+                  orderCurrency={projectCurrency} 
+                />
               </CardContent>
               <CardFooter className="flex justify-end gap-2 pt-2">
                 <Button 

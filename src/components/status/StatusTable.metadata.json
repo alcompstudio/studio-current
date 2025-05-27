@@ -24,6 +24,12 @@
       "type": "(id: number) => void",
       "description": "",
       "required": true
+    },
+    {
+      "name": "onEdit",
+      "type": "(item: StatusItem) => void",
+      "description": "",
+      "required": true
     }
   ],
   "params": [],
@@ -32,11 +38,12 @@
     "@/components/ui/table",
     "@/components/ui/button",
     "lucide-react",
-    "next/link"
+    "next/link",
+    "@/components/ui/card"
   ],
   "history": [
     {
-      "date": "2025-05-26",
+      "date": "2025-05-27",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

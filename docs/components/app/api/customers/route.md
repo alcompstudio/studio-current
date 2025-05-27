@@ -24,7 +24,7 @@ flowchart TD
 | `page` | `void` | Да |  |
 | `ua` | `void` | Да |  |
 | `url` | `string` | Да |  |
-| `__@INTERNALS@2842` | `{
+| `__@INTERNALS@2853` | `{
         cookies: RequestCookies;
         url: string;
         nextUrl: NextURL;

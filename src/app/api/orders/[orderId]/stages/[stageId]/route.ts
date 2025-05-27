@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sequelize } from '@/lib/db';
 import { QueryTypes } from 'sequelize';
-import { Stage, UpdateStageDto, WorkType } from '@/lib/types/stage';
+import { Stage, UpdateStageDto } from '@/lib/types/stage';
 import { z } from 'zod';
 
 // Схема валидации для обновления этапа
@@ -10,7 +10,7 @@ const updateStageSchema = z.object({
   description: z.string().optional().nullable(),
   sequence: z.number().int().positive().optional().nullable(),
   color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional().nullable(),
-  workType: z.enum(['Параллельный', 'Последовательный'] as const).optional().nullable(),
+  workType: z.number().int().positive().optional().nullable(),
   estimatedPrice: z.number().positive().optional().nullable(),
 });
 
@@ -98,9 +98,24 @@ export async function PUT(
   try {
     // Валидируем тело запроса
     const body = await request.json();
-    const validation = updateStageSchema.safeParse(body);
+    
+    // Логируем полученные данные для отладки
+    console.log('[API_STAGES_UPDATE] Полученные данные:', body);
+    
+    // Преобразование типов данных
+    const processedBody = {
+      ...body,
+      sequence: body.sequence ? Number(body.sequence) : null,
+      workType: body.workType ? Number(body.workType) : null,
+      estimatedPrice: body.estimatedPrice ? Number(body.estimatedPrice) : null
+    };
+    
+    console.log('[API_STAGES_UPDATE] Обработанные данные:', processedBody);
+    
+    const validation = updateStageSchema.safeParse(processedBody);
 
     if (!validation.success) {
+      console.log('[API_STAGES_UPDATE] Ошибка валидации:', validation.error.format());
       return NextResponse.json(
         { 
           error: 'Ошибка валидации',
@@ -128,7 +143,7 @@ export async function PUT(
           work_type = :workType,
           estimated_price = :estimatedPrice,
           updated_at = NOW()
-        WHERE order_id = :orderId
+        WHERE id = :stageId AND order_id = :orderId
         RETURNING 
           id::text,
           order_id::text as "order_id",
@@ -150,7 +165,7 @@ export async function PUT(
             description: data.description,
             sequence: data.sequence,
             color: data.color,
-            workType: data.workType,
+            workType: data.workType ? parseInt(data.workType.toString(), 10) : null, // Преобразование в число
             estimatedPrice: data.estimatedPrice,
           },
           type: QueryTypes.UPDATE,

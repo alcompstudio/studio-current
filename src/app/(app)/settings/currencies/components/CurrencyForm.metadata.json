@@ -8,16 +8,22 @@
   "path": "app\\(app)\\settings\\currencies\\components\\currency-form.tsx",
   "props": [
     {
-      "name": "currency",
-      "type": "Currency",
+      "name": "initialData",
+      "type": "Currency | null",
       "description": "",
       "required": false
     },
     {
-      "name": "isEditing",
-      "type": "boolean",
+      "name": "onSave",
+      "type": "() => void",
       "description": "",
-      "required": false
+      "required": true
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "",
+      "required": true
     }
   ],
   "params": [],
@@ -31,12 +37,14 @@
     "@/components/ui/button",
     "@/components/ui/form",
     "@/components/ui/input",
-    "@/components/ui/use-toast",
-    "@/types/currency"
+    "@/hooks/use-toast",
+    "@/types/currency",
+    "@/components/ui/card",
+    "lucide-react"
   ],
   "history": [
     {
-      "date": "2025-05-26",
+      "date": "2025-05-27",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

@@ -32,11 +32,12 @@
     "lucide-react",
     "./stage-form",
     "./delete-stage-button",
+    "./stage-options-list",
     "@/lib/utils"
   ],
   "history": [
     {
-      "date": "2025-05-26",
+      "date": "2025-05-27",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

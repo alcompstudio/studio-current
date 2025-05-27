@@ -9,8 +9,8 @@ flowchart TD
     Stage_ts[Stage.ts]
     sequelize[sequelize]
     Stage_ts --> sequelize
-    stage[@/lib/types/stage]
-    Stage_ts --> stage
+    StageWorkTypeOS[./StageWorkTypeOS]
+    Stage_ts --> StageWorkTypeOS
 ```
 
 ### `StageAttributes` (Interface)

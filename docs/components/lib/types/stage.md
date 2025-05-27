@@ -5,7 +5,7 @@
 ## Зависимости файла
 
 
-### `WorkType` (TypeAlias)
+### `WorkTypeOption` (Interface)
 
 *Источник: `src/lib\types\stage.ts`*
 

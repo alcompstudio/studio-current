@@ -9,23 +9,32 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { SquarePen, Trash2 } from "lucide-react";
+import { SquarePen, Trash2, Palette, Plus, Edit3 } from "lucide-react"; // Добавлены Palette, Plus, Edit3
 import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"; // Импортируем компоненты Card
 
 interface StatusItem {
   id: number;
   name: string;
   textColor: string;
   backgroundColor: string;
+  isDefault?: boolean; // Добавлено для соответствия ProjectStatus
 }
 
 interface StatusTableProps {
   items: StatusItem[];
   basePath: string; // Например: "/settings/project-statuses" или "/settings/order-statuses"
   onDelete: (id: number) => void;
+  onEdit: (item: StatusItem) => void; // Добавляем onEdit prop
 }
 
-export function StatusTable({ items, basePath, onDelete }: StatusTableProps) {
+export function StatusTable({ items, basePath, onDelete, onEdit }: StatusTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -59,11 +68,10 @@ export function StatusTable({ items, basePath, onDelete }: StatusTableProps) {
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    asChild
+                    onClick={() => onEdit(status)}
+                    title="Редактировать"
                   >
-                    <Link href={`${basePath}/${status.id}/edit`} title="Редактировать">
-                      <SquarePen className="h-4 w-4" />
-                    </Link>
+                    <SquarePen className="h-4 w-4" />
                   </Button>
                   <Button 
                     variant="ghost" 

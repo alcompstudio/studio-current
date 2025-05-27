@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,8 +15,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import type { Currency } from "@/types/currency";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ArrowLeft, Save, CreditCard } from "lucide-react";
 
 // Схема валидации формы валюты
 const currencyFormSchema = z.object({
@@ -29,144 +37,174 @@ const currencyFormSchema = z.object({
 type CurrencyFormValues = z.infer<typeof currencyFormSchema>;
 
 interface CurrencyFormProps {
-  currency?: Currency;
-  isEditing?: boolean;
+  initialData?: Currency | null;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
-export function CurrencyForm({ currency, isEditing = false }: CurrencyFormProps) {
+export function CurrencyForm({ initialData, onSave, onCancel }: CurrencyFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Инициализация формы с начальными значениями
   const form = useForm<CurrencyFormValues>({
     resolver: zodResolver(currencyFormSchema),
-    defaultValues: {
-      isoCode: currency?.isoCode || "",
-      name: currency?.name || "",
-      symbol: currency?.symbol || "",
-      exchangeRate: currency?.exchangeRate || 1,
-    },
+    defaultValues: initialData
+      ? {
+          isoCode: initialData.isoCode,
+          name: initialData.name,
+          symbol: initialData.symbol,
+          exchangeRate: initialData.exchangeRate,
+        }
+      : {
+          isoCode: "",
+          name: "",
+          symbol: "",
+          exchangeRate: 1,
+        },
+    mode: "onChange",
   });
 
   // Обработчик отправки формы
   async function onSubmit(values: CurrencyFormValues) {
+    setIsSubmitting(true);
     try {
-      // Если редактируем существующую валюту
-      if (isEditing && currency?.id) {
-        const response = await fetch(`/api/settings/currencies/${currency.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
-        });
+      const method = initialData ? "PUT" : "POST";
+      const url = initialData
+        ? `/api/settings/currencies/${initialData.id}`
+        : "/api/settings/currencies";
 
-        if (!response.ok) {
-          throw new Error("Не удалось обновить валюту");
-        }
+      const response = await fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-        toast({
-          title: "Валюта обновлена",
-          description: "Информация о валюте успешно обновлена",
-        });
-      } else {
-        // Для создания новой валюты (может быть реализовано позже)
-        toast({
-          title: "Функция в разработке",
-          description: "Создание новой валюты пока не реализовано",
-          variant: "destructive",
-        });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Ошибка ${initialData ? 'обновления' : 'создания'} валюты: ${response.statusText}`);
       }
 
-      // Перенаправляем на страницу списка валют
-      router.push("/settings/currencies");
-      router.refresh();
-    } catch (error) {
-      console.error("Ошибка при сохранении валюты:", error);
       toast({
-        title: "Ошибка",
-        description: "Не удалось сохранить изменения",
+        title: `Валюта ${initialData ? 'обновлена' : 'создана'}`,
+        description: `Валюта "${values.name}" успешно ${initialData ? 'обновлена' : 'создана'}.`,
+      });
+      
+      onSave(); // Вызываем callback для обновления списка и закрытия формы
+      router.refresh(); // Обновляем данные на странице
+    } catch (error) {
+      console.error(`Не удалось ${initialData ? 'обновить' : 'создать'} валюту:`, error);
+      const errorMessage = error instanceof Error ? error.message : "Произошла неизвестная ошибка";
+      toast({
+        title: `Ошибка ${initialData ? 'обновления' : 'создания'} валюты`,
+        description: errorMessage,
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Название</FormLabel>
-                <FormControl>
-                  <Input placeholder="Евро" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="isoCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Код валюты (ISO)</FormLabel>
-                <FormControl>
-                  <Input placeholder="EUR" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="symbol"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Символ</FormLabel>
-                <FormControl>
-                  <Input placeholder="€" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="exchangeRate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Курс обмена</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    step="0.0001"
-                    placeholder="1.0"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => router.push("/settings/currencies")}
-          >
-            Отмена
-          </Button>
-          <Button type="submit">
-            {isEditing ? "Сохранить изменения" : "Создать валюту"}
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" className="h-10 w-10 p-0 flex items-center justify-center" onClick={onCancel}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <CardTitle>{initialData ? "Редактировать валюту" : "Создать новую валюту"}</CardTitle>
+              <CardDescription>
+                {initialData ? `Изменение данных для валюты "${initialData.name}".` : "Добавить новую валюту в систему."}
+              </CardDescription>
+            </div>
+          </div>
+          <Button onClick={form.handleSubmit(onSubmit)} disabled={isSubmitting || !form.formState.isValid}>
+            <Save className="mr-2 h-4 w-4" /> {isSubmitting ? "Сохранение..." : (initialData ? "Сохранить изменения" : "Сохранить валюту")}
           </Button>
         </div>
-      </form>
-    </Form>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Название</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Евро" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="isoCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Код валюты (ISO)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="EUR" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="symbol"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Символ</FormLabel>
+                    <FormControl>
+                      <Input placeholder="€" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="exchangeRate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Курс обмена</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.0001"
+                        placeholder="1.0"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            <FormItem>
+              <FormLabel>Предпросмотр</FormLabel>
+              <div className="flex items-center gap-2 bg-muted/30 p-3 rounded-md">
+                <CreditCard className="h-5 w-5 text-primary" />
+                <span className="font-medium">{form.watch("name") || "Название валюты"}</span>
+                <span className="text-lg font-medium">{form.watch("symbol") || "$"}</span>
+                <span className="text-sm text-muted-foreground">Код: {form.watch("isoCode") || "USD"}</span>
+                <span className="text-sm text-muted-foreground">Курс: {form.watch("exchangeRate") || "1.0"}</span>
+              </div>
+            </FormItem>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,0 +1,48 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\stage-options-list.tsx",
+  "props": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "stageId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "orderCurrency",
+      "type": "string",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/button",
+    "@/lib/types/stage",
+    "@/hooks/use-toast",
+    "lucide-react",
+    "./stage-option-form",
+    "@/components/ui/alert-dialog"
+  ],
+  "history": [
+    {
+      "date": "2025-05-27",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

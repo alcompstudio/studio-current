@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sequelize } from '@/lib/db';
 import { QueryTypes } from 'sequelize';
-import { Stage, CreateStageDto, WorkType } from '@/lib/types/stage';
+import { Stage, CreateStageDto } from '@/lib/types/stage';
 import { z } from 'zod';
 
 // Validation schema for creating a stage
 const createStageSchema = z.object({
   name: z.string().min(1, 'Название этапа обязательно'),
-  description: z.string().optional(),
-  sequence: z.number().int().positive().optional(),
-  color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional(),
-  workType: z.enum(['Параллельный', 'Последовательный'] as const).optional(),
-  estimatedPrice: z.number().positive().optional(),
+  description: z.string().optional().nullable(),
+  sequence: z.number().int().positive().optional().nullable(),
+  color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/).optional().nullable(),
+  workType: z.number().int().positive().optional().nullable(),
+  estimatedPrice: z.number().positive().optional().nullable(),
 });
 
 // Временно убираем тип с опциями
@@ -95,9 +95,24 @@ export async function POST(
   try {
     // Validate request body
     const body = await request.json();
-    const validation = createStageSchema.safeParse(body);
+    
+    // Логируем полученные данные для отладки
+    console.log('[API_STAGES] Полученные данные:', body);
+    
+    // Преобразование типов данных
+    const processedBody = {
+      ...body,
+      sequence: body.sequence ? Number(body.sequence) : null,
+      workType: body.workType ? Number(body.workType) : null,
+      estimatedPrice: body.estimatedPrice ? Number(body.estimatedPrice) : null
+    };
+    
+    console.log('[API_STAGES] Обработанные данные:', processedBody);
+    
+    const validation = createStageSchema.safeParse(processedBody);
 
     if (!validation.success) {
+      console.log('[API_STAGES] Ошибка валидации:', validation.error.format());
       return NextResponse.json(
         { 
           error: 'Ошибка валидации',
@@ -148,7 +163,7 @@ export async function POST(
             description: data.description || null,
             sequence: data.sequence || null,
             color: data.color || null,
-            workType: data.workType || null,
+            workType: data.workType ? parseInt(data.workType.toString(), 10) : null, // Преобразование в число
             estimatedPrice: data.estimatedPrice || null,
           },
           type: QueryTypes.INSERT,

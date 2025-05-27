@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { WorkType, Stage } from '@/lib/types/stage';
+import { Stage, WorkTypeOption } from '@/lib/types/stage';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
@@ -32,7 +32,7 @@ const stageFormSchema = z.object({
   description: z.string().optional(),
   sequence: z.coerce.number().int().positive().optional().nullable(),
   color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Неверный формат цвета (например, #FF5733)').optional().nullable(),
-  workType: z.enum(['Параллельный', 'Последовательный'] as const).optional().nullable(),
+  workType: z.coerce.number().optional().nullable(),
   estimatedPrice: z.coerce.number().positive().optional().nullable(),
   status: z.string().optional()
 });
@@ -56,6 +56,8 @@ const StageForm: React.FC<StageFormProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nextSequence, setNextSequence] = useState<number | null>(null);
+  const [workTypes, setWorkTypes] = useState<WorkTypeOption[]>([]);
+  const [isLoadingWorkTypes, setIsLoadingWorkTypes] = useState(false);
   const { toast } = useToast();
   
   // Запрос следующего порядкового номера при создании нового этапа
@@ -64,6 +66,11 @@ const StageForm: React.FC<StageFormProps> = ({
       fetchNextSequence();
     }
   }, [orderId, stageToEdit]);
+  
+  // Загрузка типов работы при монтировании компонента
+  useEffect(() => {
+    fetchWorkTypes();
+  }, []);
 
   // Функция для получения следующего порядкового номера
   const fetchNextSequence = async () => {
@@ -78,6 +85,29 @@ const StageForm: React.FC<StageFormProps> = ({
       }
     } catch (error) {
       console.error('Ошибка при получении следующего номера этапа:', error);
+    }
+  };
+  
+  // Функция для загрузки типов работы
+  const fetchWorkTypes = async () => {
+    setIsLoadingWorkTypes(true);
+    try {
+      const response = await fetch('/api/stage-work-types-os');
+      if (response.ok) {
+        const data = await response.json();
+        setWorkTypes(data);
+      } else {
+        console.error('Ошибка при получении типов работы');
+      }
+    } catch (error) {
+      console.error('Ошибка при получении типов работы:', error);
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось загрузить типы работы',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoadingWorkTypes(false);
     }
   };
   
@@ -270,15 +300,31 @@ const StageForm: React.FC<StageFormProps> = ({
                   <FormLabel>Тип работы</FormLabel>
                   <FormControl>
                     <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value || undefined}
+                      onValueChange={(value) => field.onChange(parseInt(value))} 
+                      value={field.value?.toString() || undefined}
+                      disabled={isLoadingWorkTypes}
                     >
                     <SelectTrigger>
-                      <SelectValue placeholder="Выберите тип работы" />
+                      {isLoadingWorkTypes ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <span>Загрузка типов работы...</span>
+                        </div>
+                      ) : (
+                        <SelectValue placeholder="Выберите тип работы" />
+                      )}
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Параллельный">Параллельный</SelectItem>
-                      <SelectItem value="Последовательный">Последовательный</SelectItem>
+                      {workTypes.map((type) => (
+                        <SelectItem key={type.id} value={type.id.toString()}>
+                          {type.name}
+                        </SelectItem>
+                      ))}
+                      {workTypes.length === 0 && !isLoadingWorkTypes && (
+                        <div className="py-2 px-3 text-sm text-muted-foreground">
+                          Типы работы не найдены
+                        </div>
+                      )}
                     </SelectContent>
                   </Select>
                   </FormControl>

@@ -25,6 +25,8 @@ flowchart TD
     order_stages_tab_tsx --> stage_form
     delete_stage_button[./delete-stage-button]
     order_stages_tab_tsx --> delete_stage_button
+    stage_options_list[./stage-options-list]
+    order_stages_tab_tsx --> stage_options_list
     utils[@/lib/utils]
     order_stages_tab_tsx --> utils
 ```

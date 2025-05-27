@@ -220,20 +220,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     // Группа "Набор опций" - видима только для администраторов
     const optionsSetGroup: NavItem[] = [
       {
-        href: "/settings/project-statuses",
-        label: "Статусы проектов",
+        href: "/settings/projects",
+        label: "Проекты",
         icon: Briefcase,
         roles: ["Администратор"],
       },
       {
-        href: "/settings/order-statuses",
-        label: "Статусы заказов",
+        href: "/settings/orders",
+        label: "Заказы",
         icon: FileText,
         roles: ["Администратор"],
       },
       {
-        href: "/settings/currencies",
-        label: "Валюты",
+        href: "/settings/stages",
+        label: "Этапы",
+        icon: ClipboardList,
+        roles: ["Администратор"],
+      },
+      {
+        href: "/settings/finance",
+        label: "Финансы",
         icon: DollarSign,
         roles: ["Администратор"],
       },

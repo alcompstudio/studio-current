@@ -5,27 +5,18 @@
   "tags": [],
   "maintainer": "AI Agent / Auto-generated",
   "type": "ReactComponent",
-  "path": "app\\(app)\\settings\\project-statuses\\new\\page.tsx",
+  "path": "app\\(app)\\settings\\stages\\page.tsx",
   "props": [],
   "params": [],
   "returnType": "React.JSX.Element",
   "dependencies": [
     "react",
-    "@/components/ui/card",
-    "@/components/ui/button",
-    "lucide-react",
     "next/link",
-    "next/navigation",
-    "react-hook-form",
-    "@hookform/resolvers/zod",
-    "zod",
-    "@/components/ui/form",
-    "@/components/ui/input",
-    "@/hooks/use-toast"
+    "@/components/settings/stages/stage-work-types-content"
   ],
   "history": [
     {
-      "date": "2025-05-26",
+      "date": "2025-05-27",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

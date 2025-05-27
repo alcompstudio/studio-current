@@ -1,0 +1,24 @@
+{
+  "component": "StageWorkTypeOS",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Class",
+  "path": "lib\\models\\StageWorkTypeOS.ts",
+  "props": [],
+  "params": [],
+  "returnType": "",
+  "dependencies": [
+    "sequelize",
+    "sequelize"
+  ],
+  "history": [
+    {
+      "date": "2025-05-27",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

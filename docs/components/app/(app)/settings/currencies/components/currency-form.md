@@ -23,10 +23,14 @@ flowchart TD
     currency_form_tsx --> form
     input[@/components/ui/input]
     currency_form_tsx --> input
-    use_toast[@/components/ui/use-toast]
+    use_toast[@/hooks/use-toast]
     currency_form_tsx --> use_toast
     currency[@/types/currency]
     currency_form_tsx --> currency
+    card[@/components/ui/card]
+    currency_form_tsx --> card
+    lucide_react[lucide-react]
+    currency_form_tsx --> lucide_react
 ```
 
 ### `CurrencyForm` (ReactComponent)
@@ -35,8 +39,9 @@ flowchart TD
 
 | Имя | Тип | Обязательный | Описание |
 |---|---|---|---|
-| `currency` | `Currency` | Нет |  |
-| `isEditing` | `boolean` | Нет |  |
+| `initialData` | `Currency \| null` | Нет |  |
+| `onSave` | `() => void` | Да |  |
+| `onCancel` | `() => void` | Да |  |
 
 **Возвращает:** `React.JSX.Element`
 
