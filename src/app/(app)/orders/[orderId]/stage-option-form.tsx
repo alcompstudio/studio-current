@@ -27,25 +27,24 @@ import { StageOption } from '@/lib/types/stage';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+// Тип для опций из таблицы pricing_type_os
+interface PricingTypeOption {
+  id: number;
+  name: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 // Схема валидации формы
 const stageOptionFormSchema = z.object({
   name: z.string().min(1, 'Название опции обязательно'),
   description: z.string().optional(),
-  pricing_type: z.enum(['calculable', 'included']),
+  pricing_type_id: z.coerce.number().min(1, 'Тип ценообразования обязателен'),
   volume_min: z.coerce.number().nullable().optional(),
   volume_max: z.coerce.number().nullable().optional(),
   volume_unit: z.string().nullable().optional(),
   nominal_volume: z.coerce.number().nullable().optional(),
   price_per_unit: z.coerce.number().nullable().optional(),
-}).refine(data => {
-  // Если выбран тип 'calculable', то номинальный объем и цена должны быть указаны
-  if (data.pricing_type === 'calculable') {
-    return data.nominal_volume != null && data.price_per_unit != null;
-  }
-  return true;
-}, {
-  message: 'Для калькулируемой опции необходимо указать номинальный объем и цену за единицу',
-  path: ['pricing_type']
 });
 
 export type StageOptionFormValues = z.infer<typeof stageOptionFormSchema>;
@@ -77,7 +76,7 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
     defaultValues: {
       name: optionToEdit?.name || '',
       description: optionToEdit?.description || '',
-      pricing_type: optionToEdit?.pricing_type || 'included',
+      pricing_type_id: optionToEdit?.pricing_type_id || undefined,
       volume_min: optionToEdit?.volume_min || null,
       volume_max: optionToEdit?.volume_max || null,
       volume_unit: optionToEdit?.volume_unit || null,
@@ -87,14 +86,74 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
   });
   
   // Следим за типом ценообразования, чтобы показывать/скрывать поля
-  const pricingType = form.watch('pricing_type');
+  const pricingTypeId = form.watch('pricing_type_id');
+  const [pricingTypes, setPricingTypes] = useState<Array<{id: number, name: string}>>([]);
+  const [isLoadingPricingTypes, setIsLoadingPricingTypes] = useState(false);
+  const selectedPricingType = pricingTypes.find(pt => pt.id === pricingTypeId);
+  const isCalculable = selectedPricingType?.name === 'calculable' || selectedPricingType?.name === 'Калькулируемая';
   
+  // Загрузка типов ценообразования
+  useEffect(() => {
+    const fetchPricingTypes = async () => {
+      setIsLoadingPricingTypes(true);
+      try {
+        const response = await fetch('/api/pricing-types');
+        if (!response.ok) {
+          throw new Error('Не удалось загрузить типы ценообразования');
+        }
+        const data = await response.json();
+        setPricingTypes(data);
+        
+        if (optionToEdit && data.length > 0) {
+          // Если у опции уже есть pricing_type_id, используем его
+          if (optionToEdit.pricing_type_id) {
+            form.setValue('pricing_type_id', optionToEdit.pricing_type_id);
+          } 
+          // Если есть только старое поле pricing_type, ищем соответствующий id
+          else if (optionToEdit.pricing_type) {
+            // Ищем по английскому названию или русскому аналогу
+            const typeToSet = data.find((pt: {id: number, name: string}) => 
+              pt.name === optionToEdit.pricing_type || 
+              (optionToEdit.pricing_type === 'calculable' && pt.name === 'Калькулируемая') ||
+              (optionToEdit.pricing_type === 'included' && pt.name === 'Входит в стоимость')
+            );
+            if (typeToSet) {
+              form.setValue('pricing_type_id', typeToSet.id);
+            } else {
+              // Если тип из optionToEdit не найден, ставим первый из списка
+              form.setValue('pricing_type_id', data[0].id);
+            }
+          }
+        } else if (!optionToEdit && data.length > 0) {
+          // Если создаем новую опцию, устанавливаем 'Входит в стоимость' по умолчанию
+          const defaultType = data.find((pt: {id: number, name: string}) => 
+            pt.name === 'Входит в стоимость' || pt.name === 'included'
+          ) || data[0];
+          form.setValue('pricing_type_id', defaultType.id);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке типов ценообразования:', error);
+        toast({
+          title: 'Ошибка загрузки',
+          description: 'Не удалось загрузить типы ценообразования.',
+          variant: 'destructive',
+        });
+      }
+      setIsLoadingPricingTypes(false);
+    };
+    
+    fetchPricingTypes();
+  }, [optionToEdit, form, toast]);
+
   // Функция для расчета стоимости
   const calculatePrices = useCallback(() => {
     const values = form.getValues();
+    const currentPricingTypeId = values.pricing_type_id;
+    const currentPricingType = pricingTypes.find(pt => pt.id === currentPricingTypeId);
+    const currentIsCalculable = currentPricingType?.name === 'Калькулируемая' || currentPricingType?.name === 'calculable';
     
-    // Если тип ценообразования не "calculable", то не рассчитываем
-    if (values.pricing_type !== 'calculable') {
+    // Если тип ценообразования не "Калькулируемая", то не рассчитываем
+    if (!currentIsCalculable) {
       setCalculatedPrices({ min: null, max: null });
       return;
     }
@@ -122,12 +181,12 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
     }
     
     setCalculatedPrices({ min: minPrice, max: maxPrice });
-  }, [form]);
+  }, [form, pricingTypes]);
   
   // Реализуем динамический расчет при изменении любого поля формы
   useEffect(() => {
-    // Подписываемся на изменения любого поля формы
-    const subscription = form.watch(() => {
+    // Подписываемся на изменения всех полей, которые влияют на расчет
+    const subscription = form.watch((values) => {
       // Вызываем расчет немедленно
       calculatePrices();
     });
@@ -137,7 +196,7 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
     
     // Отписываемся при размонтировании
     return () => subscription.unsubscribe();
-  }, [form, calculatePrices]);
+  }, [form, calculatePrices, pricingTypes]); // Добавлены pricingTypes в зависимости
   
   // Функция отправки формы
   const onSubmit = async (values: StageOptionFormValues) => {
@@ -229,13 +288,14 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
           
           <FormField
             control={form.control}
-            name="pricing_type"
+            name="pricing_type_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Тип ценообразования*</FormLabel>
                 <Select 
-                  onValueChange={field.onChange} 
-                  defaultValue={field.value}
+                  onValueChange={(value) => field.onChange(parseInt(value, 10))} 
+                  value={field.value?.toString() || ""}
+                  disabled={isLoadingPricingTypes}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -243,8 +303,11 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="included">Входит в стоимость</SelectItem>
-                    <SelectItem value="calculable">Калькулируемая</SelectItem>
+                    {pricingTypes.map((type) => (
+                      <SelectItem key={type.id} value={type.id.toString()}>
+                        {type.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormDescription>
@@ -256,7 +319,10 @@ const StageOptionForm: React.FC<StageOptionFormProps> = ({
             )}
           />
           
-          {pricingType === 'calculable' && (
+          {/* Используем динамическую проверку на калькулируемую опцию */}
+          {form.watch('pricing_type_id') && pricingTypes.some(pt => 
+            pt.id === form.watch('pricing_type_id') && 
+            (pt.name === 'Калькулируемая' || pt.name === 'calculable')) && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField

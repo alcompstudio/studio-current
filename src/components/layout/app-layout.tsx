@@ -238,6 +238,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         roles: ["Администратор"],
       },
       {
+        href: "/settings/pricing-options",
+        label: "Опции",
+        icon: Settings,
+        roles: ["Администратор"],
+      },
+      {
         href: "/settings/finance",
         label: "Финансы",
         icon: DollarSign,

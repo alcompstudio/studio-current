@@ -1,0 +1,34 @@
+{
+  "component": "PricingTypesContent",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\settings\\pricing-options\\pricing-types-content.tsx",
+  "props": [],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "@/components/ui/button",
+    "@/components/ui/card",
+    "lucide-react",
+    "@/components/ui/alert-dialog",
+    "next/navigation",
+    "@/components/status/view-toggle",
+    "@/hooks/use-toast",
+    "./pricing-type-form",
+    "./pricing-types-table",
+    "./pricing-type-card",
+    "@/types/pricing"
+  ],
+  "history": [
+    {
+      "date": "2025-05-28",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -103,8 +103,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Название опции обязательно' }, { status: 400 });
     }
     
-    // Если тип 'calculable', то проверяем наличие необходимых полей
-    if (data.pricing_type === 'calculable') {
+    // Проверяем калькулируемый тип (новый способ через pricing_type_id или старый через pricing_type)
+    const priceTypeIsCalculable = 
+      (data.pricing_type_id === 1) || // ID=1 для Калькулируемая (предполагаем, что в базе данных)
+      (data.pricing_type === 'calculable') || 
+      (data.pricing_type === 'Калькулируемая');
+    
+    // Если тип калькулируемый, то проверяем наличие необходимых полей
+    if (priceTypeIsCalculable) {
       if (data.nominal_volume === null || data.nominal_volume === undefined) {
         return NextResponse.json({ error: 'Для калькулируемой опции необходимо указать номинальный объем' }, { status: 400 });
       }
@@ -118,7 +124,8 @@ export async function PUT(
     const updateData = {
       name: data.name,
       description: data.description !== undefined ? data.description : existingOption.description,
-      pricing_type: data.pricing_type || existingOption.pricing_type,
+      pricing_type: data.pricing_type || existingOption.pricing_type, // Сохраняем для обратной совместимости
+      pricing_type_id: data.pricing_type_id !== undefined ? data.pricing_type_id : existingOption.pricing_type_id, // Новое поле
       volume_min: data.volume_min !== undefined ? data.volume_min : existingOption.volume_min,
       volume_max: data.volume_max !== undefined ? data.volume_max : existingOption.volume_max,
       volume_unit: data.volume_unit !== undefined ? data.volume_unit : existingOption.volume_unit,
@@ -130,31 +137,49 @@ export async function PUT(
     let calculated_price_min = null;
     let calculated_price_max = null;
     
-    if (updateData.pricing_type === 'calculable' && updateData.nominal_volume && updateData.price_per_unit) {
+    // Проверяем калькулируемый тип по новому или старому полю
+    const isCalculable = 
+      (updateData.pricing_type_id === 1) || // ID=1 для Калькулируемая
+      (updateData.pricing_type === 'calculable') || 
+      (updateData.pricing_type === 'Калькулируемая');
+    
+    if (isCalculable && updateData.nominal_volume && updateData.price_per_unit) {
+      console.log('Рассчитываем стоимость для калькулируемой опции при обновлении:', {
+        pricing_type: updateData.pricing_type,
+        pricing_type_id: updateData.pricing_type_id,
+        volume_min: updateData.volume_min,
+        volume_max: updateData.volume_max,
+        nominal_volume: updateData.nominal_volume,
+        price_per_unit: updateData.price_per_unit
+      });
+      
       if (updateData.volume_min !== null) {
         calculated_price_min = (updateData.volume_min / updateData.nominal_volume) * updateData.price_per_unit;
+        console.log('Рассчитанная минимальная стоимость:', calculated_price_min);
       }
       
       if (updateData.volume_max !== null) {
         calculated_price_max = (updateData.volume_max / updateData.nominal_volume) * updateData.price_per_unit;
+        console.log('Рассчитанная максимальная стоимость:', calculated_price_max);
       }
     }
     
     // Обновляем запись в БД
     const result = await db.sequelize.query(
       `UPDATE order_stage_options 
-      SET name = $1, description = $2, pricing_type = $3, 
-          volume_min = $4, volume_max = $5, volume_unit = $6, 
-          nominal_volume = $7, price_per_unit = $8, 
-          calculated_price_min = $9, calculated_price_max = $10,
+      SET name = $1, description = $2, pricing_type = $3, pricing_type_id = $4,
+          volume_min = $5, volume_max = $6, volume_unit = $7, 
+          nominal_volume = $8, price_per_unit = $9, 
+          calculated_price_min = $10, calculated_price_max = $11,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id::text = $11 AND order_stage_id::text = $12
+      WHERE id::text = $12 AND order_stage_id::text = $13
       RETURNING *`,
       { 
         bind: [
           updateData.name,
           updateData.description,
           updateData.pricing_type,
+          updateData.pricing_type_id,
           updateData.volume_min,
           updateData.volume_max,
           updateData.volume_unit,

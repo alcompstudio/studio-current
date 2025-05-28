@@ -211,7 +211,8 @@ const StageOptionsList: React.FC<StageOptionsListProps> = ({
                 {/* Строка с ценой */}
                 <div className="mb-1">
                   <span className="text-muted-foreground">Цена: </span>
-                  {option.pricing_type === 'calculable' ? (
+                  {/* Проверяем новое поле pricing_type_id или старое pricing_type */}
+                  {(option.pricing_type_id === 1 || option.pricing_type === 'calculable') ? (
                     <span className="font-medium">Калькулируемая, {option.price_per_unit} {orderCurrency} за {option.nominal_volume} {option.volume_unit}</span>
                   ) : (
                     <span className="font-medium">Входит в стоимость</span>
@@ -219,7 +220,7 @@ const StageOptionsList: React.FC<StageOptionsListProps> = ({
                 </div>
                 
                 {/* Расчетная стоимость для калькулируемых опций */}
-                {option.pricing_type === 'calculable' && (
+                {(option.pricing_type_id === 1 || option.pricing_type === 'calculable') && (
                   <div className="mt-1 p-1.5 bg-primary/10 rounded">
                     <span className="text-muted-foreground">Расчетная стоимость: </span>
                     <span className="font-medium">

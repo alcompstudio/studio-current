@@ -1,0 +1,23 @@
+{
+  "component": "PricingTypeOs",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "Class",
+  "path": "lib\\models\\PricingTypeOs.ts",
+  "props": [],
+  "params": [],
+  "returnType": "",
+  "dependencies": [
+    "sequelize"
+  ],
+  "history": [
+    {
+      "date": "2025-05-28",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

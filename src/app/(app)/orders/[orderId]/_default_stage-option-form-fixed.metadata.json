@@ -1,0 +1,71 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\stage-option-form-fixed.tsx",
+  "props": [
+    {
+      "name": "orderId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "stageId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "optionToEdit",
+      "type": "StageOption | null",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "onSuccess",
+      "type": "() => void",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "orderCurrency",
+      "type": "string",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "zod",
+    "react-hook-form",
+    "@hookform/resolvers/zod",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/components/ui/textarea",
+    "@/components/ui/button",
+    "@/components/ui/select",
+    "@/lib/types/stage",
+    "@/hooks/use-toast",
+    "lucide-react"
+  ],
+  "history": [
+    {
+      "date": "2025-05-28",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

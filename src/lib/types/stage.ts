@@ -25,7 +25,8 @@ export interface StageOption {
   order_stage_id: string;
   name: string;
   description?: string | null;
-  pricing_type: 'calculable' | 'included'; // Тип ценообразования: Калькулируемая или Входит в стоимость
+  pricing_type?: 'calculable' | 'included'; // Устаревшее: Тип ценообразования (для обратной совместимости)
+  pricing_type_id?: number; // Новое: ID типа ценообразования из таблицы pricing_type_os
   // Поля для диапазона объема
   volume_min?: number | null;
   volume_max?: number | null;

@@ -1,0 +1,158 @@
+{
+  "component": "DELETE",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\api\\settings\\pricing-types-os\\[id]\\route.ts",
+  "props": [
+    {
+      "name": "cache",
+      "type": "RequestCache",
+      "description": "Returns the cache mode associated with request, which is a string indicating how the request will interact with the browser's cache when fetching.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/cache)",
+      "required": true
+    },
+    {
+      "name": "credentials",
+      "type": "RequestCredentials",
+      "description": "Returns the credentials mode associated with request, which is a string indicating whether credentials will be sent with the request always, never, or only when sent to a same-origin URL.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/credentials)",
+      "required": true
+    },
+    {
+      "name": "destination",
+      "type": "RequestDestination",
+      "description": "Returns the kind of resource requested by request, e.g., \"document\" or \"script\".\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/destination)",
+      "required": true
+    },
+    {
+      "name": "headers",
+      "type": "Headers",
+      "description": "Returns a Headers object consisting of the headers associated with request. Note that headers added in the network layer by the user agent will not be accounted for in this object, e.g., the \"Host\" header.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/headers)",
+      "required": true
+    },
+    {
+      "name": "integrity",
+      "type": "string",
+      "description": "Returns request's subresource integrity metadata, which is a cryptographic hash of the resource being fetched. Its value consists of multiple hashes separated by whitespace. [SRI]\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/integrity)",
+      "required": true
+    },
+    {
+      "name": "keepalive",
+      "type": "boolean",
+      "description": "Returns a boolean indicating whether or not request can outlive the global in which it was created.",
+      "required": true
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "description": "Returns request's HTTP method, which is \"GET\" by default.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/method)",
+      "required": true
+    },
+    {
+      "name": "mode",
+      "type": "RequestMode",
+      "description": "Returns the mode associated with request, which is a string indicating whether the request will use CORS, or will be restricted to same-origin URLs.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/mode)",
+      "required": true
+    },
+    {
+      "name": "redirect",
+      "type": "RequestRedirect",
+      "description": "Returns the redirect mode associated with request, which is a string indicating how redirects for the request will be handled during fetching. A request will follow redirects by default.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/redirect)",
+      "required": true
+    },
+    {
+      "name": "referrer",
+      "type": "string",
+      "description": "Returns the referrer of request. Its value can be a same-origin URL if explicitly set in init, the empty string to indicate no referrer, and \"about:client\" when defaulting to the global's default. This is used during fetching to determine the value of the `Referer` header of the request being made.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/referrer)",
+      "required": true
+    },
+    {
+      "name": "referrerPolicy",
+      "type": "ReferrerPolicy",
+      "description": "Returns the referrer policy associated with request. This is used during fetching to compute the value of the request's referrer.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/referrerPolicy)",
+      "required": true
+    },
+    {
+      "name": "signal",
+      "type": "AbortSignal",
+      "description": "Returns the signal associated with request, which is an AbortSignal object indicating whether or not request has been aborted, and its abort event handler.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/signal)",
+      "required": true
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "description": "Returns the URL of request as a string.\n\n[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/url)",
+      "required": true
+    },
+    {
+      "name": "clone",
+      "type": "() => Request",
+      "description": "[MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/clone)",
+      "required": true
+    },
+    {
+      "name": "body",
+      "type": "ReadableStream<Uint8Array>|null",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "bodyUsed",
+      "type": "boolean",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "arrayBuffer",
+      "type": "() => Promise<ArrayBuffer>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "blob",
+      "type": "() => Promise<Blob>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "bytes",
+      "type": "() => Promise<Uint8Array<ArrayBufferLike>>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "formData",
+      "type": "() => Promise<FormData>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "json",
+      "type": "() => Promise<any>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "text",
+      "type": "() => Promise<string>",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "Promise<import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<{ error: string; }> | import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<{ success: boolean; }>>",
+  "dependencies": [
+    "next/server",
+    "@/lib/db",
+    "zod"
+  ],
+  "history": [
+    {
+      "date": "2025-05-28",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

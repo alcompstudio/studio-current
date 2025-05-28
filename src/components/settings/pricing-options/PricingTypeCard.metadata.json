@@ -1,0 +1,45 @@
+{
+  "component": "PricingTypeCard",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\settings\\pricing-options\\pricing-type-card.tsx",
+  "props": [
+    {
+      "name": "item",
+      "type": "PricingType",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onEdit",
+      "type": "(item: PricingType) => void",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onDelete",
+      "type": "(id: number) => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/button",
+    "@/components/ui/card",
+    "lucide-react",
+    "@/types/pricing"
+  ],
+  "history": [
+    {
+      "date": "2025-05-28",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

@@ -1,0 +1,355 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Plus,
+  Edit,
+  Trash2,
+  AlertTriangle,
+  Loader2,
+} from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useRouter } from 'next/navigation';
+import { ViewToggle } from '@/components/status/view-toggle';
+import { useToast } from '@/hooks/use-toast';
+
+// Импортируем компоненты
+import { PricingTypeForm } from './pricing-type-form';
+import { PricingTypesTable } from './pricing-types-table';
+import { PricingTypeCard } from './pricing-type-card';
+import { PricingType } from '@/types/pricing';
+
+export function PricingTypesContent() {
+  const { toast } = useToast();
+  const router = useRouter();
+  const [pricingTypes, setPricingTypes] = useState<PricingType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<"grid" | "table">("table");
+  const [showForm, setShowForm] = useState(false);
+  const [editingPricingType, setEditingPricingType] = useState<PricingType | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [pricingTypeToDelete, setPricingTypeToDelete] = useState<PricingType | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Загрузка типов ценообразования при монтировании компонента
+  useEffect(() => {
+    fetchPricingTypes();
+  }, []);
+
+  // Функция для загрузки типов ценообразования из БД
+  const fetchPricingTypes = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Запрашиваем данные из таблицы pricing_type_os
+      // В реальном приложении здесь будет запрос к API
+      // const response = await fetch('/api/settings/pricing-types-os');
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(errorData.error || `Ошибка загрузки типов ценообразования: ${response.statusText}`);
+      // }
+      // const data = await response.json();
+      
+      // Фактические данные из таблицы pricing_type_os
+      const mockData: PricingType[] = [
+        { 
+          id: 1, 
+          name: 'Калькулируемая'
+        },
+        { 
+          id: 2, 
+          name: 'Входит в стоимость'
+        }
+      ];
+      
+      setPricingTypes(mockData);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Произошла неизвестная ошибка");
+      }
+      console.error("Ошибка при загрузке типов ценообразования:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Функция для открытия диалога подтверждения удаления
+  const openDeleteDialog = (pricingType: PricingType) => {
+    setPricingTypeToDelete(pricingType);
+    setDeleteDialogOpen(true);
+  };
+
+  // Функция удаления типа ценообразования
+  const handleDelete = async () => {
+    if (!pricingTypeToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      // В реальном приложении здесь будет запрос к API
+      // const response = await fetch(`/api/settings/pricing-types-os/${pricingTypeToDelete.id}`, {
+      //   method: "DELETE",
+      // });
+      //
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(
+      //     errorData.error || `Ошибка удаления типа ценообразования: ${response.statusText}`
+      //   );
+      // }
+
+      // Оптимистично удаляем из UI
+      setPricingTypes(pricingTypes.filter(type => type.id !== pricingTypeToDelete.id));
+      
+      toast({
+        title: "Тип ценообразования удален",
+        description: `Тип ценообразования "${pricingTypeToDelete.name}" успешно удален`,
+      });
+      
+      router.refresh(); // Обновляем данные на странице
+    } catch (error) {
+      console.error("Не удалось удалить тип ценообразования:", error);
+      const errorMessage = error instanceof Error ? error.message : "Произошла неизвестная ошибка";
+      toast({
+        title: "Ошибка удаления типа ценообразования",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setPricingTypeToDelete(null);
+    }
+  };
+
+  // Функция для сохранения типа ценообразования (создание или редактирование)
+  const handleSavePricingType = async (data: PricingTypeFormData) => {
+    setIsSubmitting(true);
+    const isEdit = !!editingPricingType;
+
+    try {
+      // В реальном приложении здесь будет запрос к API
+      // const method = isEdit ? 'PUT' : 'POST';
+      // const url = isEdit 
+      //   ? `/api/settings/pricing-types-os/${editingPricingType?.id}`
+      //   : '/api/settings/pricing-types-os';
+      
+      // const response = await fetch(url, {
+      //   method,
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data),
+      // });
+      
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   throw new Error(
+      //     errorData.error || `Ошибка сохранения типа ценообразования: ${response.statusText}`
+      //   );
+      // }
+      
+      // const savedPricingType = await response.json();
+
+      // Имитация ответа от сервера
+      const savedPricingType = isEdit
+        ? { 
+            ...editingPricingType, 
+            ...data,
+            updated_at: new Date().toISOString()
+          }
+        : { 
+            ...data, 
+            id: Math.max(0, ...pricingTypes.map(t => t.id)) + 1,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+
+      // Обновляем состояние
+      if (isEdit) {
+        setPricingTypes(pricingTypes.map(pt => 
+          pt.id === (savedPricingType as PricingType).id ? (savedPricingType as PricingType) : pt
+        ));
+      } else {
+        setPricingTypes([...pricingTypes, savedPricingType as PricingType]);
+      }
+
+      toast({
+        title: "Успешно",
+        description: `Тип ценообразования успешно ${isEdit ? 'обновлен' : 'добавлен'}`,
+      });
+
+      setShowForm(false);
+      setEditingPricingType(null);
+    } catch (error) {
+      console.error("Ошибка при сохранении типа ценообразования:", error);
+      const errorMessage = error instanceof Error ? error.message : "Произошла неизвестная ошибка";
+      toast({
+        title: "Ошибка сохранения",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="flex flex-col gap-6">
+        {/* Заголовок страницы */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Типы ценообразования</h2>
+            <p className="text-sm text-muted-foreground">
+              Управление типами ценообразования
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {!showForm && <ViewToggle view={view} onViewChange={setView} />}
+            {!showForm && (
+              <Button onClick={() => { 
+                setEditingPricingType(null); 
+                setShowForm(true); 
+              }}>
+                <Plus className="w-4 h-4 mr-2" /> Добавить тип
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Форма или список типов ценообразования */}
+        <div>
+          {showForm ? (
+            <PricingTypeForm 
+              open={showForm}
+              onOpenChange={setShowForm}
+              onSubmit={handleSavePricingType}
+              isSubmitting={isSubmitting}
+              initialData={editingPricingType || {}}
+            />
+          ) : isLoading ? (
+            <Card className="shadow-sm border-none">
+              <CardContent className="flex items-center justify-center gap-2 py-6 text-muted-foreground">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <p>Загрузка типов ценообразования...</p>
+              </CardContent>
+            </Card>
+          ) : error ? (
+            <Card className="shadow-sm border-destructive bg-destructive/10">
+              <CardContent className="flex items-center gap-2 text-destructive py-4">
+                <AlertTriangle className="h-5 w-5" />
+                <p className="text-sm font-semibold">
+                  Ошибка загрузки типов ценообразования: {error}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            view === "table" ? (
+              <PricingTypesTable 
+                items={pricingTypes} 
+                onDelete={(id: number) => {
+                  const pricingType = pricingTypes.find(t => t.id === id);
+                  if (pricingType) openDeleteDialog(pricingType);
+                }} 
+                onEdit={(pricingType: PricingType) => {
+                  setEditingPricingType(pricingType);
+                  setShowForm(true);
+                }}
+              />
+            ) : ( 
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {pricingTypes.length > 0 ? pricingTypes.map((pricingType) => (
+                  <PricingTypeCard 
+                    key={pricingType.id}
+                    item={pricingType}
+                    onEdit={(item) => {
+                      setEditingPricingType(item);
+                      setShowForm(true);
+                    }} 
+                    onDelete={(id) => {
+                      const pricingType = pricingTypes.find(t => t.id === id);
+                      if (pricingType) openDeleteDialog(pricingType);
+                    }}
+                  />
+                )) : (
+                  <Card className="col-span-full border-none shadow-sm">
+                    <CardContent className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
+                      <p className="mb-4">Типы ценообразования не найдены</p>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          setEditingPricingType(null);
+                          setShowForm(true);
+                        }}
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Добавить новый тип
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* Диалог подтверждения удаления */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Вы уверены, что хотите удалить этот тип ценообразования?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {pricingTypeToDelete && (
+                <>
+                  Тип ценообразования "<strong>{pricingTypeToDelete.name}</strong>" будет удален. 
+                  Это действие нельзя отменить.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>
+              Отмена
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete();
+              }}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Удаление...
+                </>
+              ) : "Удалить"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
