@@ -1,4 +1,4 @@
-const { sequelize } = require('../src/lib/db');
+const { sequelize } = require('../src/lib/db.ts');
 const fs = require('fs');
 const path = require('path');
 

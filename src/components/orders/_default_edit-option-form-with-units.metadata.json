@@ -1,0 +1,64 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\orders\\edit-option-form-with-units.tsx",
+  "props": [
+    {
+      "name": "etapId",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "option",
+      "type": "StageOption",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onOptionUpdated",
+      "type": "(updatedOption: StageOption) => void",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "react-hook-form",
+    "@hookform/resolvers/zod",
+    "zod",
+    "@/components/ui/form",
+    "@/components/ui/input",
+    "@/components/ui/textarea",
+    "@/components/ui/button",
+    "@/components/ui/select",
+    "@/lib/types/stage",
+    "@/hooks/use-toast"
+  ],
+  "history": [
+    {
+      "date": "2025-05-29",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

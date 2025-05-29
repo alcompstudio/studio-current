@@ -14,43 +14,43 @@ export default function FinancePage() {
   const currency = "USD";
 
   return (
-    <div className="flex flex-col gap-6" data-oid="p68mhsl">
-      <div className="flex items-center justify-between" data-oid="ipz6_nq">
-        <h2 className="text-2xl font-bold tracking-tight" data-oid="gan13nr">
+    <div className="flex flex-col gap-6" data-oid="746lyp1">
+      <div className="flex items-center justify-between" data-oid="lgmb.2u">
+        <h2 className="text-2xl font-bold tracking-tight" data-oid="mfvyd86">
           Finance Overview
         </h2>
-        <div className="flex gap-2" data-oid="c8tt4bx">
+        <div className="flex gap-2" data-oid="65z2k-0">
           {/* Add role specific actions if needed */}
-          <Button variant="outline" data-oid="_a5r2gg">
-            <Download className="mr-2 h-4 w-4" data-oid="_g:x0l1" /> Export
+          <Button variant="outline" data-oid="2gycg.8">
+            <Download className="mr-2 h-4 w-4" data-oid="dxjjdl4" /> Export
             Statement
           </Button>
         </div>
       </div>
 
-      <Card data-oid="s6i76f7">
+      <Card data-oid="-ef6.mi">
         <CardHeader
           className="flex flex-row items-center justify-between space-y-0 pb-2"
-          data-oid="kbvr_2q"
+          data-oid="s.-xh9h"
         >
-          <CardTitle className="text-sm font-medium" data-oid="ysx5_8k">
+          <CardTitle className="text-sm font-medium" data-oid="8ewh738">
             Current Balance
           </CardTitle>
           <DollarSign
             className="h-4 w-4 text-muted-foreground"
-            data-oid="jv2gy4m"
+            data-oid="eukcj8g"
           />
         </CardHeader>
-        <CardContent data-oid="66eeqi5">
-          <div className="text-2xl font-bold" data-oid="6:8.-mt">
+        <CardContent data-oid="jt9brb6">
+          <div className="text-2xl font-bold" data-oid="5lzq5:v">
             {currency} {currentBalance.toFixed(2)}
           </div>
-          <p className="text-xs text-muted-foreground" data-oid="iej2:w4">
+          <p className="text-xs text-muted-foreground" data-oid="tru-1pg">
             Your available internal balance
           </p>
-          <div className="flex gap-2 mt-4" data-oid="qz0cnse">
-            <Button size="sm" data-oid="zzp0tx5">
-              <Upload className="mr-2 h-4 w-4" data-oid="qtoi1:t" /> Request
+          <div className="flex gap-2 mt-4" data-oid="5hb6t8_">
+            <Button size="sm" data-oid="jgarhf2">
+              <Upload className="mr-2 h-4 w-4" data-oid="s_yp.ll" /> Request
               Payout
             </Button>
             {/* Add Deposit button for Clients? Or handled by Admin? */}
@@ -58,30 +58,30 @@ export default function FinancePage() {
         </CardContent>
       </Card>
 
-      <Card data-oid="i4_0ycq">
-        <CardHeader data-oid="bpaut09">
-          <CardTitle data-oid="y7qr0s3">Transaction History</CardTitle>
-          <CardDescription data-oid="1015-0m">
+      <Card data-oid="lx8w01f">
+        <CardHeader data-oid="5jhmhwy">
+          <CardTitle data-oid="03e715t">Transaction History</CardTitle>
+          <CardDescription data-oid="d_0u8d2">
             Recent financial activities on your account.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="6nm7d..">
-          <p className="text-sm text-muted-foreground" data-oid="2h8-tdv">
+        <CardContent data-oid="ynj-0f5">
+          <p className="text-sm text-muted-foreground" data-oid="9-werbn">
             No transactions yet.
           </p>
           {/* TODO: Implement transaction history table */}
         </CardContent>
       </Card>
 
-      <Card data-oid="8yz8:s5">
-        <CardHeader data-oid="aaj3.gy">
-          <CardTitle data-oid="0u2widx">Invoices</CardTitle>
-          <CardDescription data-oid="o.de5fq">
+      <Card data-oid="mr7_2ku">
+        <CardHeader data-oid="j_pmu8-">
+          <CardTitle data-oid="-fol70z">Invoices</CardTitle>
+          <CardDescription data-oid="n2753bs">
             Manage your incoming and outgoing invoices.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="34s_:66">
-          <p className="text-sm text-muted-foreground" data-oid="b8brho.">
+        <CardContent data-oid=".:470qx">
+          <p className="text-sm text-muted-foreground" data-oid="o8s9iai">
             No invoices found.
           </p>
           {/* TODO: Implement invoice listing (pending, paid, overdue) */}

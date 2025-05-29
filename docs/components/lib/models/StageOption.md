@@ -9,6 +9,8 @@ flowchart TD
     StageOption_ts[StageOption.ts]
     sequelize[sequelize]
     StageOption_ts --> sequelize
+    UnitOs[./UnitOs]
+    StageOption_ts --> UnitOs
 ```
 
 ### `StageOptionAttributes` (Interface)

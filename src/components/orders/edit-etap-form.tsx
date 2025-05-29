@@ -106,99 +106,99 @@ export default function EditEtapForm({
   };
 
   return (
-    <Form {...form} data-oid="b23vdcr">
+    <Form {...form} data-oid="d.0cho8">
       <form
         id={`edit-etap-form-${etap.id}`}
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
-        data-oid="2q:_rfu"
+        data-oid="2_kk43k"
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem data-oid="u.hk5u:">
-              <FormLabel data-oid="zfl-6ti">Stage Name</FormLabel>
-              <FormControl data-oid="kud.72q">
+            <FormItem data-oid=".rvnt5o">
+              <FormLabel data-oid="lbcax4h">Stage Name</FormLabel>
+              <FormControl data-oid="q1tjv81">
                 <Input
                   placeholder="Enter stage name"
                   {...field}
-                  data-oid="h2hr9.o"
+                  data-oid="96o8gck"
                 />
               </FormControl>
-              <FormMessage data-oid="svsid_2" />
+              <FormMessage data-oid="n-zbje2" />
             </FormItem>
           )}
-          data-oid="k4u3eg0"
+          data-oid="89-t-5a"
         />
 
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem data-oid="f7j.e9x">
-              <FormLabel data-oid="zakge-:">Description (Optional)</FormLabel>
-              <FormControl data-oid="0:n1dta">
+            <FormItem data-oid="gzsjr5x">
+              <FormLabel data-oid="ean2kt.">Description (Optional)</FormLabel>
+              <FormControl data-oid="m.sj4l1">
                 <Textarea
                   placeholder="Describe the stage..."
                   className="min-h-[80px]"
                   {...field}
                   value={field.value ?? ""}
-                  data-oid="8if1:oi"
+                  data-oid="6w-_wcr"
                 />
               </FormControl>
-              <FormMessage data-oid="pvlwgdm" />
+              <FormMessage data-oid="9pvgn8m" />
             </FormItem>
           )}
-          data-oid="qje40q:"
+          data-oid="5k9kcsd"
         />
 
         {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
-        <div data-oid="8v2hz-y">
+        <div data-oid="d:zckcg">
           {" "}
           {/* Keep work type in a single column */}
           <FormField
             control={form.control}
             name="workType"
             render={({ field }) => (
-              <FormItem data-oid="8jj29qf">
-                <FormLabel data-oid="plczbw7">Work Type</FormLabel>
+              <FormItem data-oid="azl_j6n">
+                <FormLabel data-oid="yv0xdq9">Work Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value}
-                  data-oid="4ro60kb"
+                  data-oid="dl-rcve"
                 >
-                  <FormControl data-oid="sds1ke4">
-                    <SelectTrigger data-oid="02brjlf">
+                  <FormControl data-oid="oes41:w">
+                    <SelectTrigger data-oid=":wns-.z">
                       <SelectValue
                         placeholder="Select work type"
-                        data-oid="bzbelx6"
+                        data-oid="ude_56r"
                       />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent data-oid="4_.vrf8">
+                  <SelectContent data-oid="zwj8k:o">
                     {etapWorkTypes.map((type) => (
-                      <SelectItem key={type} value={type} data-oid="kp952ba">
+                      <SelectItem key={type} value={type} data-oid=".2:ob4v">
                         {type}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <FormMessage data-oid="85sj10i" />
+                <FormMessage data-oid="czb0oo8" />
               </FormItem>
             )}
-            data-oid="su6.c_i"
+            data-oid="u8bac65"
           />
           {/* Removed Estimated Price Field */}
         </div>
 
-        <div className="flex justify-end gap-2 pt-4" data-oid="bc93nqu">
+        <div className="flex justify-end gap-2 pt-4" data-oid="ynkr5y3">
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
-            data-oid="y8b4w05"
+            data-oid=".lgi0qr"
           >
             Cancel
           </Button>
@@ -209,7 +209,7 @@ export default function EditEtapForm({
               !etap.options ||
               etap.options.length === 0
             }
-            data-oid="hvgh0bc"
+            data-oid="z6ewu.v"
           >
             {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
@@ -217,7 +217,7 @@ export default function EditEtapForm({
         {/* Reminder message */}
         <p
           className="text-xs text-muted-foreground pt-2 text-right"
-          data-oid="s5_u.4s"
+          data-oid="knkkvr-"
         >
           Note: Stage price is calculated from options in the right panel.
           Ensure at least one option exists.

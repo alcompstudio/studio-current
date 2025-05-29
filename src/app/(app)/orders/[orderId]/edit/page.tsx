@@ -109,10 +109,11 @@ export default function OrderEditPage() {
             : [],
         );
         setLoadingProjects(false);
-        
+
         // Загружаем статусы заказов
         const statusesRes = await fetch("/api/order-statuses-os");
-        if (!statusesRes.ok) throw new Error("Ошибка загрузки статусов заказов");
+        if (!statusesRes.ok)
+          throw new Error("Ошибка загрузки статусов заказов");
         const statusesData = await statusesRes.json();
         setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
         setLoadingStatuses(false);
@@ -167,15 +168,16 @@ export default function OrderEditPage() {
                     orderData.project_id === undefined
                   ? undefined
                   : Number(orderData.project_id);
-                  
+
             // Обработка статуса как числа вместо строки
-            const statusValue = 
-              typeof orderData.status === "string" && !isNaN(parseInt(orderData.status, 10))
+            const statusValue =
+              typeof orderData.status === "string" &&
+              !isNaN(parseInt(orderData.status, 10))
                 ? parseInt(orderData.status, 10)
                 : typeof orderData.status === "number"
                   ? orderData.status
                   : 1; // Используем 1 как значение по умолчанию вместо undefined
-                  
+
             form.reset({
               title: orderData.title || "",
               description: orderData.description || "",
@@ -245,7 +247,7 @@ export default function OrderEditPage() {
     try {
       console.log("Sending update request for order ID:", numericOrderId);
       console.log("Data to send:", dataToSend);
-      
+
       const response = await fetch(`/api/orders`, {
         method: "PUT",
         headers: {
@@ -266,7 +268,7 @@ export default function OrderEditPage() {
 
       const updatedOrder = await response.json();
       console.log("Updated order:", updatedOrder);
-      
+
       toast({
         title: "Order Updated",
         description: `Changes for "${data.title}" have been successfully saved.`,
@@ -291,9 +293,9 @@ export default function OrderEditPage() {
     return (
       <div
         className="flex justify-center items-center min-h-[300px]"
-        data-oid="s:a0ba6"
+        data-oid="l7:mltm"
       >
-        <p data-oid="f_03dbh">Loading order details...</p>
+        <p data-oid="jthivxp">Loading order details...</p>
       </div>
     );
   }
@@ -302,9 +304,9 @@ export default function OrderEditPage() {
     return (
       <div
         className="flex justify-center items-center min-h-[300px]"
-        data-oid="b7qs5mh"
+        data-oid="5j-e91g"
       >
-        <p className="text-destructive" data-oid=".xbb8l3">
+        <p className="text-destructive" data-oid="68qq_9v">
           Could not load order details.
         </p>
       </div>
@@ -312,16 +314,16 @@ export default function OrderEditPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6" data-oid="8nr1z02">
+    <div className="flex flex-col gap-6" data-oid="ptdb27q">
       {/* Header */}
-      <div className="flex items-center justify-between" data-oid="-6ja0kj">
-        <div className="flex items-center gap-4" data-oid="v_ma--m">
-          <Link href={`/orders/${orderId}`} passHref data-oid="-q3g-ko">
-            <Button variant="outline" size="icon" data-oid="69h8ot-">
-              <ArrowLeft className="h-4 w-4" data-oid="1vhii35" />
+      <div className="flex items-center justify-between" data-oid="6mpt:n8">
+        <div className="flex items-center gap-4" data-oid="f0nxmer">
+          <Link href={`/orders/${orderId}`} passHref data-oid=":p7yqw8">
+            <Button variant="outline" size="icon" data-oid="of9733t">
+              <ArrowLeft className="h-4 w-4" data-oid=":9drns4" />
             </Button>
           </Link>
-          <h2 className="text-2xl font-bold tracking-tight" data-oid="z23347-">
+          <h2 className="text-2xl font-bold tracking-tight" data-oid="7m0rhv2">
             Edit Order: {order.title}
           </h2>
         </div>
@@ -329,60 +331,60 @@ export default function OrderEditPage() {
           type="submit"
           form="order-edit-form"
           disabled={form.formState.isSubmitting}
-          data-oid="1elk_qw"
+          data-oid="7rokb5:"
         >
           {form.formState.isSubmitting ? (
             "Saving..."
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4" data-oid="9pou4tf" /> Save Changes
+              <Save className="mr-2 h-4 w-4" data-oid="yreqnj6" /> Save Changes
             </>
           )}
         </Button>
       </div>
 
       {/* Edit Form Card */}
-      <Card data-oid="ng6n8gv">
-        <CardHeader data-oid="xbcybru">
-          <CardTitle data-oid="hbk8ttb">Order Details</CardTitle>
-          <CardDescription data-oid="ucl9:iw">
+      <Card data-oid="x-yscg9">
+        <CardHeader data-oid="bi96r.v">
+          <CardTitle data-oid="36tje:i">Order Details</CardTitle>
+          <CardDescription data-oid="znu_wu2">
             Update the order information below.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="-0m3.pe">
-          <Form {...form} data-oid="0kz_2j0">
+        <CardContent data-oid="goi5g5_">
+          <Form {...form} data-oid="tpgzt_3">
             <form
               id="order-edit-form"
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6"
-              data-oid="4g2nz06"
+              data-oid="ykpib_6"
             >
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
-                  <FormItem data-oid="gz8at8e">
-                    <FormLabel data-oid="ks39mdk">Order Title</FormLabel>
-                    <FormControl data-oid="z_kftic">
+                  <FormItem data-oid="jf-mbf2">
+                    <FormLabel data-oid="xdm_88s">Order Title</FormLabel>
+                    <FormControl data-oid="a00yd1-">
                       <Input
                         placeholder="Enter order title"
                         {...field}
-                        data-oid="u8nkm3d"
+                        data-oid="s_gg5m9"
                       />
                     </FormControl>
-                    <FormMessage data-oid="_osjimt" />
+                    <FormMessage data-oid="fe.dvbn" />
                   </FormItem>
                 )}
-                data-oid="yskp6zu"
+                data-oid="zkyxkm8"
               />
 
               <FormField
                 control={form.control}
                 name="project_id"
                 render={({ field }) => (
-                  <FormItem data-oid="at6utjf">
-                    <FormLabel data-oid="0:eb4lj">Проект</FormLabel>
-                    <FormControl data-oid="7yj2134">
+                  <FormItem data-oid="jl33jr9">
+                    <FormLabel data-oid="n24ubao">Проект</FormLabel>
+                    <FormControl data-oid="c-v69a7">
                       <Select
                         disabled={loadingProjects}
                         onValueChange={(value) =>
@@ -391,24 +393,24 @@ export default function OrderEditPage() {
                           )
                         }
                         value={field.value ? String(field.value) : ""}
-                        data-oid="rmjlij3"
+                        data-oid="b0tt2ct"
                       >
-                        <SelectTrigger data-oid="j0iz:4e">
+                        <SelectTrigger data-oid="zcx:3z.">
                           <SelectValue
                             placeholder={
                               loadingProjects
                                 ? "Загрузка..."
                                 : "Выберите проект"
                             }
-                            data-oid="0pessf6"
+                            data-oid="85323kh"
                           />
                         </SelectTrigger>
-                        <SelectContent data-oid="pw8048:">
+                        <SelectContent data-oid="t04:g6d">
                           {projects.map((project) => (
                             <SelectItem
                               key={project.id}
                               value={String(project.id)}
-                              data-oid="dkxx1uh"
+                              data-oid=":gy8:61"
                             >
                               {project.title}
                             </SelectItem>
@@ -416,82 +418,93 @@ export default function OrderEditPage() {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormDescription data-oid="fzxw8y_">
+                    <FormDescription data-oid="vj0cc6q">
                       Выберите проект, к которому относится заказ.
                     </FormDescription>
-                    <FormMessage data-oid="b7-ky-q" />
+                    <FormMessage data-oid="pbhhst:" />
                   </FormItem>
                 )}
-                data-oid="x:kak87"
+                data-oid="t02wcz3"
               />
 
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem data-oid=".2axc.t">
-                    <FormLabel data-oid="e3xru:2">Description</FormLabel>
-                    <FormControl data-oid="xv8oa7b">
+                  <FormItem data-oid="_6q1jio">
+                    <FormLabel data-oid="35iw77r">Description</FormLabel>
+                    <FormControl data-oid="5:dyh0-">
                       <Textarea
                         placeholder="Describe the order..."
                         className="min-h-[100px]"
                         {...field}
                         value={field.value ?? ""}
-                        data-oid="vap8vu0"
+                        data-oid="3i05izm"
                       />
                     </FormControl>
-                    <FormMessage data-oid="2fpt4q7" />
+                    <FormMessage data-oid="k_5fzhn" />
                   </FormItem>
                 )}
-                data-oid="8vy3z-1"
+                data-oid="89c4o_g"
               />
 
               <div
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                data-oid="-0cf.3w"
+                data-oid="fqrxha2"
               >
                 <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
-                    <FormItem data-oid="85q92m7">
-                      <FormLabel data-oid="bcdnxiz">Status</FormLabel>
+                    <FormItem data-oid="3r9oui9">
+                      <FormLabel data-oid="ojr2fco">Status</FormLabel>
                       <Select
                         disabled={loadingStatuses}
                         onValueChange={(value) => field.onChange(Number(value))}
                         value={field.value ? String(field.value) : undefined}
-                        data-oid="fn9f8f:"
+                        data-oid="88cqft1"
                       >
-                        <FormControl data-oid="t_ty822">
-                          <SelectTrigger data-oid="3w-973w">
+                        <FormControl data-oid=".6e4u06">
+                          <SelectTrigger data-oid="46admx2">
                             <SelectValue
-                              placeholder={loadingStatuses ? "Загрузка..." : "Выберите статус"}
-                              data-oid="avz11mz"
+                              placeholder={
+                                loadingStatuses
+                                  ? "Загрузка..."
+                                  : "Выберите статус"
+                              }
+                              data-oid="p2balrc"
                             />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent data-oid="hgsjhpz">
+                        <SelectContent data-oid=".xhez7y">
                           {orderStatuses.map((status) => (
                             <SelectItem
                               key={status.id}
                               value={String(status.id)}
-                              data-oid="c12c_ij"
+                              data-oid="-gye89i"
                             >
-                              <div className="flex items-center gap-2">
-                                <div 
-                                  className="w-3 h-3 rounded-full" 
-                                  style={{ backgroundColor: status.backgroundColor }}
+                              <div
+                                className="flex items-center gap-2"
+                                data-oid="i-yyvqi"
+                              >
+                                <div
+                                  className="w-3 h-3 rounded-full"
+                                  style={{
+                                    backgroundColor: status.backgroundColor,
+                                  }}
+                                  data-oid="t:lm41k"
                                 />
+
                                 {status.name}
                               </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage data-oid="3wd5qhb" />
+                      <FormMessage data-oid="g_6szl8" />
                     </FormItem>
                   )}
-                  data-oid="fk:nscf"
+                  data-oid="s9w1zdh"
                 />
 
                 <FormField
@@ -502,12 +515,12 @@ export default function OrderEditPage() {
                       (p) => p.id === form.watch("project_id"),
                     );
                     return (
-                      <FormItem data-oid="mjybb59">
-                        <FormLabel data-oid="7gun9pw">Price</FormLabel>
-                        <FormControl data-oid="akilm-p">
+                      <FormItem data-oid="jt-6hpi">
+                        <FormLabel data-oid="v6b.y8t">Price</FormLabel>
+                        <FormControl data-oid=".fzb775">
                           <div
                             className="flex items-center gap-2"
-                            data-oid="kihv27f"
+                            data-oid="fur5m6g"
                           >
                             <Input
                               type="number"
@@ -526,22 +539,22 @@ export default function OrderEditPage() {
                                   value === "" ? null : parseFloat(value),
                                 );
                               }}
-                              data-oid="klcrz-a"
+                              data-oid="__st-pg"
                             />
 
                             <span
                               className="text-muted-foreground"
-                              data-oid="vmzhfg5"
+                              data-oid="h:3p9lb"
                             >
                               {selectedProject?.currency ?? ""}
                             </span>
                           </div>
                         </FormControl>
-                        <FormMessage data-oid="wse1xkl" />
+                        <FormMessage data-oid=":dfmnjy" />
                       </FormItem>
                     );
                   }}
-                  data-oid="2lr_56q"
+                  data-oid="_o3dx61"
                 />
               </div>
             </form>

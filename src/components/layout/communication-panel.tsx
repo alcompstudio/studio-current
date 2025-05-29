@@ -221,27 +221,27 @@ export function CommunicationPanel({
     // Adjusted positioning: top-[70px] to place below header, height calc
     <aside
       className={`fixed right-0 top-[70px] bottom-0 ${isExpanded ? "w-80" : "w-[70px]"} bg-card border-border z-20 flex flex-col transition-all duration-300 h-[calc(100vh-70px)]`}
-      data-oid="jt6zwt5"
+      data-oid="1o50pvd"
     >
       {/* Content Area */}
       {isExpanded ? (
         <Tabs
           defaultValue="messages"
           className="flex flex-col flex-1 overflow-hidden"
-          data-oid="hn93i8i"
+          data-oid="hn06si0"
         >
           {" "}
           {/* Ensure Tabs fills height and hides overflow */}
           {/* Toggle Button moved to top right, inside the panel */}
           <div
             className="h-[60px] border-b border-border flex items-center px-6 justify-between flex-shrink-0"
-            data-oid="3_bu795"
+            data-oid="6fgio3a"
           >
             {" "}
             {/* Prevent shrinking */}
             <h3
               className="text-lg font-light text-foreground"
-              data-oid="m9.mhg:"
+              data-oid="-mve_.s"
             >
               Communications
             </h3>
@@ -250,37 +250,37 @@ export function CommunicationPanel({
               size="icon"
               onClick={() => setIsExpanded(!isExpanded)} // Toggle state
               className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
-              data-oid="4p1zaxc"
+              data-oid="_s:x93f"
             >
               {/* Show ChevronRight (to collapse) when expanded */}
-              <ChevronRight className="h-5 w-5" data-oid="j4jj22t" />
+              <ChevronRight className="h-5 w-5" data-oid="z0ni8ch" />
             </Button>
           </div>
           {/* Tabs */}
           <TabsList
             className="grid w-full grid-cols-3 rounded-none border-b bg-card p-0 flex-shrink-0"
-            data-oid="zz5em6a"
+            data-oid="3v2fi4g"
           >
             {" "}
             {/* Prevent shrinking */}
             <TabsTrigger
               value="messages"
               className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary"
-              data-oid="1v3.rq6"
+              data-oid="4c0wq-s"
             >
               Messages
             </TabsTrigger>
             <TabsTrigger
               value="notifications"
               className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary"
-              data-oid="tu4_m1m"
+              data-oid="co7wcsd"
             >
               Notifications
             </TabsTrigger>
             <TabsTrigger
               value="activity"
               className="flex-1 py-3 text-sm font-light rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-card hover:text-primary"
-              data-oid="76-s.dr"
+              data-oid="y7igekn"
             >
               Activity
             </TabsTrigger>
@@ -288,69 +288,69 @@ export function CommunicationPanel({
           {/* Search */}
           <div
             className="p-4 border-b border-border flex-shrink-0"
-            data-oid="yy9ws0p"
+            data-oid="bd8gs:r"
           >
             {" "}
             {/* Prevent shrinking */}
-            <div className="relative" data-oid="5sdmol-">
+            <div className="relative" data-oid="lb-mc0-">
               <Input
                 type="text"
                 placeholder="Search messages..."
                 className="w-full bg-muted border-border rounded-md py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary"
-                data-oid="xhnfbo3"
+                data-oid="y3d6.4p"
               />
 
               <Search
                 className="h-5 w-5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2"
-                data-oid="x2mwr28"
+                data-oid="5rgk:su"
               />
             </div>
           </div>
           {/* Tab Content wrapped in ScrollArea */}
-          <ScrollArea className="flex-1" data-oid="1q0cf-q">
+          <ScrollArea className="flex-1" data-oid="3.hibl4">
             {" "}
             {/* Allow ScrollArea to take remaining space */}
-            <TabsContent value="messages" className="mt-0" data-oid="qyponst">
+            <TabsContent value="messages" className="mt-0" data-oid="mbzfrxn">
               {messages.length > 0 ? (
                 messages.map((message) => (
                   <div
                     key={message.id}
                     className={`border-b border-border p-4 hover:bg-accent cursor-pointer ${message.active ? "bg-sidebar-accent" : ""}`}
-                    data-oid="4pl5230"
+                    data-oid="cz94e0u"
                   >
-                    <div className="flex items-start" data-oid="qa8l:3-">
+                    <div className="flex items-start" data-oid="s-yqmsr">
                       <Avatar
                         className="w-10 h-10 mr-3 flex-shrink-0"
-                        data-oid="0f4.s.-"
+                        data-oid="b9sk-tt"
                       >
                         <AvatarFallback
                           className={`text-sm ${message.avatarBg} ${message.avatarText}`}
-                          data-oid="5bg-_4o"
+                          data-oid="mjg6055"
                         >
                           {message.initials}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1 min-w-0" data-oid="8:7xen4">
+                      <div className="flex-1 min-w-0" data-oid="9h1qwl3">
                         <div
                           className="flex justify-between items-center mb-1"
-                          data-oid="lixqlu4"
+                          data-oid="_c9oxlf"
                         >
                           <h4
                             className={`text-sm truncate ${message.unread ? "font-medium text-foreground" : "font-light text-foreground"}`}
-                            data-oid="crd4wwb"
+                            data-oid="3h7_2qs"
                           >
                             {message.sender}
                           </h4>
                           <span
                             className="text-xs text-muted-foreground"
-                            data-oid="2z0gn35"
+                            data-oid="r2wboga"
                           >
                             {message.time}
                           </span>
                         </div>
                         <p
                           className={`text-sm truncate ${message.unread ? "text-foreground" : "text-muted-foreground"}`}
-                          data-oid="qlvnjc8"
+                          data-oid="ta8-4.2"
                         >
                           {message.preview}
                         </p>
@@ -361,7 +361,7 @@ export function CommunicationPanel({
               ) : (
                 <p
                   className="text-sm text-muted-foreground text-center py-8"
-                  data-oid="nknn5x-"
+                  data-oid=".cmgdbm"
                 >
                   No new messages.
                 </p>
@@ -370,7 +370,7 @@ export function CommunicationPanel({
             <TabsContent
               value="notifications"
               className="mt-0 p-4 space-y-4"
-              data-oid="fhiim-g"
+              data-oid="kkqd-zb"
             >
               {/* <h3 className="text-lg font-semibold">Recent Notifications</h3> */}
               {notifications.length > 0 ? (
@@ -378,33 +378,33 @@ export function CommunicationPanel({
                   <React.Fragment key={notification.id}>
                     <div
                       className="p-2 rounded-md hover:bg-accent cursor-pointer"
-                      data-oid="0erlsv_"
+                      data-oid="hgavb6v"
                     >
-                      <p className="text-sm font-medium" data-oid="zzevlwt">
+                      <p className="text-sm font-medium" data-oid=".1eq8vq">
                         {notification.title}
                       </p>
                       <p
                         className="text-xs text-muted-foreground"
-                        data-oid="i49nxiz"
+                        data-oid="b5i30f2"
                       >
                         {notification.description}
                       </p>
                       <p
                         className="text-xs text-muted-foreground text-right"
-                        data-oid=":65dafs"
+                        data-oid="huy3gcw"
                       >
                         {notification.time}
                       </p>
                     </div>
                     {index < notifications.length - 1 && (
-                      <Separator data-oid="wnntga0" />
+                      <Separator data-oid="29z0h89" />
                     )}
                   </React.Fragment>
                 ))
               ) : (
                 <p
                   className="text-sm text-muted-foreground text-center py-8"
-                  data-oid="4tn2w91"
+                  data-oid="erelpel"
                 >
                   No new notifications.
                 </p>
@@ -413,38 +413,38 @@ export function CommunicationPanel({
             <TabsContent
               value="activity"
               className="mt-0 p-6"
-              data-oid="_7p_bvu"
+              data-oid="p1q-9zv"
             >
-              <div className="relative" data-oid="2iboehm">
+              <div className="relative" data-oid="vou-ixj">
                 <div
                   className="absolute top-0 bottom-0 left-4 w-px bg-border"
-                  data-oid="5wehmd:"
+                  data-oid="w3ohx8z"
                 ></div>
                 {activities.map((activity) => (
                   <div
                     key={activity.id}
                     className="relative flex items-start mb-6"
-                    data-oid="adv21p9"
+                    data-oid="b:cvk9w"
                   >
                     <div
                       className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor || "bg-muted"} ${activity.iconColor || "text-muted-foreground"} flex items-center justify-center z-10 mr-4`}
-                      data-oid="g.lr.8u"
+                      data-oid="toqr64-"
                     >
-                      <activity.icon className="h-4 w-4" data-oid="ue43tc0" />
+                      <activity.icon className="h-4 w-4" data-oid="2gwv:9w" />
                     </div>
-                    <div data-oid="gv:o8xx">
+                    <div data-oid="1vn4ku-">
                       <p
                         className="text-sm font-light text-foreground"
-                        data-oid="n11bza7"
+                        data-oid="5lmmx:_"
                       >
-                        <span className="font-medium" data-oid=":d2da.c">
+                        <span className="font-medium" data-oid="-f588xe">
                           {activity.user}
                         </span>{" "}
                         {activity.action}
                       </p>
                       <p
                         className="text-xs text-muted-foreground mt-1"
-                        data-oid="fxzzbdq"
+                        data-oid="tap_pul"
                       >
                         {activity.time}
                       </p>
@@ -459,7 +459,7 @@ export function CommunicationPanel({
         // Collapsed view - show icons and expand button
         <div
           className="flex-1 flex flex-col items-center pt-4 space-y-6 border-none shadow-none"
-          data-oid="2r2d686"
+          data-oid="etkan-w"
         >
           {/* Expand Button at the top */}
           <Button
@@ -467,9 +467,9 @@ export function CommunicationPanel({
             size="icon"
             onClick={() => setIsExpanded(true)} // Expand on click
             className="text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1 mb-4" // Added margin bottom
-            data-oid="6j-yc80"
+            data-oid="ya2p:m3"
           >
-            <ChevronLeft className="h-5 w-5" data-oid="ytwjaip" />
+            <ChevronLeft className="h-5 w-5" data-oid="fyhcx7t" />
           </Button>
 
           {/* Tab Icons */}
@@ -478,27 +478,27 @@ export function CommunicationPanel({
             size="icon"
             className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
             onClick={handleIconClick}
-            data-oid="2128zrl"
+            data-oid="ish3uik"
           >
-            <MessageSquare className="h-5 w-5" data-oid="sq9vuwj" />
+            <MessageSquare className="h-5 w-5" data-oid="-5e_o.l" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
             onClick={handleIconClick}
-            data-oid="6q6t8nn"
+            data-oid="_98ehk-"
           >
-            <Bell className="h-5 w-5" data-oid="w-_2dld" />
+            <Bell className="h-5 w-5" data-oid=".7j7d4e" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="w-10 h-10 rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-primary"
             onClick={handleIconClick}
-            data-oid="szarli:"
+            data-oid="bzf-zec"
           >
-            <ActivityIcon className="h-5 w-5" data-oid="w1ut_q:" />
+            <ActivityIcon className="h-5 w-5" data-oid="zp:kjex" />
           </Button>
         </div>
       )}

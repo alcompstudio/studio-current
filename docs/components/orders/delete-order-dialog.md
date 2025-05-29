@@ -27,7 +27,14 @@ flowchart TD
 |---|---|---|---|
 | `orderId` | `string \| number` | Да |  |
 | `className` | `string` | Нет |  |
-| `variant` | `"outline" \| "ghost" \| "link" \| "default" \| "destructive" \| "secondary" \| null \| undefined` | Нет |  |
+| `variant` | `\| "outline"
+    \| "ghost"
+    \| "link"
+    \| "default"
+    \| "destructive"
+    \| "secondary"
+    \| null
+    \| undefined` | Нет |  |
 | `size` | `"default" \| "sm" \| "lg" \| "icon" \| null \| undefined` | Нет |  |
 | `children` | `ReactNode` | Нет |  |
 | `buttonClassName` | `string` | Нет |  |

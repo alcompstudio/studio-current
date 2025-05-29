@@ -230,80 +230,80 @@ export function AuthForm() {
   };
 
   return (
-    <div className="mx-auto max-w-md space-y-6" data-oid="d855pgu">
-      <div className="space-y-2 text-center" data-oid="g1y5aj2">
-        <h1 className="text-3xl font-bold" data-oid="2to4b_n">
+    <div className="mx-auto max-w-md space-y-6" data-oid="hbp-p.2">
+      <div className="space-y-2 text-center" data-oid="m856dl.">
+        <h1 className="text-3xl font-bold" data-oid="d8g0kd1">
           {isLogin ? "Login" : "Sign Up"}
         </h1>
-        <p className="text-muted-foreground" data-oid="wk0tixj">
+        <p className="text-muted-foreground" data-oid="q-a31-c">
           {isLogin
             ? "Use test credentials (e.g., admin@taskverse.test / password)"
             : "Create an account to get started"}
         </p>
       </div>
-      <Form {...form} data-oid="7.obs56">
+      <Form {...form} data-oid="vc3z18i">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
-          data-oid="y.z.rv1"
+          data-oid="uw7x-9f"
         >
           {!isLogin && (
             <FormField
               control={form.control}
               name="name" // Добавляем поле Name для регистрации
               render={({ field }) => (
-                <FormItem data-oid="y_6u.e_">
-                  <FormLabel data-oid="gw-e2s5">Name</FormLabel>
-                  <FormControl data-oid="erx..rp">
+                <FormItem data-oid="_lk1d9r">
+                  <FormLabel data-oid="m6fjrle">Name</FormLabel>
+                  <FormControl data-oid="8wvpphh">
                     <Input
                       placeholder="Your Name"
                       {...field}
-                      data-oid="y7u_jh-"
+                      data-oid="gd_ptbu"
                     />
                   </FormControl>
-                  <FormMessage data-oid="8mj9uy0" />
+                  <FormMessage data-oid="sh81my4" />
                 </FormItem>
               )}
-              data-oid="dnsn3mr"
+              data-oid="k4h7iun"
             />
           )}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem data-oid="f15manb">
-                <FormLabel data-oid="gukizlz">Email</FormLabel>
-                <FormControl data-oid="ke-g6xb">
+              <FormItem data-oid="neglut-">
+                <FormLabel data-oid="1lli6:g">Email</FormLabel>
+                <FormControl data-oid="ohph1ps">
                   <Input
                     placeholder="client@taskverse.test"
                     {...field}
-                    data-oid="-ts2-8k"
+                    data-oid="41:2m9j"
                   />
                 </FormControl>
-                <FormMessage data-oid="2o-_b5e" />
+                <FormMessage data-oid="rh7e0u6" />
               </FormItem>
             )}
-            data-oid="a:.n-uj"
+            data-oid="fpcbi2r"
           />
 
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem data-oid="kp23.cl">
-                <FormLabel data-oid="-8jyn57">Password</FormLabel>
-                <FormControl data-oid="r1z1nzb">
+              <FormItem data-oid="uf6jaif">
+                <FormLabel data-oid="zqqjib7">Password</FormLabel>
+                <FormControl data-oid="xr7oboz">
                   <Input
                     type="password"
                     placeholder="password"
                     {...field}
-                    data-oid=".5uiyju"
+                    data-oid="i2p_qq4"
                   />
                 </FormControl>
-                <FormMessage data-oid="0gplgnj" />
+                <FormMessage data-oid="3h:-b1v" />
               </FormItem>
             )}
-            data-oid="p_trdam"
+            data-oid="7c8z_9m"
           />
 
           {!isLogin && (
@@ -312,64 +312,64 @@ export function AuthForm() {
                 control={form.control}
                 name="confirmPassword"
                 render={({ field }) => (
-                  <FormItem data-oid="_0dwwwx">
-                    <FormLabel data-oid=".9s2go-">Confirm Password</FormLabel>
-                    <FormControl data-oid="fe.-_j9">
-                      <Input type="password" {...field} data-oid="yi7:vk2" />
+                  <FormItem data-oid="dxy:j8z">
+                    <FormLabel data-oid="rj:1fjr">Confirm Password</FormLabel>
+                    <FormControl data-oid="r:fott7">
+                      <Input type="password" {...field} data-oid="py391s2" />
                     </FormControl>
-                    <FormMessage data-oid="krznilt" />
+                    <FormMessage data-oid="y.bijhv" />
                   </FormItem>
                 )}
-                data-oid="31hfxr9"
+                data-oid="uolcxgk"
               />
 
               <FormField
                 control={form.control}
                 name="role"
                 render={({ field }) => (
-                  <FormItem className="space-y-3" data-oid="b:k18da">
-                    <FormLabel data-oid=".-r0r0m">Register as:</FormLabel>
-                    <FormControl data-oid="fj-kzkr">
+                  <FormItem className="space-y-3" data-oid="6ud..kf">
+                    <FormLabel data-oid="qkq15:w">Register as:</FormLabel>
+                    <FormControl data-oid="oqymu03">
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                         className="flex flex-col space-y-1"
-                        data-oid=".-b34dw"
+                        data-oid="ttclg41"
                       >
                         <FormItem
                           className="flex items-center space-x-3 space-y-0"
-                          data-oid="9f3wvfj"
+                          data-oid="bk9118b"
                         >
-                          <FormControl data-oid="sua.bwn">
+                          <FormControl data-oid="o1n85pu">
                             <RadioGroupItem
                               value="Заказчик"
-                              data-oid="7yotkpo"
+                              data-oid="4n71_ey"
                             />
                           </FormControl>
-                          <FormLabel className="font-normal" data-oid="pp4ehoy">
+                          <FormLabel className="font-normal" data-oid="xwfh:w_">
                             Заказчик (Client)
                           </FormLabel>
                         </FormItem>
                         <FormItem
                           className="flex items-center space-x-3 space-y-0"
-                          data-oid="ftrbqvb"
+                          data-oid="ib_3xa5"
                         >
-                          <FormControl data-oid="5a4u7wu">
+                          <FormControl data-oid=":o_6krz">
                             <RadioGroupItem
                               value="Исполнитель"
-                              data-oid="9517pe0"
+                              data-oid="7rqm76s"
                             />
                           </FormControl>
-                          <FormLabel className="font-normal" data-oid="c-nqjc2">
+                          <FormLabel className="font-normal" data-oid="w-sfru6">
                             Исполнитель (Freelancer)
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
-                    <FormMessage data-oid="tsv1ah2" />
+                    <FormMessage data-oid="wi8rs4:" />
                   </FormItem>
                 )}
-                data-oid="tuarhjc"
+                data-oid="e.hz2i_"
               />
             </>
           )}
@@ -377,7 +377,7 @@ export function AuthForm() {
             type="submit"
             className="w-full"
             disabled={form.formState.isSubmitting}
-            data-oid="u27x-pj"
+            data-oid="jv59zof"
           >
             {form.formState.isSubmitting
               ? "Processing..."
@@ -387,13 +387,13 @@ export function AuthForm() {
           </Button>
         </form>
       </Form>
-      <div className="mt-4 text-center text-sm" data-oid="k8i51ki">
+      <div className="mt-4 text-center text-sm" data-oid="rwt7f5j">
         {isLogin ? "Don't have an account? " : "Already have an account? "}
         <Button
           variant="link"
           onClick={toggleAuthMode}
           className="p-0 h-auto"
-          data-oid="w78iy.7"
+          data-oid="1dt68jw"
         >
           {isLogin ? "Sign up" : "Login"}
         </Button>

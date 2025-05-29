@@ -20,7 +20,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         className={cn(base, variants[variant], className)}
         ref={ref}
         {...props}
-        data-oid="812p:6g"
       />
     );
   },

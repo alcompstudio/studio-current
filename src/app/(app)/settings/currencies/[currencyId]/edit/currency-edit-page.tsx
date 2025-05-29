@@ -13,27 +13,27 @@ export default async function EditCurrencyPage({
   // Получаем данные о валюте с сервера
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/settings/currencies/${params.currencyId}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
-  
+
   const currency: Currency = await response.json();
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/settings/currencies">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" /> Назад
+    <div className="flex flex-col gap-6" data-oid="ulqgvl:">
+      <div className="flex items-center justify-between" data-oid="r7s4oo7">
+        <div className="flex items-center gap-4" data-oid="w2geae5">
+          <Link href="/settings/currencies" data-oid="n5c:fst">
+            <Button variant="outline" size="sm" data-oid="cdw9kf4">
+              <ArrowLeft className="h-4 w-4 mr-2" data-oid=".uno.cf" /> Назад
             </Button>
           </Link>
-          <h1 className="text-xl font-semibold">
+          <h1 className="text-xl font-semibold" data-oid="z6qp8r5">
             Редактирование валюты: {currency.name}
           </h1>
         </div>
       </div>
 
-      <CurrencyForm currency={currency} isEditing={true} />
+      <CurrencyForm currency={currency} isEditing={true} data-oid="az6rxeq" />
     </div>
   );
 }

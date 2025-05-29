@@ -200,34 +200,34 @@ export default function AdminDashboardPage() {
     <div
       className="min-h-screen bg-background flex"
       style={{ fontFamily }}
-      data-oid="qfiu13k"
+      data-oid="85za27m"
     >
       {/* Left sidebar - fixed */}
       <aside
         className={`fixed left-0 top-0 bottom-0 ${isNavExpanded ? "w-64" : "w-[70px]"} bg-sidebar-background border-r border-sidebar-border z-20 flex flex-col transition-all duration-300`}
-        data-oid="w-1-toc"
+        data-oid="_n-.8_p"
       >
         {/* Logo area */}
         <div
           className="h-[70px] flex items-center justify-center gap-2 px-6 border-b border-sidebar-border bg-sidebar-primary"
-          data-oid="1.em1hz"
+          data-oid="vwclhjh"
         >
           <h1
             className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden"
-            data-oid="gxg1zsn"
+            data-oid="j3v4mu9"
           >
             Freelan
-            <span className="text-accent" data-oid="oyvcefg">
+            <span className="text-accent" data-oid="9f3uc-h">
               Center
             </span>{" "}
             {/* Updated text and color */}
           </h1>
           <h1
             className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden"
-            data-oid="nkxcl7l"
+            data-oid="zxloa92"
           >
             F
-            <span className="text-accent" data-oid="kcw9k3z">
+            <span className="text-accent" data-oid="hhd7l1c">
               C
             </span>{" "}
             {/* Updated 'C' to accent color */}
@@ -235,12 +235,12 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Navigation */}
-        <ScrollArea className="flex-1 py-6" data-oid=".wo.ibh">
-          <div className="px-4 mb-4" data-oid="toubuo2">
+        <ScrollArea className="flex-1 py-6" data-oid="mp7-y-.">
+          <div className="px-4 mb-4" data-oid="zb74kdd">
             {isNavExpanded && (
               <p
                 className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-2"
-                data-oid="8g2syn9"
+                data-oid="y8jiz7b"
               >
                 Main
               </p>
@@ -248,58 +248,58 @@ export default function AdminDashboardPage() {
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md bg-sidebar-accent text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="r2k86il"
+              data-oid=".0zk8l4"
             >
               <Home
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="bl_j0n4"
+                data-oid="wk-tqu1"
               />
 
-              {isNavExpanded && <span data-oid="kol3ifs">Dashboard</span>}
+              {isNavExpanded && <span data-oid="wlpry5:">Dashboard</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="5frugzu"
+              data-oid="xfuqb:_"
             >
               <Briefcase
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="yz3-egq"
+                data-oid="b5cw82z"
               />
 
-              {isNavExpanded && <span data-oid="0x_nhc.">Projects</span>}
+              {isNavExpanded && <span data-oid="a4vov6v">Projects</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="e234yu7"
+              data-oid=":-dtgx7"
             >
               <FileText
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="fx-zqyy"
+                data-oid="_z9itle"
               />
 
-              {isNavExpanded && <span data-oid="3u4rriu">Orders</span>}
+              {isNavExpanded && <span data-oid="nei-i0l">Orders</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="v0q32kf"
+              data-oid="e:8bufx"
             >
               <ClipboardList
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="06_4nwv"
+                data-oid="ixq:o:9"
               />
 
-              {isNavExpanded && <span data-oid="qqatusw">Tasks</span>}
+              {isNavExpanded && <span data-oid="_wb2-xm">Tasks</span>}
             </a>
           </div>
 
-          <div className="px-4 mb-4" data-oid="n6eor_x">
+          <div className="px-4 mb-4" data-oid="g5bvdz7">
             {isNavExpanded && (
               <p
                 className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-2"
-                data-oid="1.-1sqn"
+                data-oid="4qbj21r"
               >
                 Users
               </p>
@@ -307,46 +307,46 @@ export default function AdminDashboardPage() {
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="u:5gq_k"
+              data-oid="6w:0g9i"
             >
               <Users
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="r.w1lme"
+                data-oid="grqh2:s"
               />
 
-              {isNavExpanded && <span data-oid="rzzkasr">Clients</span>}
+              {isNavExpanded && <span data-oid="otpc-nd">Clients</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="wgyo.yf"
+              data-oid="pgvyro4"
             >
               <Users
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="c-1xvtq"
+                data-oid="f2.g2x."
               />
 
-              {isNavExpanded && <span data-oid=":9axxux">Freelancers</span>}
+              {isNavExpanded && <span data-oid="ng6srae">Freelancers</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="pf1w.pf"
+              data-oid="bgfxrar"
             >
               <Users
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="_a1qve2"
+                data-oid="5.:--h:"
               />
 
-              {isNavExpanded && <span data-oid="2cb1kay">Administrators</span>}
+              {isNavExpanded && <span data-oid="r00mu4m">Administrators</span>}
             </a>
           </div>
 
-          <div className="px-4 mb-4" data-oid="o91.4wf">
+          <div className="px-4 mb-4" data-oid="583_ddc">
             {isNavExpanded && (
               <p
                 className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-2"
-                data-oid="3h64dz3"
+                data-oid="wj-i41q"
               >
                 Finance
               </p>
@@ -354,46 +354,46 @@ export default function AdminDashboardPage() {
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="m7kmmq9"
+              data-oid="da914g9"
             >
               <DollarSign
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="rxlv8jr"
+                data-oid="v7a:y4d"
               />
 
-              {isNavExpanded && <span data-oid="2t0.guj">Transactions</span>}
+              {isNavExpanded && <span data-oid="y82c7rm">Transactions</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="zhfjkig"
+              data-oid="c9s0ov:"
             >
               <FileBarChart2
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="2lt1fe_"
+                data-oid="5p686jc"
               />
 
-              {isNavExpanded && <span data-oid="8imls79">Reports</span>}
+              {isNavExpanded && <span data-oid="a4gmx2a">Reports</span>}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="kirs79z"
+              data-oid="2dh2.7q"
             >
               <CreditCard
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="56y7p8z"
+                data-oid="wcyxiba"
               />
 
-              {isNavExpanded && <span data-oid="p0k3pxx">Payments</span>}
+              {isNavExpanded && <span data-oid="b622isq">Payments</span>}
             </a>
           </div>
 
-          <div className="px-4" data-oid=".i_y4lo">
+          <div className="px-4" data-oid="k.7-_ko">
             {isNavExpanded && (
               <p
                 className="text-xs text-muted-foreground uppercase tracking-wider mb-2 px-2"
-                data-oid="mdek3i_"
+                data-oid="duih.v:"
               >
                 Settings
               </p>
@@ -401,28 +401,28 @@ export default function AdminDashboardPage() {
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="qvuon9r"
+              data-oid="upthrmy"
             >
               <Settings
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid=".h8929o"
+                data-oid="4-z6mi:"
               />
 
               {isNavExpanded && (
-                <span data-oid="9ebn5o0">General Settings</span>
+                <span data-oid="6nmx8av">General Settings</span>
               )}
             </a>
             <a
               href="#"
               className={`flex items-center ${isNavExpanded ? "px-2 py-2" : "px-0 py-2 justify-center"} rounded-md text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground mb-1 cursor-pointer`}
-              data-oid="ykct05u"
+              data-oid="vsbd7of"
             >
               <Database
                 className={`${isNavExpanded ? "h-5 w-5 mr-3" : "h-6 w-6"}`}
-                data-oid="v5y3ocj"
+                data-oid=":7crw--"
               />
 
-              {isNavExpanded && <span data-oid="qvu6k4x">Reference Data</span>}
+              {isNavExpanded && <span data-oid=":g02jcx">Reference Data</span>}
             </a>
           </div>
         </ScrollArea>
@@ -430,33 +430,33 @@ export default function AdminDashboardPage() {
         {/* User profile */}
         <div
           className={`p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground ${isNavExpanded ? "" : "flex justify-center"}`}
-          data-oid="z5fbfe1"
+          data-oid="x46su:f"
         >
           {isNavExpanded ? (
-            <div className="flex items-center" data-oid="z6potn_">
-              <Avatar className="w-10 h-10 mr-3" data-oid="30.u9wq">
+            <div className="flex items-center" data-oid=".v0rmb6">
+              <Avatar className="w-10 h-10 mr-3" data-oid=":y6x6sm">
                 <AvatarFallback
                   className="bg-white/20 text-sidebar-primary-foreground"
-                  data-oid="htn3zdb"
+                  data-oid="oxrdjj-"
                 >
                   JD
                 </AvatarFallback>
               </Avatar>
-              <div data-oid="0so7uff">
-                <p className="text-sm font-light" data-oid="e-f33c:">
+              <div data-oid="wtlnno0">
+                <p className="text-sm font-light" data-oid="uq8krk6">
                   John Doe
                 </p>
-                <p className="text-xs text-muted" data-oid="3ny2go5">
+                <p className="text-xs text-muted" data-oid="9zvkib.">
                   Administrator
                 </p>{" "}
                 {/* Use muted for role */}
               </div>
             </div>
           ) : (
-            <Avatar className="w-10 h-10" data-oid=":o:14jg">
+            <Avatar className="w-10 h-10" data-oid="cpmo1uj">
               <AvatarFallback
                 className="bg-white/20 text-sidebar-primary-foreground"
-                data-oid="wiw:e9."
+                data-oid="jdx373d"
               >
                 JD
               </AvatarFallback>
@@ -470,12 +470,12 @@ export default function AdminDashboardPage() {
           size="icon"
           onClick={() => setIsNavExpanded(!isNavExpanded)}
           className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-sm border border-border text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto" // Use shadow-sm
-          data-oid="rf46ouz"
+          data-oid="m1-oskj"
         >
           {isNavExpanded ? (
-            <ChevronLeft className="h-5 w-5" data-oid="_rw:1.w" />
+            <ChevronLeft className="h-5 w-5" data-oid="5_a_byc" />
           ) : (
-            <ChevronRight className="h-5 w-5" data-oid="_7n-1g9" />
+            <ChevronRight className="h-5 w-5" data-oid="me1kdao" />
           )}
         </Button>
       </aside>
@@ -487,171 +487,171 @@ export default function AdminDashboardPage() {
           leftMargin,
           rightMargin,
         )}
-        data-oid="hft:733"
+        data-oid="mjk76qc"
       >
         {/* Header */}
         <header
           className="h-[70px] bg-card border-b border-border flex items-center justify-between px-8"
-          data-oid="99wb7n9"
+          data-oid="fr4ap:h"
         >
-          <h2 className="text-xl font-light text-foreground" data-oid="lqldt9b">
+          <h2 className="text-xl font-light text-foreground" data-oid="u2j9-w.">
             Dashboard
           </h2>
 
-          <div className="flex items-center space-x-4" data-oid="w-pqetu">
+          <div className="flex items-center space-x-4" data-oid="w16om7o">
             <Button
               variant="ghost"
               size="icon"
               className="text-muted-foreground hover:text-primary cursor-pointer"
-              data-oid="l93fw4g"
+              data-oid="zsb4-g6"
             >
-              <Bell className="h-6 w-6" data-oid=".l-5k5h" />
+              <Bell className="h-6 w-6" data-oid="icoehgf" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               className="text-muted-foreground hover:text-primary cursor-pointer"
-              data-oid="3_.jr7_"
+              data-oid="39b5s9a"
             >
-              <Calendar className="h-6 w-6" data-oid=":mty1h6" />
+              <Calendar className="h-6 w-6" data-oid="s4ayvwi" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               className="text-muted-foreground hover:text-primary cursor-pointer"
-              data-oid="t8j6u-:"
+              data-oid="6qxlgbj"
             >
-              <Search className="h-6 w-6" data-oid="g_s09x4" />
+              <Search className="h-6 w-6" data-oid="pm-l6im" />
             </Button>
           </div>
         </header>
 
         {/* Dashboard content */}
-        <ScrollArea className="flex-1 p-8" data-oid="q9a88qy">
+        <ScrollArea className="flex-1 p-8" data-oid="uk.u-j0">
           {/* Stats */}
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-            data-oid="ghw4vlj"
+            data-oid="u_9.e.u"
           >
-            <Card data-oid="ku_3llr">
+            <Card data-oid="dkwzpt.">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid="7os0pjz"
+                data-oid="ivq4.tq"
               >
                 <CardTitle
                   className="text-sm font-medium text-muted-foreground"
-                  data-oid="dk6pxb4"
+                  data-oid="k1lo2g1"
                 >
                   Total Projects
                 </CardTitle>
                 <span
                   className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"
-                  data-oid="2uuwoz9"
+                  data-oid=":mif-sh"
                 >
                   +12.5%
                 </span>
               </CardHeader>
-              <CardContent data-oid=".aud03w">
+              <CardContent data-oid="7s4f_l2">
                 <p
                   className="text-3xl font-light text-foreground mb-1"
-                  data-oid="42yrrcp"
+                  data-oid="jxcmyo:"
                 >
                   142
                 </p>
-                <p className="text-sm text-muted-foreground" data-oid="9jlis1x">
+                <p className="text-sm text-muted-foreground" data-oid="ages97y">
                   12 new this month
                 </p>
               </CardContent>
             </Card>
 
-            <Card data-oid="_u-a3ip">
+            <Card data-oid="96tub_r">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid=".pk8bfo"
+                data-oid="509cwor"
               >
                 <CardTitle
                   className="text-sm font-medium text-muted-foreground"
-                  data-oid="ze0.d3m"
+                  data-oid="l4rvmqs"
                 >
                   Active Clients
                 </CardTitle>
                 <span
                   className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"
-                  data-oid=":hfizuv"
+                  data-oid="c8f2i_j"
                 >
                   +7.2%
                 </span>
               </CardHeader>
-              <CardContent data-oid="san8kco">
+              <CardContent data-oid="tbwm3cy">
                 <p
                   className="text-3xl font-light text-foreground mb-1"
-                  data-oid="bc16stb"
+                  data-oid="qd3hc7i"
                 >
                   64
                 </p>
-                <p className="text-sm text-muted-foreground" data-oid="euue2lz">
+                <p className="text-sm text-muted-foreground" data-oid="operq.q">
                   8 new this month
                 </p>
               </CardContent>
             </Card>
 
-            <Card data-oid="60:8w8p">
+            <Card data-oid="jugx.z2">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid="35r9qyn"
+                data-oid="q_71jqw"
               >
                 <CardTitle
                   className="text-sm font-medium text-muted-foreground"
-                  data-oid="saea_dj"
+                  data-oid="_geespg"
                 >
                   Total Revenue
                 </CardTitle>
                 <span
                   className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"
-                  data-oid="vl0wrtw"
+                  data-oid="k2fktab"
                 >
                   +22.5%
                 </span>
               </CardHeader>
-              <CardContent data-oid="emojj6-">
+              <CardContent data-oid="t_:-tfc">
                 <p
                   className="text-3xl font-light text-foreground mb-1"
-                  data-oid="3.vj2r2"
+                  data-oid="1bw5gxx"
                 >
                   $86,589
                 </p>
-                <p className="text-sm text-muted-foreground" data-oid="tk01:kc">
+                <p className="text-sm text-muted-foreground" data-oid="bbg9q8p">
                   $12,480 this month
                 </p>
               </CardContent>
             </Card>
 
-            <Card data-oid="_1h_mss">
+            <Card data-oid="2pqyibm">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid="9dpcz4c"
+                data-oid="-85pg15"
               >
                 <CardTitle
                   className="text-sm font-medium text-muted-foreground"
-                  data-oid="ixzi-c3"
+                  data-oid="sxm0ijw"
                 >
                   Pending Tasks
                 </CardTitle>
                 <span
                   className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded"
-                  data-oid="xz9pnn4"
+                  data-oid="rid8.td"
                 >
                   +3.8%
                 </span>
               </CardHeader>
-              <CardContent data-oid="pi1xhse">
+              <CardContent data-oid="ay5xvig">
                 <p
                   className="text-3xl font-light text-foreground mb-1"
-                  data-oid="..0ordx"
+                  data-oid="h35ktqy"
                 >
                   24
                 </p>
-                <p className="text-sm text-muted-foreground" data-oid="mbe_4ny">
+                <p className="text-sm text-muted-foreground" data-oid="vtpc80a">
                   6 due today
                 </p>
               </CardContent>
@@ -659,115 +659,115 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Recent projects - Card layout */}
-          <Card className="mb-8" data-oid="0f81b1.">
-            <CardHeader data-oid="rhlj7hs">
+          <Card className="mb-8" data-oid="r56o1rr">
+            <CardHeader data-oid="sjs6cv8">
               <CardTitle
                 className="text-lg font-light text-foreground"
-                data-oid="pejqbh0"
+                data-oid="7_y_bj:"
               >
                 Recent Projects
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4" data-oid=":g5ft7a">
+            <CardContent className="space-y-4" data-oid="f3evwgf">
               {/* Project Card 1 */}
               <Card
                 className="bg-muted hover:border-primary transition-colors"
-                data-oid="_x2jlao"
+                data-oid="bpz59np"
               >
-                <CardContent className="p-6" data-oid="w.11ehq">
-                  <div className="flex items-start" data-oid=".cb6xai">
+                <CardContent className="p-6" data-oid="r3c-9fw">
+                  <div className="flex items-start" data-oid="wk-l99q">
                     <div
                       className="w-10 h-10 rounded bg-sidebar-accent text-primary flex items-center justify-center mr-4 flex-shrink-0"
-                      data-oid="dizx9zk"
+                      data-oid="ul3p5dk"
                     >
-                      <Monitor className="h-5 w-5" data-oid="j0s_h3u" />
+                      <Monitor className="h-5 w-5" data-oid="117is_l" />
                     </div>
-                    <div className="flex-1" data-oid="03zmluz">
+                    <div className="flex-1" data-oid="ufpj4zz">
                       <div
                         className="flex justify-between items-start mb-2"
-                        data-oid="jdm6hg7"
+                        data-oid=".bye8v2"
                       >
                         <h4
                           className="text-lg font-light text-foreground"
-                          data-oid="8s0swz1"
+                          data-oid="hvep.hg"
                         >
                           Website Redesign
                         </h4>
                         <span
                           className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"
-                          data-oid="_nifd:8"
+                          data-oid="ixv3s9r"
                         >
                           In Progress
                         </span>
                       </div>
                       <p
                         className="text-sm text-muted-foreground mb-4"
-                        data-oid="6min87x"
+                        data-oid="seg2hea"
                       >
                         Complete redesign of e-commerce website with modern
                         UI/UX and improved checkout flow.
                       </p>
                       <div
                         className="flex justify-between items-center mb-3"
-                        data-oid="ojx602:"
+                        data-oid="2hpzh:k"
                       >
-                        <div data-oid="v9gjhwp">
+                        <div data-oid="lnk_a1q">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="rn2whng"
+                            data-oid="ny4k75d"
                           >
                             Client
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid=".3s6.8a"
+                            data-oid="pd13wuj"
                           >
                             Acme Inc.
                           </p>
                         </div>
-                        <div data-oid="j0e4iym">
+                        <div data-oid="m_t_aoj">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="_rqbog."
+                            data-oid="10_pekw"
                           >
                             Deadline
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="m9e1obk"
+                            data-oid="s.92fl4"
                           >
                             Dec 15, 2023
                           </p>
                         </div>
-                        <div data-oid="t-pdike">
+                        <div data-oid="r3334rz">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="i1r43hs"
+                            data-oid="c_9fyb1"
                           >
                             Budget
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="i-z6qnp"
+                            data-oid="r3_136d"
                           >
                             $4,500
                           </p>
                         </div>
                       </div>
-                      <div data-oid="7tgnge2">
+                      <div data-oid="m86jr5y">
                         <div
                           className="flex justify-between items-center mb-1"
-                          data-oid="3ediv-p"
+                          data-oid="bgy6si-"
                         >
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="ua_g.3q"
+                            data-oid="iix11am"
                           >
                             Progress
                           </p>
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="edarsfh"
+                            data-oid="2srcosn"
                           >
                             65%
                           </p>
@@ -775,7 +775,7 @@ export default function AdminDashboardPage() {
                         <Progress
                           value={65}
                           className="h-2 [&>div]:bg-emerald-500"
-                          data-oid="ni1qbmi"
+                          data-oid="y6ir.4a"
                         />
                       </div>
                     </div>
@@ -786,102 +786,102 @@ export default function AdminDashboardPage() {
               {/* Project Card 2 */}
               <Card
                 className="bg-muted hover:border-primary transition-colors"
-                data-oid="3bc659k"
+                data-oid="8f9daw3"
               >
-                <CardContent className="p-6" data-oid="48frgx3">
-                  <div className="flex items-start" data-oid="tapub1r">
+                <CardContent className="p-6" data-oid="-v759kj">
+                  <div className="flex items-start" data-oid="r_15hpo">
                     <div
                       className="w-10 h-10 rounded bg-blue-100 text-blue-800 flex items-center justify-center mr-4 flex-shrink-0"
-                      data-oid="232hy1u"
+                      data-oid="fq:p_x:"
                     >
-                      <Smartphone className="h-5 w-5" data-oid="-9bqg6c" />
+                      <Smartphone className="h-5 w-5" data-oid="8lq451:" />
                     </div>
-                    <div className="flex-1" data-oid="acrc_y3">
+                    <div className="flex-1" data-oid="rzplbvr">
                       <div
                         className="flex justify-between items-start mb-2"
-                        data-oid="ea6yn_x"
+                        data-oid="79lw.n9"
                       >
                         <h4
                           className="text-lg font-light text-foreground"
-                          data-oid="vf-7bmz"
+                          data-oid="d2ol107"
                         >
                           Mobile App Development
                         </h4>
                         <span
                           className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded"
-                          data-oid="8t:448q"
+                          data-oid="yq-0fe7"
                         >
                           On Hold
                         </span>
                       </div>
                       <p
                         className="text-sm text-muted-foreground mb-4"
-                        data-oid="lteuiu3"
+                        data-oid="vc0dr0n"
                       >
                         Native mobile application for iOS and Android with
                         offline capabilities and push notifications.
                       </p>
                       <div
                         className="flex justify-between items-center mb-3"
-                        data-oid=":wce9bj"
+                        data-oid="c7ucwk-"
                       >
-                        <div data-oid="9-ldq7x">
+                        <div data-oid="84-3l6r">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="t2tn9.k"
+                            data-oid="6il.ziy"
                           >
                             Client
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="s72sjg."
+                            data-oid="6m6gjaw"
                           >
                             TechStart
                           </p>
                         </div>
-                        <div data-oid="luoh5rz">
+                        <div data-oid="8edql.e">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="i58uobb"
+                            data-oid=":rfbc8_"
                           >
                             Deadline
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="mz-ylm8"
+                            data-oid="qdfe41n"
                           >
                             Jan 30, 2024
                           </p>
                         </div>
-                        <div data-oid="d1vwcbx">
+                        <div data-oid="gxsfbry">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="r_n-hcm"
+                            data-oid="kx:i1ce"
                           >
                             Budget
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="46l0fx7"
+                            data-oid="xu2b_4s"
                           >
                             $12,000
                           </p>
                         </div>
                       </div>
-                      <div data-oid="b0e:1ny">
+                      <div data-oid="3.7ih:p">
                         <div
                           className="flex justify-between items-center mb-1"
-                          data-oid="s9lk_es"
+                          data-oid="zmvdrxi"
                         >
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="7bs6wme"
+                            data-oid="ekbyans"
                           >
                             Progress
                           </p>
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="2hbs76:"
+                            data-oid="svt3sre"
                           >
                             25%
                           </p>
@@ -889,7 +889,7 @@ export default function AdminDashboardPage() {
                         <Progress
                           value={25}
                           className="h-2 [&>div]:bg-amber-500"
-                          data-oid="q2r-dzm"
+                          data-oid="czvlos5"
                         />
                       </div>
                     </div>
@@ -900,102 +900,102 @@ export default function AdminDashboardPage() {
               {/* Project Card 3 */}
               <Card
                 className="bg-muted hover:border-primary transition-colors"
-                data-oid="vs0.8gl"
+                data-oid="g:wy58d"
               >
-                <CardContent className="p-6" data-oid="34n912x">
-                  <div className="flex items-start" data-oid="quh8.ti">
+                <CardContent className="p-6" data-oid=".ytvlfz">
+                  <div className="flex items-start" data-oid="u51lb5n">
                     <div
                       className="w-10 h-10 rounded bg-purple-100 text-purple-800 flex items-center justify-center mr-4 flex-shrink-0"
-                      data-oid="zub.9s2"
+                      data-oid="2qcyryy"
                     >
-                      <Palette className="h-5 w-5" data-oid="fvgyptw" />
+                      <Palette className="h-5 w-5" data-oid="nyzmq69" />
                     </div>
-                    <div className="flex-1" data-oid="cv__plh">
+                    <div className="flex-1" data-oid="lwlvzsr">
                       <div
                         className="flex justify-between items-start mb-2"
-                        data-oid="v_z5d16"
+                        data-oid="528szk3"
                       >
                         <h4
                           className="text-lg font-light text-foreground"
-                          data-oid="etzjz_:"
+                          data-oid="uz_krl4"
                         >
                           Brand Identity
                         </h4>
                         <span
                           className="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded"
-                          data-oid="8-qweiz"
+                          data-oid="8jhbnsm"
                         >
                           In Progress
                         </span>
                       </div>
                       <p
                         className="text-sm text-muted-foreground mb-4"
-                        data-oid="fsvb717"
+                        data-oid="xwmh315"
                       >
                         Complete brand identity package including logo, color
                         palette, typography, and brand guidelines.
                       </p>
                       <div
                         className="flex justify-between items-center mb-3"
-                        data-oid="36mufcg"
+                        data-oid="n23-_g3"
                       >
-                        <div data-oid="hjb-ipl">
+                        <div data-oid="d6f49_p">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="koy-fz8"
+                            data-oid="t812j4-"
                           >
                             Client
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="gd:7.dw"
+                            data-oid="jxkea00"
                           >
                             GreenLife
                           </p>
                         </div>
-                        <div data-oid="xa-arn5">
+                        <div data-oid="-didkc_">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="cb4yduy"
+                            data-oid="t.2wfa-"
                           >
                             Deadline
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="9m716va"
+                            data-oid=":i0jrzx"
                           >
                             Nov 22, 2023
                           </p>
                         </div>
-                        <div data-oid="z6jk1m.">
+                        <div data-oid="zvs.6x3">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="9ue4mzd"
+                            data-oid="d.q83nc"
                           >
                             Budget
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="bvhkon4"
+                            data-oid="l.6unnc"
                           >
                             $3,200
                           </p>
                         </div>
                       </div>
-                      <div data-oid="fhge8v8">
+                      <div data-oid="39uww36">
                         <div
                           className="flex justify-between items-center mb-1"
-                          data-oid="eyl:83y"
+                          data-oid="p78it4r"
                         >
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid=".8m7vsp"
+                            data-oid=".xcz:fw"
                           >
                             Progress
                           </p>
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="2vub2r2"
+                            data-oid="rp473pz"
                           >
                             80%
                           </p>
@@ -1003,7 +1003,7 @@ export default function AdminDashboardPage() {
                         <Progress
                           value={80}
                           className="h-2 [&>div]:bg-emerald-500"
-                          data-oid="bh9550e"
+                          data-oid="..-higu"
                         />
                       </div>
                     </div>
@@ -1014,37 +1014,37 @@ export default function AdminDashboardPage() {
               {/* Project Card 4 */}
               <Card
                 className="bg-muted hover:border-primary transition-colors"
-                data-oid="-gvtl20"
+                data-oid="gt-h5w."
               >
-                <CardContent className="p-6" data-oid="82vpwob">
-                  <div className="flex items-start" data-oid="8sn_5w7">
+                <CardContent className="p-6" data-oid="0rsn5l4">
+                  <div className="flex items-start" data-oid="iol94zl">
                     <div
                       className="w-10 h-10 rounded bg-emerald-100 text-emerald-800 flex items-center justify-center mr-4 flex-shrink-0"
-                      data-oid="8wy9b-."
+                      data-oid="hghl5o:"
                     >
-                      <ShieldCheck className="h-5 w-5" data-oid="pp5_01u" />
+                      <ShieldCheck className="h-5 w-5" data-oid="mg00dof" />
                     </div>
-                    <div className="flex-1" data-oid="6pbp4lv">
+                    <div className="flex-1" data-oid="ekst6gn">
                       <div
                         className="flex justify-between items-start mb-2"
-                        data-oid="lmnqdf9"
+                        data-oid="37wtke7"
                       >
                         <h4
                           className="text-lg font-light text-foreground"
-                          data-oid="mjd1gn0"
+                          data-oid="5kclx32"
                         >
                           Security Audit
                         </h4>
                         <span
                           className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
-                          data-oid="2jsup3l"
+                          data-oid="8j.c28e"
                         >
                           Completed
                         </span>
                       </div>
                       <p
                         className="text-sm text-muted-foreground mb-4"
-                        data-oid="e5iqnnm"
+                        data-oid="rvzba2i"
                       >
                         Comprehensive security audit of web application
                         including penetration testing and vulnerability
@@ -1052,65 +1052,65 @@ export default function AdminDashboardPage() {
                       </p>
                       <div
                         className="flex justify-between items-center mb-3"
-                        data-oid="8thi6qg"
+                        data-oid="rqn5r18"
                       >
-                        <div data-oid="33go1qh">
+                        <div data-oid="hj1lgw4">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="p44xpt4"
+                            data-oid="pzo7_-y"
                           >
                             Client
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="g307pi."
+                            data-oid="h3h.ki."
                           >
                             SecureBank
                           </p>
                         </div>
-                        <div data-oid="at-ku3z">
+                        <div data-oid="ryxpiko">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid="dzxfy_y"
+                            data-oid="xqm9g2m"
                           >
                             Deadline
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="h2elu9s"
+                            data-oid="9xp0-ud"
                           >
                             Oct 10, 2023
                           </p>
                         </div>
-                        <div data-oid="mjf4wuv">
+                        <div data-oid="wu66x9r">
                           <p
                             className="text-xs text-muted-foreground mb-1"
-                            data-oid=":npb.vo"
+                            data-oid="xjol7o2"
                           >
                             Budget
                           </p>
                           <p
                             className="text-sm font-light text-foreground"
-                            data-oid="6ri5wp2"
+                            data-oid="unbkuc2"
                           >
                             $8,750
                           </p>
                         </div>
                       </div>
-                      <div data-oid="ffqk24-">
+                      <div data-oid="5-1ftic">
                         <div
                           className="flex justify-between items-center mb-1"
-                          data-oid="w331:pr"
+                          data-oid="m7723yz"
                         >
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid="41mvl1q"
+                            data-oid="skxv07z"
                           >
                             Progress
                           </p>
                           <p
                             className="text-xs text-muted-foreground"
-                            data-oid=":n_hp3m"
+                            data-oid="6tlmi-6"
                           >
                             100%
                           </p>
@@ -1118,7 +1118,7 @@ export default function AdminDashboardPage() {
                         <Progress
                           value={100}
                           className="h-2 [&>div]:bg-blue-500"
-                          data-oid="iin2jx_"
+                          data-oid="r_fs7eq"
                         />
                       </div>
                     </div>
@@ -1131,58 +1131,58 @@ export default function AdminDashboardPage() {
           {/* Activity and Tasks */}
           <div
             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-            data-oid="vbnkui4"
+            data-oid="w_bk.hv"
           >
-            <Card data-oid="92vj-l.">
+            <Card data-oid="kesva5-">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid="vug8phb"
+                data-oid="n6i_n50"
               >
                 <CardTitle
                   className="text-lg font-light text-foreground"
-                  data-oid="wqxdw33"
+                  data-oid=".zxhk0f"
                 >
                   Recent Activity
                 </CardTitle>
                 <Button
                   variant="link"
                   className="text-sm text-primary hover:underline p-0 h-auto"
-                  data-oid="u:wdsuq"
+                  data-oid="t.ouul0"
                 >
                   View All
                 </Button>
               </CardHeader>
-              <CardContent data-oid="ar..pix">
-                <div className="relative" data-oid="qjprvog">
+              <CardContent data-oid="uwxwpba">
+                <div className="relative" data-oid="1nb6clb">
                   <div
                     className="absolute top-0 bottom-0 left-4 w-px bg-border"
-                    data-oid="r7424vl"
+                    data-oid="h71c5ga"
                   ></div>
                   {activities.map((activity) => (
                     <div
                       key={activity.id}
                       className="relative flex items-start mb-6"
-                      data-oid="u2sl-8k"
+                      data-oid="ibiyaku"
                     >
                       <div
                         className={`flex-shrink-0 w-8 h-8 rounded-full ${activity.bgColor} ${activity.iconColor} flex items-center justify-center z-10 mr-4`}
-                        data-oid="lw7_2v6"
+                        data-oid="0l2l6ie"
                       >
-                        <activity.icon className="h-4 w-4" data-oid="hgzkgej" />
+                        <activity.icon className="h-4 w-4" data-oid="cm-nnkj" />
                       </div>
-                      <div data-oid="vwc3gqg">
+                      <div data-oid="kuf_y71">
                         <p
                           className="text-sm font-light text-foreground"
-                          data-oid="2w0f._b"
+                          data-oid="i7neyar"
                         >
-                          <span className="font-medium" data-oid="t6tey0i">
+                          <span className="font-medium" data-oid="5tpsaij">
                             {activity.user}
                           </span>{" "}
                           {activity.action}
                         </p>
                         <p
                           className="text-xs text-muted-foreground mt-1"
-                          data-oid="u_0.vq6"
+                          data-oid=".9..0mw"
                         >
                           {activity.time}
                         </p>
@@ -1193,57 +1193,57 @@ export default function AdminDashboardPage() {
               </CardContent>
             </Card>
 
-            <Card data-oid="vxnj99e">
+            <Card data-oid="7s-9num">
               <CardHeader
                 className="flex flex-row items-center justify-between pb-2"
-                data-oid="bm9wko:"
+                data-oid="af3dgza"
               >
                 <CardTitle
                   className="text-lg font-light text-foreground"
-                  data-oid="axl14kh"
+                  data-oid="ouj:vtu"
                 >
                   Upcoming Tasks
                 </CardTitle>
                 <Button
                   variant="link"
                   className="text-sm text-primary hover:underline p-0 h-auto"
-                  data-oid="8nn9gv4"
+                  data-oid="2-269kq"
                 >
                   View All
                 </Button>
               </CardHeader>
-              <CardContent data-oid="iaqsu5i">
-                <div className="space-y-4" data-oid="3hcn6sv">
+              <CardContent data-oid="apepqr3">
+                <div className="space-y-4" data-oid=".j3umhw">
                   {tasks.map((task) => (
                     <div
                       key={task.id}
                       className="flex items-center"
-                      data-oid="ef83b5-"
+                      data-oid=":hydecn"
                     >
                       <Checkbox
                         id={`task-${task.id}`}
                         className="h-4 w-4 text-primary rounded border-border focus:ring-primary mr-3"
-                        data-oid="g4ok-sy"
+                        data-oid=".jssp06"
                       />
 
-                      <div className="flex-1" data-oid="cc3g2q:">
+                      <div className="flex-1" data-oid="ppycnmz">
                         <label
                           htmlFor={`task-${task.id}`}
                           className="text-sm font-light text-foreground cursor-pointer"
-                          data-oid="abd04ar"
+                          data-oid="_4dj3l6"
                         >
                           {task.description}
                         </label>
                         <p
                           className="text-xs text-muted-foreground"
-                          data-oid="7_o390j"
+                          data-oid="r07w2je"
                         >
                           {task.time}
                         </p>
                       </div>
                       <span
                         className={`text-xs px-2 py-1 rounded ${task.tagColor}`}
-                        data-oid="bx39229"
+                        data-oid="y82wmxo"
                       >
                         {task.tag}
                       </span>
@@ -1260,7 +1260,7 @@ export default function AdminDashboardPage() {
       <CommunicationPanel
         isExpanded={isCommunicationExpanded}
         setIsExpanded={setIsCommunicationExpanded}
-        data-oid="77sv3uf"
+        data-oid="-jyp4rj"
       />
     </div>
   );

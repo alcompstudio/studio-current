@@ -6,8 +6,8 @@ import { Toaster } from "../../../../src/components/ui/toaster";
 const AuthFormBoard = () => {
   return (
     <>
-      <AuthForm data-oid="ai60wj9" />
-      <Toaster data-oid="y81xevg" />
+      <AuthForm data-oid="ye338cv" />
+      <Toaster data-oid=":g5_osl" />
     </>
   );
 };

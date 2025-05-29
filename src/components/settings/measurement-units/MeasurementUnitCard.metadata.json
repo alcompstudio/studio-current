@@ -1,0 +1,47 @@
+{
+  "component": "MeasurementUnitCard",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\settings\\measurement-units\\measurement-unit-card.tsx",
+  "props": [
+    {
+      "name": "item",
+      "type": "MeasurementUnit",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onEdit",
+      "type": "(unit: MeasurementUnit) => void",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "onDelete",
+      "type": "(id: number) => void",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "@/components/ui/card",
+    "@/components/ui/button",
+    "lucide-react",
+    "date-fns",
+    "date-fns/locale",
+    "./measurement-units-content"
+  ],
+  "history": [
+    {
+      "date": "2025-05-29",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

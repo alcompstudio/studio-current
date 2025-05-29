@@ -30,7 +30,8 @@ export interface StageOption {
   // Поля для диапазона объема
   volume_min?: number | null;
   volume_max?: number | null;
-  volume_unit?: string | null; // Единица измерения объема (шт., симв., %, слов, ч и т.д.)
+  volume_unit?: string | null; // Единица измерения объема (шт., симв., %, слов, ч и т.д.) - для обратной совместимости
+  volume_unit_id?: number | null; // ID единицы измерения из таблицы unit_os
   nominal_volume?: number | null; // Номинальный объем для расчета
   price_per_unit?: number | null; // Цена за единицу объема
   // Рассчитанная стоимость (мин и макс)

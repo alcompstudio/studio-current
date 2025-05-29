@@ -12,42 +12,42 @@ export default function PlatformFinancePage() {
   // TODO: Add role check (Admin only)
   // TODO: Fetch platform financial overview, transactions, currency rates
   return (
-    <div className="flex flex-col gap-6" data-oid="ubeyd0y">
-      <div className="flex items-center justify-between" data-oid="myr60iq">
-        <h2 className="text-2xl font-bold tracking-tight" data-oid="2qcf06p">
+    <div className="flex flex-col gap-6" data-oid="4p9.mhs">
+      <div className="flex items-center justify-between" data-oid="f0dxx:2">
+        <h2 className="text-2xl font-bold tracking-tight" data-oid="mik-gs:">
           Platform Finance
         </h2>
-        <div className="flex gap-2" data-oid="ehnx.q_">
-          <Button variant="outline" data-oid="nmmaz_u">
-            <Settings className="mr-2 h-4 w-4" data-oid="w:gc3hb" /> Currency
+        <div className="flex gap-2" data-oid="cq4cg9l">
+          <Button variant="outline" data-oid="wee60vd">
+            <Settings className="mr-2 h-4 w-4" data-oid="0qr7w3f" /> Currency
             Rates
           </Button>
-          <Button data-oid="hkcovfl">
-            <PlusCircle className="mr-2 h-4 w-4" data-oid="881y60i" /> Manual
+          <Button data-oid="41cwpib">
+            <PlusCircle className="mr-2 h-4 w-4" data-oid="d3xmfop" /> Manual
             Transaction
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2" data-oid="7xrvfv3">
-        <Card data-oid="2_e_xr:">
+      <div className="grid gap-4 md:grid-cols-2" data-oid="1_5meol">
+        <Card data-oid="csmehwe">
           <CardHeader
             className="flex flex-row items-center justify-between space-y-0 pb-2"
-            data-oid="b4xticf"
+            data-oid="sg0a5in"
           >
-            <CardTitle className="text-sm font-medium" data-oid="mrsl4b_">
+            <CardTitle className="text-sm font-medium" data-oid="crwi29e">
               Total Platform Balance (USD)
             </CardTitle>
             <DollarSign
               className="h-4 w-4 text-muted-foreground"
-              data-oid="w3tuy19"
+              data-oid="13tuc_w"
             />
           </CardHeader>
-          <CardContent data-oid="7xp7tqn">
-            <div className="text-2xl font-bold" data-oid="hyvpx_q">
+          <CardContent data-oid="oo_qt2d">
+            <div className="text-2xl font-bold" data-oid="ytqbyn7">
               $15,234.56
             </div>
-            <p className="text-xs text-muted-foreground" data-oid="_oqoo5e">
+            <p className="text-xs text-muted-foreground" data-oid="vyx3454">
               Aggregated balance across user types
             </p>
           </CardContent>
@@ -55,32 +55,32 @@ export default function PlatformFinancePage() {
         {/* Add more overview cards if needed (e.g., Pending Payouts) */}
       </div>
 
-      <Card data-oid="a-wum93">
-        <CardHeader data-oid="j8ez:2_">
-          <CardTitle data-oid="q8035b-">Manual Transactions Log</CardTitle>
-          <CardDescription data-oid="xxj2b8d">
+      <Card data-oid="ztttgi4">
+        <CardHeader data-oid="-5fgw2s">
+          <CardTitle data-oid="9p_vlp6">Manual Transactions Log</CardTitle>
+          <CardDescription data-oid="183gxsy">
             Record of manual balance adjustments by administrators.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="pwkp9ja">
-          <p className="text-sm text-muted-foreground" data-oid="o36fm3j">
+        <CardContent data-oid="74ywpf5">
+          <p className="text-sm text-muted-foreground" data-oid="ztt.klv">
             No manual transactions recorded yet.
           </p>
           {/* TODO: Implement transaction log table */}
         </CardContent>
       </Card>
 
-      <Card data-oid="namkhx7">
-        <CardHeader data-oid=".8ax3q1">
-          <CardTitle data-oid="sbfdm5a">
+      <Card data-oid="xxg_pt1">
+        <CardHeader data-oid="6swzpl1">
+          <CardTitle data-oid="6fc_a5s">
             Platform Fees & Revenue (Conceptual)
           </CardTitle>
-          <CardDescription data-oid="64rhm2a">
+          <CardDescription data-oid="q.oiid_">
             Overview of potential revenue streams.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="t258d2f">
-          <p className="text-sm text-muted-foreground" data-oid="vp4xsas">
+        <CardContent data-oid="dp.7tgt">
+          <p className="text-sm text-muted-foreground" data-oid="17qf6tw">
             Fee structure and reporting to be implemented.
           </p>
           {/* TODO: Implement fee settings and revenue reports */}

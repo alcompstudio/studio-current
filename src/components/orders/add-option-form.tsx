@@ -111,63 +111,63 @@ export default function AddOptionForm({
   };
 
   return (
-    <Form {...form} data-oid=":lxxxdk">
+    <Form {...form} data-oid="z9brpq5">
       <form
         id={`add-option-form-${etapId}`}
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
-        data-oid="46h-c0a"
+        data-oid="c9zr2is"
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem data-oid="lp04dy8">
-              <FormLabel data-oid="2n1bsr5">Option Name</FormLabel>
-              <FormControl data-oid="-d4qr.y">
+            <FormItem data-oid="2xieyem">
+              <FormLabel data-oid="u8i82d.">Option Name</FormLabel>
+              <FormControl data-oid="061p9-c">
                 <Input
                   placeholder="Enter option name"
                   {...field}
-                  data-oid=":oy119j"
+                  data-oid="d.k4z9r"
                 />
               </FormControl>
-              <FormMessage data-oid="qcjofs0" />
+              <FormMessage data-oid="qxzklo8" />
             </FormItem>
           )}
-          data-oid="jm5krnp"
+          data-oid="pmni5-e"
         />
 
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem data-oid="3kjw9m:">
-              <FormLabel data-oid="g9lug1w">Description (Optional)</FormLabel>
-              <FormControl data-oid="is140dy">
+            <FormItem data-oid="yj4llhe">
+              <FormLabel data-oid="9zonch8">Description (Optional)</FormLabel>
+              <FormControl data-oid="38dp9rx">
                 <Textarea
                   placeholder="Describe the option..."
                   className="min-h-[60px]"
                   {...field}
                   value={field.value ?? ""}
-                  data-oid="7-fa2tq"
+                  data-oid="dugg6-:"
                 />
               </FormControl>
-              <FormMessage data-oid="o3xn:oi" />
+              <FormMessage data-oid="38slyzu" />
             </FormItem>
           )}
-          data-oid="u_9iv.r"
+          data-oid="5db148j"
         />
 
-        <div className="flex items-center space-x-2" data-oid="y_kxuae">
+        <div className="flex items-center space-x-2" data-oid="7w98u6d">
           <FormField
             control={form.control}
             name="isCalculable"
             render={({ field }) => (
               <FormItem
                 className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 shadow-sm"
-                data-oid="ie4vua3"
+                data-oid="xag1nw3"
               >
-                <FormControl data-oid="z7u-9n0">
+                <FormControl data-oid="1a:ta5x">
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={(checked) => {
@@ -183,19 +183,19 @@ export default function AddOptionForm({
                         });
                       }
                     }}
-                    data-oid="vfkory3"
+                    data-oid="vobs1ts"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none" data-oid="5f2tv4.">
-                  <FormLabel data-oid="syb0kan">Calculable Option</FormLabel>
-                  <FormDescription data-oid="8uw9n4q">
+                <div className="space-y-1 leading-none" data-oid="duq0y-c">
+                  <FormLabel data-oid="x76a5a1">Calculable Option</FormLabel>
+                  <FormDescription data-oid="_fgnsfc">
                     Does this option affect the price calculation?
                   </FormDescription>
-                  <FormMessage data-oid=".b2nlax" />
+                  <FormMessage data-oid="kn6y48f" />
                 </div>
               </FormItem>
             )}
-            data-oid="ckpgvr4"
+            data-oid="jdrdvdy"
           />
         </div>
 
@@ -203,15 +203,15 @@ export default function AddOptionForm({
         {isCalculable && (
           <div
             className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded-md"
-            data-oid="w5.h3:r"
+            data-oid="dtylp:z"
           >
             <FormField
               control={form.control}
               name="planUnits"
               render={({ field }) => (
-                <FormItem data-oid="dbx3o-j">
-                  <FormLabel data-oid="gfv2sp8">Plan Units</FormLabel>
-                  <FormControl data-oid="ey:bms3">
+                <FormItem data-oid="6xdid_5">
+                  <FormLabel data-oid="19lrda:">Plan Units</FormLabel>
+                  <FormControl data-oid=":78vx5p">
                     <Input
                       type="number"
                       placeholder="e.g., 2500"
@@ -224,22 +224,22 @@ export default function AddOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="7yqu10s"
+                      data-oid="bpj.fjn"
                     />
                   </FormControl>
-                  <FormMessage data-oid="nyb-v66" />
+                  <FormMessage data-oid="4xbhr79" />
                 </FormItem>
               )}
-              data-oid="r224j6x"
+              data-oid="nyi2mkt"
             />
 
             <FormField
               control={form.control}
               name="unitDivider"
               render={({ field }) => (
-                <FormItem data-oid="ks5zgmz">
-                  <FormLabel data-oid="ujpyr22">Unit Divider</FormLabel>
-                  <FormControl data-oid="u.ok_v3">
+                <FormItem data-oid="xtlz1lv">
+                  <FormLabel data-oid="_moq:7n">Unit Divider</FormLabel>
+                  <FormControl data-oid="7.6rycr">
                     <Input
                       type="number"
                       placeholder="e.g., 1000"
@@ -252,24 +252,24 @@ export default function AddOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="t7z4jm2"
+                      data-oid="p14en-k"
                     />
                   </FormControl>
-                  <FormMessage data-oid="n_:r488" />
+                  <FormMessage data-oid="blkj6:." />
                 </FormItem>
               )}
-              data-oid="0x65kxf"
+              data-oid="p0_mglv"
             />
 
             <FormField
               control={form.control}
               name="pricePerUnit"
               render={({ field }) => (
-                <FormItem data-oid="d2t-pu5">
-                  <FormLabel data-oid="dzk1c9_">
+                <FormItem data-oid="mncfzci">
+                  <FormLabel data-oid="80sfquy">
                     Price / Unit ({currency})
                   </FormLabel>
-                  <FormControl data-oid="7px51hg">
+                  <FormControl data-oid="q660sq0">
                     <Input
                       type="number"
                       placeholder="e.g., 2.5"
@@ -283,65 +283,65 @@ export default function AddOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="mjl.wlg"
+                      data-oid="8cvvuq4"
                     />
                   </FormControl>
-                  <FormMessage data-oid="xkl_1ug" />
+                  <FormMessage data-oid="9vxpq25" />
                 </FormItem>
               )}
-              data-oid="owp3h6q"
+              data-oid="jzqyk3_"
             />
           </div>
         )}
 
         {/* Included in Price Checkbox - Always show, but its meaning differs */}
-        <div className="flex items-center space-x-2" data-oid="rb68u-c">
+        <div className="flex items-center space-x-2" data-oid="y-mzo80">
           <FormField
             control={form.control}
             name="includedInPrice"
             render={({ field }) => (
               <FormItem
                 className="flex flex-row items-center space-x-2"
-                data-oid="v10_y0:"
+                data-oid="gjuglxl"
               >
-                <FormControl data-oid="lwugz2f">
+                <FormControl data-oid="46ei1j:">
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     // Calculable options are typically included by default
                     // Allow unchecking only if NOT calculable
                     disabled={isCalculable}
-                    data-oid="y6jgwmj"
+                    data-oid="1.x0x:p"
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-normal" data-oid="9ldpe6w">
+                <FormLabel className="text-sm font-normal" data-oid="4ao263f">
                   Included in Estimated Price
                   {isCalculable && (
                     <span
                       className="text-xs text-muted-foreground"
-                      data-oid="4xuxnwi"
+                      data-oid=":_c:z8-"
                     >
                       {" "}
                       (Calculable options always included)
                     </span>
                   )}
                 </FormLabel>
-                <FormMessage data-oid="7swsv6q" />
+                <FormMessage data-oid="ojfowlz" />
               </FormItem>
             )}
-            data-oid="jupis:."
+            data-oid="28y8i67"
           />
         </div>
 
         {/* Form Action Buttons */}
-        <div className="flex justify-end gap-2 pt-2" data-oid="_ag.8.a">
+        <div className="flex justify-end gap-2 pt-2" data-oid="yu_bm9g">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={onCancel}
             className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
-            data-oid="m_pgrmy"
+            data-oid="vef7zdc"
           >
             Cancel
           </Button>
@@ -349,7 +349,7 @@ export default function AddOptionForm({
             type="submit"
             size="sm"
             disabled={form.formState.isSubmitting}
-            data-oid="ujzq.tr"
+            data-oid="phofiv5"
           >
             {form.formState.isSubmitting ? "Adding..." : "Add Option"}
           </Button>

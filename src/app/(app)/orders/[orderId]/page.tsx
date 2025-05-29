@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import type { Order } from "@/lib/types"; 
+import type { Order } from "@/lib/types";
 import type { OrderStatusOS } from "@/lib/types/order";
 import { useToast } from "@/hooks/use-toast";
 import { DeleteOrderDialog } from "@/components/orders/delete-order-dialog";
@@ -30,9 +30,9 @@ export default function OrderDetailPage() {
     if (orderId) {
       setIsLoading(true);
       Promise.all([
-        fetch(`/api/orders?id=${orderId}`), 
+        fetch(`/api/orders?id=${orderId}`),
         fetch("/api/projects"),
-        fetch("/api/order-statuses-os")
+        fetch("/api/order-statuses-os"),
       ])
         .then(async ([orderRes, projectsRes, statusesRes]) => {
           if (!orderRes.ok)
@@ -47,7 +47,7 @@ export default function OrderDetailPage() {
             throw new Error(
               `Ошибка загрузки статусов: ${statusesRes.status} ${statusesRes.statusText}`,
             );
-            
+
           const orderDataRaw: Order | Order[] = await orderRes.json();
           const projectsData: {
             id: number;
@@ -55,7 +55,7 @@ export default function OrderDetailPage() {
             currency?: string;
           }[] = await projectsRes.json();
           const statusesData: OrderStatusOS[] = await statusesRes.json();
-          
+
           setProjects(
             Array.isArray(projectsData)
               ? projectsData.map((p) => ({
@@ -65,9 +65,9 @@ export default function OrderDetailPage() {
                 }))
               : [],
           );
-          
+
           setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
-          
+
           const order = Array.isArray(orderDataRaw)
             ? orderDataRaw[0]
             : orderDataRaw;
@@ -109,7 +109,7 @@ export default function OrderDetailPage() {
     return (
       <div
         className="flex min-h-screen items-center justify-center"
-        data-oid="rklyqub"
+        data-oid="64n1450"
       >
         Loading order...
       </div>
@@ -120,7 +120,7 @@ export default function OrderDetailPage() {
     return (
       <div
         className="flex min-h-screen items-center justify-center"
-        data-oid="4v7sl.m"
+        data-oid="j3cl-ia"
       >
         Order not found or ID missing. Redirecting...
       </div>
@@ -130,40 +130,43 @@ export default function OrderDetailPage() {
   const userRole = "Заказчик"; // Mock role
 
   return (
-    <div className="flex flex-col gap-6" data-oid="piqkv00">
+    <div className="flex flex-col gap-6" data-oid="6l--yb1">
       {/* Header */}
-      <div className="flex items-center justify-between" data-oid="4.wd1k5">
-        <div className="flex items-center gap-4" data-oid="rkzi4-2">
-          <Link href="/orders" passHref data-oid="91byhoh">
-            <Button variant="outline" size="icon" data-oid="rtwq3cg">
-              <ArrowLeft className="h-4 w-4" data-oid="hhbpn_f" />
+      <div className="flex items-center justify-between" data-oid="0:sxsve">
+        <div className="flex items-center gap-4" data-oid="vg.t35s">
+          <Link href="/orders" passHref data-oid="s0gy_3w">
+            <Button variant="outline" size="icon" data-oid="2i22ain">
+              <ArrowLeft className="h-4 w-4" data-oid="z5m.6vs" />
             </Button>
           </Link>
-          <h2 className="text-2xl font-bold tracking-tight" data-oid="nw.7b:-">
+          <h2 className="text-2xl font-bold tracking-tight" data-oid="2wh_x5-">
             {orderData.title}
           </h2>
         </div>
         {userRole === "Заказчик" && (
-          <div className="flex items-center gap-2">
-            <Link href={`/orders/${orderId}/edit`} passHref data-oid="vbixani">
-              <Button variant="outline" data-oid="_xw12sk">
-                <Edit className="mr-2 h-4 w-4" data-oid="-x11k8d" /> Редактировать
+          <div className="flex items-center gap-2" data-oid=".47e-50">
+            <Link href={`/orders/${orderId}/edit`} passHref data-oid="bcgy1i1">
+              <Button variant="outline" data-oid="-ovr75g">
+                <Edit className="mr-2 h-4 w-4" data-oid="ml56yyu" />{" "}
+                Редактировать
               </Button>
             </Link>
-            <DeleteOrderDialog 
-              orderId={orderId} 
+            <DeleteOrderDialog
+              orderId={orderId}
               size="icon"
               buttonClassName="h-10 w-10 rounded-full border border-input bg-background hover:bg-destructive hover:text-destructive-foreground transition-colors"
+              data-oid="byddogq"
             />
           </div>
         )}
       </div>
 
       {/* Компонент с вкладками */}
-      <OrderDetailsTabs 
-        order={orderData} 
-        orderStatuses={orderStatuses} 
-        projects={projects} 
+      <OrderDetailsTabs
+        order={orderData}
+        orderStatuses={orderStatuses}
+        projects={projects}
+        data-oid="8blp508"
       />
     </div>
   );

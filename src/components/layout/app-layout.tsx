@@ -29,6 +29,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronUp,
+  Ruler as Scale,
   ChevronDown,
   ClipboardList,
 } from "lucide-react";
@@ -47,6 +48,15 @@ interface AuthUser {
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  // Стили для анимации раскрытия/сворачивания группы меню
+  const menuAnimationStyles = {
+    menuItem: "transition-all duration-300 ease-in-out overflow-hidden",
+    menuItemOpen: "max-h-20 opacity-100 transform translate-y-0",
+    menuItemClosed: "max-h-0 opacity-0 transform -translate-y-2",
+    menuGroup: "transition-all duration-300 ease-in-out overflow-hidden",
+    chevron: "transition-transform duration-300 ease-in-out",
+    chevronOpen: "transform rotate-180",
+  };
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast(); // Initialize useToast
@@ -54,14 +64,109 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = React.useState(true);
   // Default communication panel to collapsed (width 70px)
   const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false);
+  // Ссылки на DOM элементы для прокрутки
+  const optionsSetRef = React.useRef<HTMLDivElement>(null);
+  const scrollAreaRef = React.useRef<HTMLDivElement>(null);
+  
   // Состояние для раскрывающегося списка "Набор опций"
   const [isOptionsSetExpanded, setIsOptionsSetExpanded] = React.useState(() => {
     // Инициализируем состояние из localStorage, если оно доступно
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('optionsSetExpanded') === 'true';
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("optionsSetExpanded") === "true";
     }
     return false;
   });
+  
+  // Calculate right margin class based on communication panel state
+  const rightMarginClass = isCommPanelExpanded 
+    ? "mr-80" 
+    : "mr-[70px]";
+
+  // Функция для принудительной прокрутки меню "Набор опций"
+  const scrollToOptionsButton = React.useCallback(() => {
+    // Используем несколько задержек для гарантии обновления DOM
+    let attempts = 0;
+    const maxAttempts = 5;
+    
+    // Функция попытки прокрутки
+    const tryScroll = () => {
+      attempts++;
+      console.log(`ScrollToOptionsButton attempt ${attempts}...`);
+      
+      if (!scrollAreaRef.current) {
+        console.log('ScrollArea ref not found!');
+        if (attempts < maxAttempts) {
+          setTimeout(tryScroll, 50);
+        }
+        return;
+      }
+      
+      // Находим кнопку "Набор опций" и viewport прокрутки
+      const optionsButton = document.querySelector('div[data-oid="l-j964n"]');
+      const viewport = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      
+      if (!optionsButton || !viewport) {
+        console.log('Options button or viewport not found!', { optionsButton, viewport });
+        if (attempts < maxAttempts) {
+          setTimeout(tryScroll, 50);
+        }
+        return;
+      }
+      
+      // Получаем абсолютную позицию кнопки
+      const buttonRect = optionsButton.getBoundingClientRect();
+      const viewportRect = viewport.getBoundingClientRect();
+      
+      // Желаемая позиция от верхнего края viewport
+      const targetTopOffset = 86;
+      
+      // Текущая позиция относительно видимой области
+      const currentTopOffset = buttonRect.top - viewportRect.top;
+      
+      // Разница между текущей и желаемой позициями
+      const scrollDelta = currentTopOffset - targetTopOffset;
+      
+      // Текущая позиция скролла
+      const currentScrollTop = (viewport as HTMLElement).scrollTop;
+      const targetScrollPosition = currentScrollTop + scrollDelta;
+      
+      console.log('Scroll calculation:', { 
+        currentTopOffset, 
+        targetTopOffset, 
+        scrollDelta, 
+        currentScrollTop, 
+        targetScrollPosition 
+      });
+      
+      // Проверяем, нужна ли прокрутка (если разница слишком мала, можно пропустить)
+      if (Math.abs(scrollDelta) > 5) {
+        if ('scrollTo' in viewport) {
+          // Выполняем прокрутку с использованием анимации
+          viewport.scrollTo({
+            top: targetScrollPosition,
+            behavior: 'smooth' as ScrollBehavior
+          });
+          
+          console.log('Scroll performed to position:', targetScrollPosition);
+          
+          // Проверяем, что прокрутка работает корректно
+          setTimeout(() => {
+            const newButtonRect = optionsButton.getBoundingClientRect();
+            const newViewportRect = viewport.getBoundingClientRect();
+            const newOffset = newButtonRect.top - newViewportRect.top;
+            console.log('After scroll position check:', { newOffset, targetTopOffset });
+          }, 500);
+        } else {
+          console.warn('scrollTo not available on viewport');  
+        }
+      } else {
+        console.log('No scroll needed, already at good position');
+      }
+    };
+    
+    // Запускаем первую попытку с небольшой задержкой
+    setTimeout(tryScroll, 50);
+  }, [scrollAreaRef]);
 
   React.useEffect(() => {
     // Check auth status from localStorage on mount
@@ -140,13 +245,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   const getNavItems = (role: UserRole | undefined): NavGroups => {
-    if (!role) return {
-      main: [],
-      users: [],
-      finance: [],
-      settings: [],
-      optionsSet: []
-    };
+    if (!role)
+      return {
+        main: [],
+        users: [],
+        finance: [],
+        settings: [],
+        optionsSet: [],
+      };
 
     // Define navigation groups
     const mainGroup: NavItem[] = [
@@ -244,6 +350,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         roles: ["Администратор"],
       },
       {
+        href: "/settings/measurement-units",
+        label: "Ед. изм",
+        icon: Scale,
+        roles: ["Администратор"],
+      },
+      {
         href: "/settings/finance",
         label: "Финансы",
         icon: DollarSign,
@@ -268,77 +380,112 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        data-oid="ywtvalf"
-      >
-        Loading Layout...
+      <div className="flex items-center justify-center h-screen w-screen bg-background">
+        <div className="animate-pulse">
+          <div className="h-12 w-48 bg-muted rounded-md mb-4" />
+          <div className="h-4 w-36 bg-muted rounded-md" />
+        </div>
       </div>
     );
   }
 
   if (!authUser) {
-    // Should have been redirected, but as a fallback, render nothing or a message
+    // This should rarely happen - useEffect should redirect if not authenticated
+    router.replace("/auth");
     return null;
   }
 
+  // Get initials for avatar
   const userInitial = authUser.email
     ? authUser.email.charAt(0).toUpperCase()
-    : "?";
+    : "U";
 
-  // Calculate dynamic right padding/margin for main content area based on communication panel state
-  const rightMarginClass = isCommPanelExpanded ? "mr-80" : "mr-[70px]";
+  // rightMarginClass уже объявлен выше
 
   return (
-    <SidebarProvider defaultOpen data-oid="weuz7ng">
+    <SidebarProvider defaultOpen data-oid="5vjnhht">
       {/* Left Sidebar */}
-      <Sidebar data-oid="ruo3txl">
+      <Sidebar data-oid="e1evjkk">
         <SidebarHeader
           className="h-[70px] items-center justify-center gap-2 px-6 border-b border-sidebar-border bg-sidebar-primary"
-          data-oid="jnf0lp3"
+          data-oid="s9y5mc6"
         >
           <h1
             className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=expanded]:block hidden"
-            data-oid="53--woj"
+            data-oid="b8gne7h"
           >
             Freelan
-            <span className="text-accent" data-oid="3kjd-:j">
+            <span className="text-accent" data-oid="abblnl3">
               Center
             </span>{" "}
             {/* Updated text and color */}
           </h1>
           <h1
             className="text-xl font-light tracking-wide text-sidebar-primary-foreground group-data-[state=collapsed]:block hidden"
-            data-oid=".21zq7t"
+            data-oid="sg9ny2m"
           >
             F
-            <span className="text-accent" data-oid="atj4cfd">
+            <span className="text-accent" data-oid="bhhupq5">
               C
             </span>{" "}
             {/* Updated 'C' to accent color */}
           </h1>
         </SidebarHeader>
-        <SidebarContent className="p-0 bg-white" data-oid="8zsjjpy">
-
-          <ScrollArea className="h-full px-1" data-oid="b.3qdle">
+        <SidebarContent className="p-0 bg-white" data-oid=":qfyhdc">
+          <ScrollArea className="h-full px-1" data-oid=":xw-r6s" ref={scrollAreaRef}>
             {navItems.main.length > 0 && (
-              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="7po_ei9">
-                <SidebarGroupLabel
-                  className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
-                  data-oid="17d8ngt"
+              <SidebarGroup
+                className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4"
+                data-oid="1p0.rm4"
+              >
+                {/* Контейнер для заголовка и кнопки в развёрнутом состоянии */}
+                <div className="flex justify-between items-center mb-2 group-data-[state=collapsed]:hidden">
+                  <SidebarGroupLabel
+                    className="px-2 text-xs uppercase tracking-wider text-muted-foreground"
+                    data-oid="c.almyi"
+                  >
+                    Main
+                  </SidebarGroupLabel>
+                  <SidebarTrigger asChild data-oid="8uj3a4z">
+                    <button
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-l-full rounded-r-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
+                      data-oid="8haztoe"
+                    >
+                      <ChevronLeft
+                        className="h-5 w-5"
+                        data-oid="he.tsbk"
+                      />
+                    </button>
+                  </SidebarTrigger>
+                </div>
+                
+                {/* Контейнер для кнопки в свёрнутом состоянии */}
+                <div className="flex justify-center items-center h-8 mb-2 group-data-[state=expanded]:hidden">
+                  <SidebarTrigger asChild data-oid="collapsed-trigger">
+                    <button
+                      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-l-full rounded-r-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent text-muted-foreground hover:text-primary cursor-pointer h-auto w-auto p-1"
+                      data-oid="collapsed-button"
+                    >
+                      <ChevronRight
+                        className="h-5 w-5"
+                        data-oid="collapsed-icon"
+                      />
+                    </button>
+                  </SidebarTrigger>
+                </div>
+                {/* Удален пустой блок-разделитель, т.к. кнопка уже есть выше */}
+
+                <SidebarMenu
+                  className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center"
+                  data-oid="i5pg7bn"
                 >
-                  Main
-                </SidebarGroupLabel>
-                {/* Hidden spacer for collapsed state */}
-                <div className="h-8 group-data-[state=expanded]:hidden" />
-                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="pjtbz5:">
                   {navItems.main.map((item) => (
-                    <SidebarMenuItem key={item.href} data-oid="_2t.34j">
+                    <SidebarMenuItem key={item.href} data-oid="pzekmsm">
                       <Link
                         href={item.href}
                         passHref
                         legacyBehavior
-                        data-oid="a6xzb52"
+                        data-oid="t1.55ia"
                       >
                         <SidebarMenuButton
                           asChild
@@ -351,13 +498,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           tooltip={item.label}
                           variant="default" // Use default variant for styling
                           className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
-                          data-oid="0zvejxr"
+                          data-oid="d1b52mx"
                         >
-                          <a className="rounded-[16px] w-full flex items-center justify-center group-data-[state=expanded]:justify-start group-data-[state=collapsed]:p-2 group-data-[state=collapsed]:mx-auto" data-oid="9scs5-2">
-                            <item.icon data-oid="uy:dx-m" />
+                          <a
+                            className="rounded-[16px] w-full flex items-center justify-center group-data-[state=expanded]:justify-start group-data-[state=collapsed]:p-2 group-data-[state=collapsed]:mx-auto"
+                            data-oid="a-4x5_p"
+                          >
+                            <item.icon data-oid="inwjj97" />
                             <span
                               className="group-data-[state=expanded]:inline hidden"
-                              data-oid="0st:hoc"
+                              data-oid="xf65omo"
                             >
                               {item.label}
                             </span>
@@ -370,23 +520,33 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.users.length > 0 && (
-              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="pbl2:cq">
+              <SidebarGroup
+                className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4"
+                data-oid="3loqim3"
+              >
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
-                  data-oid="wrmd-hv"
+                  data-oid="wh5f:ew"
                 >
                   Users
                 </SidebarGroupLabel>
                 {/* Hidden spacer for collapsed state */}
-                <div className="h-8 group-data-[state=expanded]:hidden" />
-                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="uz9l9v2">
+                <div
+                  className="h-8 group-data-[state=expanded]:hidden"
+                  data-oid="df7j.l:"
+                />
+
+                <SidebarMenu
+                  className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center"
+                  data-oid="09gp8tq"
+                >
                   {navItems.users.map((item) => (
-                    <SidebarMenuItem key={item.href} data-oid="rxc4x8k">
+                    <SidebarMenuItem key={item.href} data-oid=":2j_vkm">
                       <Link
                         href={item.href}
                         passHref
                         legacyBehavior
-                        data-oid="idmqf3g"
+                        data-oid="0y-yisp"
                       >
                         <SidebarMenuButton
                           asChild
@@ -394,13 +554,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           tooltip={item.label}
                           variant="default"
                           className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
-                          data-oid="zj8q:o8"
+                          data-oid="5r29nfx"
                         >
-                          <a data-oid="6_trf2s">
-                            <item.icon data-oid="dj2-:l0" />
+                          <a data-oid="1d59.-h">
+                            <item.icon data-oid="2_xwmwq" />
                             <span
                               className="group-data-[state=expanded]:inline hidden"
-                              data-oid="qgafte-"
+                              data-oid="8v1lvz5"
                             >
                               {item.label}
                             </span>
@@ -413,23 +573,33 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.finance.length > 0 && (
-              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="g80.855">
+              <SidebarGroup
+                className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4"
+                data-oid="zu.16h-"
+              >
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
-                  data-oid="eiof:m2"
+                  data-oid="tufgsbe"
                 >
                   Finance
                 </SidebarGroupLabel>
                 {/* Hidden spacer for collapsed state */}
-                <div className="h-8 group-data-[state=expanded]:hidden" />
-                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="ko2qs56">
+                <div
+                  className="h-8 group-data-[state=expanded]:hidden"
+                  data-oid="6p2r9t6"
+                />
+
+                <SidebarMenu
+                  className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center"
+                  data-oid="z-1-nge"
+                >
                   {navItems.finance.map((item) => (
-                    <SidebarMenuItem key={item.href} data-oid="qflfqw4">
+                    <SidebarMenuItem key={item.href} data-oid="xm2qb_k">
                       <Link
                         href={item.href}
                         passHref
                         legacyBehavior
-                        data-oid="p.4f.:f"
+                        data-oid="0nuv61c"
                       >
                         <SidebarMenuButton
                           asChild
@@ -437,13 +607,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           tooltip={item.label}
                           variant="default"
                           className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
-                          data-oid="ofkzwjp"
+                          data-oid="mr9.yb:"
                         >
-                          <a data-oid="90cf634">
-                            <item.icon data-oid="ti:7ae9" />
+                          <a data-oid="iwn7-wr">
+                            <item.icon data-oid="3-jdp2y" />
                             <span
                               className="group-data-[state=expanded]:inline hidden"
-                              data-oid="sd4gm40"
+                              data-oid=":1jdl55"
                             >
                               {item.label}
                             </span>
@@ -456,24 +626,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarGroup>
             )}
             {navItems.settings.length > 0 && (
-              <SidebarGroup className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4" data-oid="hb_1j3m">
+              <SidebarGroup
+                className="py-6 mb-0 group w-full group-data-[state=collapsed]:px-0.5 group-data-[state=expanded]:px-4"
+                data-oid="47thd3q"
+              >
                 <SidebarGroupLabel
                   className="px-2 text-xs uppercase tracking-wider mb-2 text-muted-foreground group-data-[state=expanded]:block hidden"
-                  data-oid="s5wsuk-"
+                  data-oid=":o9vm57"
                 >
                   Settings
                 </SidebarGroupLabel>
                 {/* Hidden spacer for collapsed state */}
-                <div className="h-8 group-data-[state=expanded]:hidden" />
-                <SidebarMenu className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center" data-oid="2d_m8wv">
+                <div
+                  className="h-8 group-data-[state=expanded]:hidden"
+                  data-oid="t.6m6fv"
+                />
+
+                <SidebarMenu
+                  className="w-full group-data-[state=collapsed]:max-w-[54px] group-data-[state=collapsed]:!p-1.5 group-data-[state=collapsed]:flex group-data-[state=collapsed]:items-center group-data-[state=collapsed]:justify-center"
+                  data-oid="t:wks.i"
+                >
                   {/* Пункт меню Settings */}
                   {navItems.settings.map((item) => (
-                    <SidebarMenuItem key={item.href} data-oid="pp3tdhp">
+                    <SidebarMenuItem key={item.href} data-oid="9dtbp9y">
                       <Link
                         href={item.href}
                         passHref
                         legacyBehavior
-                        data-oid=":y8:zza"
+                        data-oid="hv60nac"
                       >
                         <SidebarMenuButton
                           asChild
@@ -481,13 +661,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           tooltip={item.label}
                           variant="default"
                           className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
-                          data-oid="0pnxs7w"
+                          data-oid="bqbwo3d"
                         >
-                          <a data-oid="vkzwjqt">
-                            <item.icon data-oid="a6dsboc" />
+                          <a data-oid="hrrfde7">
+                            <item.icon data-oid="_6mnp:i" />
                             <span
                               className="group-data-[state=expanded]:inline hidden"
-                              data-oid="mdot-nj"
+                              data-oid="25ave2j"
                             >
                               {item.label}
                             </span>
@@ -496,62 +676,88 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       </Link>
                     </SidebarMenuItem>
                   ))}
-                  
+
                   {/* Раскрывающаяся группа "Набор опций" внутри группы Settings */}
                   {navItems.optionsSet && navItems.optionsSet.length > 0 && (
                     <>
-                      <SidebarMenuItem data-oid="options-set-dropdown-item">
-                        <div 
+                      <SidebarMenuItem data-oid="1hhyyk9">
+                        <div
                           onClick={() => {
-                            const isExpanded = localStorage.getItem('optionsSetExpanded') === 'true';
-                            localStorage.setItem('optionsSetExpanded', (!isExpanded).toString());
+                            const isExpanded =
+                              localStorage.getItem("optionsSetExpanded") ===
+                              "true";
+                            localStorage.setItem(
+                              "optionsSetExpanded",
+                              (!isExpanded).toString(),
+                            );
                             setIsOptionsSetExpanded(!isExpanded);
+                            
+                            // Вызываем принудительную прокрутку
+                            scrollToOptionsButton();
                           }}
                           className="flex w-full items-center justify-between gap-2 overflow-hidden rounded-2xl p-2 text-left cursor-pointer hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-10 text-sm text-sidebar-foreground"
-                          data-oid="options-set-dropdown-header"
+                          data-oid="l-j964n"
                         >
-                          <div className="flex items-center gap-2">
-                            <Settings className="h-4 w-4" />
-                            <span className="group-data-[state=expanded]:inline hidden">Набор опций</span>
+                          <div
+                            className="flex items-center gap-2"
+                            data-oid="6i5l_63"
+                          >
+                            <Settings className="h-4 w-4" data-oid="3ukkbo." />
+                            <span
+                              className="group-data-[state=expanded]:inline hidden"
+                              data-oid="lmnc:zj"
+                            >
+                              Набор опций
+                            </span>
                           </div>
-                          {isOptionsSetExpanded ? (
-                            <ChevronUp className="h-4 w-4" data-oid="options-set-chevron-up" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4" data-oid="options-set-chevron-down" />
-                          )}
+                          <ChevronDown
+                            className={`h-4 w-4 ${menuAnimationStyles.chevron} ${isOptionsSetExpanded ? menuAnimationStyles.chevronOpen : ""}`}
+                            data-oid="s98lti3"
+                          />
                         </div>
                       </SidebarMenuItem>
-                      
+
                       {/* Пункты меню внутри раскрывающегося списка */}
-                      {isOptionsSetExpanded && navItems.optionsSet.map((item) => (
-                        <SidebarMenuItem key={item.href} data-oid={`options-set-item-${item.label.toLowerCase().replace(/\s+/g, '-')}`}>
-                          <Link
-                            href={item.href}
-                            passHref
-                            legacyBehavior
-                            data-oid={`options-set-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                      <div
+                        className={`${menuAnimationStyles.menuGroup} ${isOptionsSetExpanded ? "max-h-[500px]" : "max-h-0"}`}
+                        data-oid="q8f8nav"
+                        ref={optionsSetRef}
+                      >
+                        {navItems.optionsSet.map((item) => (
+                          <SidebarMenuItem
+                            key={item.href}
+                            className={`${menuAnimationStyles.menuItem} ${isOptionsSetExpanded ? menuAnimationStyles.menuItemOpen : menuAnimationStyles.menuItemClosed}`}
+                            data-oid="dckr6:l"
                           >
-                            <SidebarMenuButton
-                              asChild
-                              isActive={pathname.startsWith(item.href)}
-                              tooltip={item.label}
-                              variant="default"
-                              className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground pl-6"
-                              data-oid={`options-set-button-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                            <Link
+                              href={item.href}
+                              passHref
+                              legacyBehavior
+                              data-oid="tfp6svr"
                             >
-                              <a data-oid={`options-set-anchor-${item.label.toLowerCase().replace(/\s+/g, '-')}`}>
-                                <item.icon data-oid={`options-set-icon-${item.label.toLowerCase().replace(/\s+/g, '-')}`} />
-                                <span
-                                  className="group-data-[state=expanded]:inline hidden"
-                                  data-oid={`options-set-text-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                                >
-                                  {item.label}
-                                </span>
-                              </a>
-                            </SidebarMenuButton>
-                          </Link>
-                        </SidebarMenuItem>
-                      ))}
+                              <SidebarMenuButton
+                                asChild
+                                isActive={pathname.startsWith(item.href)}
+                                tooltip={item.label}
+                                variant="default"
+                                className="text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground pl-6"
+                                data-oid="3r-n64j"
+                              >
+                                <a data-oid="e49rrdk">
+                                  <item.icon data-oid="wnk8t-q" />
+
+                                  <span
+                                    className="group-data-[state=expanded]:inline hidden"
+                                    data-oid="9lulbff"
+                                  >
+                                    {item.label}
+                                  </span>
+                                </a>
+                              </SidebarMenuButton>
+                            </Link>
+                          </SidebarMenuItem>
+                        ))}
+                      </div>
                     </>
                   )}
                 </SidebarMenu>
@@ -561,23 +767,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter
           className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=expanded]:flex hidden items-center justify-between gap-2"
-          data-oid="4jmrjw9"
+          data-oid="280ccmg"
         >
           <div
             className="flex items-center justify-between w-full gap-2"
-            data-oid="user-info-container"
+            data-oid="j5g6d5e"
           >
-            <div className="flex items-center gap-2 flex-grow min-w-0">
-              <Avatar className="h-10 w-10 shrink-0" data-oid=":0ptezt">
+            <div
+              className="flex items-center gap-2 flex-grow min-w-0"
+              data-oid="0ib5ncu"
+            >
+              <Avatar className="h-10 w-10 shrink-0" data-oid="0t:r30v">
                 <AvatarFallback
                   className="bg-white/20 text-sidebar-primary-foreground"
-                  data-oid="_muzr.x"
+                  data-oid="4zhz-rn"
                 >
                   {userInitial}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-grow min-w-0" data-oid="ub95w4q">
-                <p className="text-base font-medium text-white truncate" data-oid="w3axjnx">
+              <div className="flex-grow min-w-0" data-oid="xco4t:j">
+                <p
+                  className="text-base font-medium text-white truncate"
+                  data-oid="-93reju"
+                >
                   {authUser.role}
                 </p>
               </div>
@@ -588,63 +800,68 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               className="text-sidebar-primary-foreground hover:bg-white/10 h-10 w-10 rounded-full"
               onClick={handleLogout}
               aria-label="Logout"
-              data-oid="q90b:0u"
+              data-oid="3c.:pco"
             >
-              <LogOut className="h-5 w-5" data-oid="yi-jqfs" />
+              <LogOut className="h-5 w-5" data-oid="exzybul" />
             </Button>
           </div>
         </SidebarFooter>
         <SidebarFooter
           className="p-4 border-t border-sidebar-border bg-sidebar-primary text-sidebar-primary-foreground group-data-[state=collapsed]:flex hidden justify-center"
-          data-oid="8d8efmp"
+          data-oid="08ynet_"
         >
-          <Avatar className="h-10 w-10" data-oid="4xvik55">
+          <Avatar className="h-10 w-10" data-oid="t2g9cl8">
             <AvatarFallback
               className="bg-white/20 text-sidebar-primary-foreground"
-              data-oid="hns6up4"
+              data-oid=".85_w.g"
             >
               {userInitial}
             </AvatarFallback>
           </Avatar>
         </SidebarFooter>
-        {/* Custom Toggle Button */}
-        <SidebarTrigger asChild data-oid="wvu7d18">
-          <button
-            className="absolute -right-3 top-20 bg-background rounded-full p-1 shadow-md border border-border text-muted-foreground hover:text-primary cursor-pointer z-30"
-            data-oid="1bl1i2w"
-          >
-            <ChevronLeft
-              className="h-5 w-5 group-data-[state=collapsed]:hidden"
-              data-oid="4y1x19."
-            />
-
-            <ChevronRight
-              className="h-5 w-5 group-data-[state=expanded]:hidden"
-              data-oid="vpwxgjv"
-            />
-          </button>
-        </SidebarTrigger>
+        {/* Удаляем старую кнопку из этого места */}
       </Sidebar>
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-h-screen" data-oid="sybm61z">
+      <div className="flex flex-col flex-1 min-h-screen" data-oid=":6lf746">
         {/* Pass user info to Header */}
         <Header
           userEmail={authUser.email}
           userRole={authUser.role}
-          data-oid="a5jqxfm"
+          data-oid="up4cwbw"
         />
 
-        {/* Adjusted margin/padding for main content based on sidebar and communication panel state */}
+        {/* Левый угловой элемент */}
+        <div 
+          className={cn(
+            "fixed z-30 top-[70px] w-4 h-4 bg-white transition-all duration-300",
+            "group-data-[state=expanded]/sidebar-wrapper:left-64 group-data-[state=collapsed]/sidebar-wrapper:left-[70px]",
+          )}
+        >
+          <div className="absolute inset-0 bg-background rounded-tl-2xl" />
+        </div>
+
+        {/* Правый угловой элемент */}
+        <div 
+          className={cn(
+            "fixed z-30 top-[70px] w-4 h-4 bg-white transition-all duration-300",
+            isCommPanelExpanded ? "right-80" : "right-[70px]", // Исправлено на right-80 (20rem) для соответствия ширине панели
+          )}
+        >
+          <div className="absolute inset-0 bg-background rounded-tr-2xl" />
+        </div>
+
+        {/* Основной контейнер с контентом */}
         <SidebarInset
           className={cn(
-            "flex-1 overflow-auto p-8 md:p-8 transition-all duration-300",
+            "flex-1 overflow-auto transition-all duration-300 bg-background",
+            "p-8 md:p-8",
             // Left margin based on left sidebar state
             "group-data-[state=expanded]/sidebar-wrapper:ml-64 group-data-[state=collapsed]/sidebar-wrapper:ml-[70px]",
             // Right margin based on communication panel state
             rightMarginClass,
           )}
-          data-oid="c5_4zlc"
+          data-oid="j7ls_7y"
         >
           {children}
         </SidebarInset>
@@ -654,7 +871,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <CommunicationPanel
         isExpanded={isCommPanelExpanded}
         setIsExpanded={setIsCommPanelExpanded}
-        data-oid="5x5q0vu"
+        data-oid="d2ma4yp"
       />
     </SidebarProvider>
   );

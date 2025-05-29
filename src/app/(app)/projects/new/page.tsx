@@ -47,7 +47,7 @@ const projectFormSchema = z.object({
     .min(1, { message: "Выберите допустимый статус" }),
   currency: z.coerce
     .number({ required_error: "Валюта обязательна" })
-    .min(1, { message: "Выберите допустимую валюту" }),  
+    .min(1, { message: "Выберите допустимую валюту" }),
   budget: z.coerce
     .number()
     .positive({ message: "Бюджет должен быть положительным числом" })
@@ -62,7 +62,7 @@ export default function ProjectCreatePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [projectStatuses, setProjectStatuses] = useState<ProjectStatus[]>([]);
   const [currencies, setCurrencies] = useState<Currency[]>([]);
-  
+
   // Используем фиксированное значение для customerId (1) вместо чтения из localStorage
   // В реальном приложении здесь должен быть код получения ID из сессии/контекста авторизации
   const fixedCustomerId = 1;
@@ -88,41 +88,52 @@ export default function ProjectCreatePage() {
         // Загрузка статусов
         const statusResponse = await fetch("/api/project-statuses");
         if (!statusResponse.ok) {
-          const errorData = await statusResponse.json().catch(() => ({ message: "Не удалось загрузить статусы проектов" }));
-          throw new Error(errorData.message || "Не удалось загрузить статусы проектов");
+          const errorData = await statusResponse.json().catch(() => ({
+            message: "Не удалось загрузить статусы проектов",
+          }));
+          throw new Error(
+            errorData.message || "Не удалось загрузить статусы проектов",
+          );
         }
         const statusData: ProjectStatus[] = await statusResponse.json();
         setProjectStatuses(statusData);
-        
+
         // Устанавливаем статус "Новый" по умолчанию или первый доступный статус
         if (statusData.length > 0) {
-          const defaultStatus = statusData.find(s => s.name === "Новый") || statusData[0];
-          if (defaultStatus && form.setValue) { 
+          const defaultStatus =
+            statusData.find((s) => s.name === "Новый") || statusData[0];
+          if (defaultStatus && form.setValue) {
             form.setValue("status", defaultStatus.id, { shouldValidate: true });
           }
         }
-        
+
         // Загрузка валют
         const currencyResponse = await fetch("/api/currencies");
         if (!currencyResponse.ok) {
-          const errorData = await currencyResponse.json().catch(() => ({ message: "Не удалось загрузить валюты" }));
+          const errorData = await currencyResponse
+            .json()
+            .catch(() => ({ message: "Не удалось загрузить валюты" }));
           throw new Error(errorData.message || "Не удалось загрузить валюты");
         }
         const currencyData: Currency[] = await currencyResponse.json();
         setCurrencies(currencyData);
-        
+
         // Устанавливаем USD по умолчанию или первую доступную валюту
         if (currencyData.length > 0) {
-          const defaultCurrency = currencyData.find(c => c.isoCode === "USD") || currencyData[0];
-          if (defaultCurrency && form.setValue) { 
-            form.setValue("currency", defaultCurrency.id, { shouldValidate: true });
+          const defaultCurrency =
+            currencyData.find((c) => c.isoCode === "USD") || currencyData[0];
+          if (defaultCurrency && form.setValue) {
+            form.setValue("currency", defaultCurrency.id, {
+              shouldValidate: true,
+            });
           }
         }
       } catch (error: any) {
         console.error("Ошибка при загрузке данных:", error);
         toast({
           title: "Ошибка загрузки данных",
-          description: error.message || "Не удалось загрузить необходимые данные.",
+          description:
+            error.message || "Не удалось загрузить необходимые данные.",
           variant: "destructive",
         });
       } finally {
@@ -135,7 +146,7 @@ export default function ProjectCreatePage() {
 
   const onSubmit = async (data: ProjectFormValues) => {
     setIsLoading(true);
-    
+
     console.log("Данные формы перед отправкой:", data);
 
     const dataToSend = {
@@ -158,7 +169,7 @@ export default function ProjectCreatePage() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.error || `Ошибка создания проекта: ${response.statusText}`
+          errorData.error || `Ошибка создания проекта: ${response.statusText}`,
         );
       }
 
@@ -176,7 +187,7 @@ export default function ProjectCreatePage() {
       } else {
         router.push("/projects");
       }
-      router.refresh(); 
+      router.refresh();
     } catch (error) {
       console.error("Не удалось создать проект:", error);
       const errorMessage =
@@ -192,16 +203,24 @@ export default function ProjectCreatePage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" data-oid="7nqd..3">
       {/* Заголовок и кнопки на прозрачном фоне над карточкой */}
-      <div className="flex items-center justify-between" data-component-name="ProjectCreatePage">
-        <div className="flex items-center gap-4">
-          <Link href="/projects">
-            <Button variant="outline" className="h-10 w-10 rounded-full">
-              <ArrowLeft className="h-4 w-4" />
+      <div
+        className="flex items-center justify-between"
+        data-component-name="ProjectCreatePage"
+        data-oid="vwhkw4e"
+      >
+        <div className="flex items-center gap-4" data-oid="amv6m4y">
+          <Link href="/projects" data-oid="wjfr_c1">
+            <Button
+              variant="outline"
+              className="h-10 w-10 rounded-full"
+              data-oid="84ismfs"
+            >
+              <ArrowLeft className="h-4 w-4" data-oid="qjdl.gu" />
             </Button>
           </Link>
-          <h2 className="text-2xl font-bold tracking-tight">
+          <h2 className="text-2xl font-bold tracking-tight" data-oid="xp_qexi">
             Создание нового проекта
           </h2>
         </div>
@@ -210,68 +229,77 @@ export default function ProjectCreatePage() {
           form="new-project-form"
           disabled={isLoading}
           className="rounded-full"
+          data-oid="hsl6068"
         >
-          <Save className="mr-2 h-4 w-4" /> Сохранить
+          <Save className="mr-2 h-4 w-4" data-oid="jyrbxe9" /> Сохранить
         </Button>
       </div>
 
       {/* Карточка с формой */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Детали проекта</CardTitle>
-          <CardDescription>
+      <Card data-oid="9b55034">
+        <CardHeader data-oid="1i43kb0">
+          <CardTitle data-oid="99950ea">Детали проекта</CardTitle>
+          <CardDescription data-oid="e:aqqjn">
             Введите информацию о новом проекте
           </CardDescription>
         </CardHeader>
-        
-        <CardContent>
-          <Form {...form}>
+
+        <CardContent data-oid="h6x._pp">
+          <Form {...form} data-oid="ya:axo1">
             <form
               id="new-project-form"
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-8"
+              data-oid="hcer-ja"
             >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Название проекта</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Введите название проекта" {...field} />
+                  <FormItem data-oid="dy8z6xc">
+                    <FormLabel data-oid="h8b7:ft">Название проекта</FormLabel>
+                    <FormControl data-oid="f4073-y">
+                      <Input
+                        placeholder="Введите название проекта"
+                        {...field}
+                        data-oid="s24q8-_"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage data-oid=".0dyx2y" />
                   </FormItem>
                 )}
+                data-oid="v9y3lkv"
               />
 
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Описание</FormLabel>
-                    <FormControl>
+                  <FormItem data-oid="4eekjp.">
+                    <FormLabel data-oid="px5mjee">Описание</FormLabel>
+                    <FormControl data-oid="78pexbt">
                       <Textarea
                         placeholder="Введите описание проекта"
                         className="min-h-32"
                         {...field}
                         value={field.value || ""}
+                        data-oid="9_wrtwp"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage data-oid="zdxe.wo" />
                   </FormItem>
                 )}
+                data-oid=".w_tl8o"
               />
 
-              <div className="flex gap-6">
+              <div className="flex gap-6" data-oid="y8d3tzb">
                 <FormField
                   control={form.control}
                   name="budget"
                   render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Бюджет</FormLabel>
-                      <FormControl>
+                    <FormItem className="flex-1" data-oid="jhbm7zn">
+                      <FormLabel data-oid="sa.p7yj">Бюджет</FormLabel>
+                      <FormControl data-oid="wras8xf">
                         <Input
                           type="number"
                           placeholder="Введите бюджет"
@@ -279,69 +307,91 @@ export default function ProjectCreatePage() {
                           value={field.value || ""}
                           onChange={(e) => {
                             const value = e.target.value;
-                            field.onChange(value === "" ? undefined : Number(value));
+                            field.onChange(
+                              value === "" ? undefined : Number(value),
+                            );
                           }}
+                          data-oid=":wezycm"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage data-oid="hlyealw" />
                     </FormItem>
                   )}
+                  data-oid="ajuimeq"
                 />
 
                 <FormField
                   control={form.control}
                   name="currency"
                   render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Валюта</FormLabel>
+                    <FormItem className="flex-1" data-oid="l84cj0.">
+                      <FormLabel data-oid="v:b612f">Валюта</FormLabel>
                       <Select
                         value={field.value?.toString() || ""}
                         onValueChange={(value) => field.onChange(Number(value))}
+                        data-oid=":-44e4g"
                       >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Выберите валюту" />
+                        <FormControl data-oid="he0lgq_">
+                          <SelectTrigger data-oid="-65z8wn">
+                            <SelectValue
+                              placeholder="Выберите валюту"
+                              data-oid="_4pzje5"
+                            />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent data-oid="v0nikuz">
                           {currencies.map((currency) => (
-                            <SelectItem key={currency.id} value={currency.id.toString()}>
+                            <SelectItem
+                              key={currency.id}
+                              value={currency.id.toString()}
+                              data-oid="y5yz4vm"
+                            >
                               {currency.isoCode}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage data-oid="mitw89a" />
                     </FormItem>
                   )}
+                  data-oid="1l5v-yo"
                 />
 
                 <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Статус</FormLabel>
+                    <FormItem className="flex-1" data-oid=".2o0g24">
+                      <FormLabel data-oid="sygsw1b">Статус</FormLabel>
                       <Select
                         value={field.value?.toString() || ""}
                         onValueChange={(value) => field.onChange(Number(value))}
+                        data-oid="t2qaeeg"
                       >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Выберите статус" />
+                        <FormControl data-oid="7:w_qkz">
+                          <SelectTrigger data-oid="m3c0q.x">
+                            <SelectValue
+                              placeholder="Выберите статус"
+                              data-oid="m7rn:_5"
+                            />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent data-oid="2h-aw4c">
                           {projectStatuses.map((status) => (
-                            <SelectItem key={status.id} value={status.id.toString()}>
+                            <SelectItem
+                              key={status.id}
+                              value={status.id.toString()}
+                              data-oid="4z-apze"
+                            >
                               {status.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage data-oid="kafe016" />
                     </FormItem>
                   )}
+                  data-oid="om1fa_7"
                 />
               </div>
             </form>

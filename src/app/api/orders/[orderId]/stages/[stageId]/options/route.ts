@@ -151,14 +151,11 @@ export async function POST(
       return NextResponse.json({ error: 'Название опции обязательно' }, { status: 400 });
     }
     
-    // Проверяем калькулируемый тип (новый способ через pricing_type_id или старый через pricing_type)
-    const priceTypeIsCalculable = 
-      (data.pricing_type_id === 1) || // ID=1 для Калькулируемая (предполагаем, что в базе данных)
-      (data.pricing_type === 'calculable') || 
-      (data.pricing_type === 'Калькулируемая');
+    // Проверяем калькулируемый тип - только по новому полю pricing_type_id
+    const isCalculable = data.pricing_type_id === 1; // ID=1 для Калькулируемая
     
     // Если тип калькулируемый, то проверяем наличие необходимых полей
-    if (priceTypeIsCalculable) {
+    if (isCalculable) {
       if (data.nominal_volume === null || data.nominal_volume === undefined) {
         return NextResponse.json({ error: 'Для калькулируемой опции необходимо указать номинальный объем' }, { status: 400 });
       }
@@ -170,16 +167,15 @@ export async function POST(
     
     // Преобразуем данные для сохранения
     const optionData = {
-      order_stage_id: stageId,
+      order_stage_id: Number(stageId),
       name: data.name,
-      description: data.description || null,
-      pricing_type: data.pricing_type || 'included', // Сохраняем для обратной совместимости
-      pricing_type_id: data.pricing_type_id || null, // Новое поле
+      description: data.description || '',
+      pricing_type_id: data.pricing_type_id, // Только новое поле
       volume_min: data.volume_min || null,
       volume_max: data.volume_max || null,
-      volume_unit: data.volume_unit || null,
+      volume_unit_id: data.volume_unit_id || null, // Только новое поле
       nominal_volume: data.nominal_volume || null,
-      price_per_unit: data.price_per_unit || null
+      price_per_unit: data.price_per_unit || null,
     };
     
     // Рассчитываем calculated_price_min и calculated_price_max
@@ -188,9 +184,8 @@ export async function POST(
     
     // Используем тот же флаг калькулируемости, что и выше
     
-    if (priceTypeIsCalculable && data.nominal_volume && data.price_per_unit) {
+    if (isCalculable && data.nominal_volume && data.price_per_unit) {
       console.log('Рассчитываем стоимость для калькулируемой опции:', {
-        pricing_type: data.pricing_type,
         pricing_type_id: data.pricing_type_id,
         volume_min: data.volume_min,
         volume_max: data.volume_max,
@@ -212,22 +207,21 @@ export async function POST(
     // Вставляем запись в БД
     const [result] = await db.sequelize.query(
       `INSERT INTO order_stage_options(
-        order_stage_id, name, description, pricing_type, pricing_type_id,
-        volume_min, volume_max, volume_unit, nominal_volume, 
+        order_stage_id, name, description, pricing_type_id,
+        volume_min, volume_max, volume_unit_id, nominal_volume, 
         price_per_unit, calculated_price_min, calculated_price_max,
         created_at, updated_at
-      ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
+      ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
       RETURNING *`,
       {
         bind: [
           optionData.order_stage_id,
           optionData.name,
           optionData.description,
-          optionData.pricing_type,
           optionData.pricing_type_id,
           optionData.volume_min,
           optionData.volume_max,
-          optionData.volume_unit,
+          optionData.volume_unit_id,
           optionData.nominal_volume,
           optionData.price_per_unit,
           calculated_price_min,

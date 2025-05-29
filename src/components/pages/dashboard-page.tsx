@@ -68,7 +68,7 @@ export default function DashboardPage() {
     return (
       <div
         className="flex min-h-screen items-center justify-center"
-        data-oid="om1phjm"
+        data-oid="k8xsrv-"
       >
         Loading Dashboard...
       </div>
@@ -80,7 +80,7 @@ export default function DashboardPage() {
     return (
       <div
         className="flex min-h-screen items-center justify-center"
-        data-oid="et_dqoh"
+        data-oid="fi4nux8"
       >
         User not found. Please log in.
       </div>
@@ -90,25 +90,25 @@ export default function DashboardPage() {
   const userRole = authUser.role;
 
   return (
-    <div className="flex flex-col gap-6" data-oid="h58:la8">
-      <div className="flex items-center justify-between" data-oid="9hymxjh">
-        <h2 className="text-2xl font-bold tracking-tight" data-oid="x231146">
+    <div className="flex flex-col gap-6" data-oid="lh7s:lf">
+      <div className="flex items-center justify-between" data-oid="luuq1a:">
+        <h2 className="text-2xl font-bold tracking-tight" data-oid="siyfrfs">
           Dashboard
         </h2>
         {userRole === "Заказчик" && (
-          <Link href="/projects" passHref data-oid="da42h45">
+          <Link href="/projects" passHref data-oid="4zxr:wu">
             {" "}
             {/* Assuming /projects is where you create projects */}
-            <Button variant="default" data-oid="113q2mb">
-              <PlusCircle className="mr-2 h-4 w-4" data-oid="_htm5_e" /> Create
+            <Button variant="default" data-oid="4xzjjob">
+              <PlusCircle className="mr-2 h-4 w-4" data-oid="ltxza3c" /> Create
               New Project
             </Button>
           </Link>
         )}
         {userRole === "Исполнитель" && (
-          <Link href="/find-orders" passHref data-oid="0rddgfv">
-            <Button variant="outline" data-oid="kv0z:er">
-              <SearchIcon className="mr-2 h-4 w-4" data-oid="mizy3ag" /> Find
+          <Link href="/find-orders" passHref data-oid="3.-v3g1">
+            <Button variant="outline" data-oid="84i5tpn">
+              <SearchIcon className="mr-2 h-4 w-4" data-oid="5bm90av" /> Find
               Orders {/* Use imported SearchIcon */}
             </Button>
           </Link>
@@ -118,95 +118,95 @@ export default function DashboardPage() {
 
       <div
         className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
-        data-oid="ldk-rwm"
+        data-oid="yooa3ny"
       >
-        <Card data-oid="gxps_p0">
+        <Card data-oid="3rqd31k">
           <CardHeader
             className="flex flex-row items-center justify-between space-y-0 pb-2"
-            data-oid="hlpo8xi"
+            data-oid="9xd-cjh"
           >
-            <CardTitle className="text-sm font-medium" data-oid="pljh3_c">
+            <CardTitle className="text-sm font-medium" data-oid="uvk.gtl">
               {userRole === "Исполнитель"
                 ? "Active Assignments"
                 : "Active Projects"}
             </CardTitle>
             <Briefcase
               className="h-4 w-4 text-muted-foreground"
-              data-oid="zuwa2gm"
+              data-oid="ig3rf.p"
             />
           </CardHeader>
-          <CardContent data-oid="2:zyoxe">
-            <div className="text-2xl font-bold" data-oid="0iub5so">
+          <CardContent data-oid="ol59nb_">
+            <div className="text-2xl font-bold" data-oid="kp9km3m">
               {activeProjects}
             </div>
-            <p className="text-xs text-muted-foreground" data-oid="stqf-aj">
+            <p className="text-xs text-muted-foreground" data-oid=".s:ei3d">
               {userRole === "Исполнитель"
                 ? "Assignments in progress"
                 : "Projects currently in progress"}
             </p>
           </CardContent>
         </Card>
-        <Card data-oid=":ptncaz">
+        <Card data-oid="wvtvnvt">
           <CardHeader
             className="flex flex-row items-center justify-between space-y-0 pb-2"
-            data-oid="f96c91s"
+            data-oid="iyz7q6v"
           >
-            <CardTitle className="text-sm font-medium" data-oid="2zit7kd">
+            <CardTitle className="text-sm font-medium" data-oid="_i6r:6s">
               {userRole === "Исполнитель" ? "Pending Tasks" : "Tasks Overview"}
             </CardTitle>
             <Activity
               className="h-4 w-4 text-muted-foreground"
-              data-oid="wmng8gu"
+              data-oid="pxnd_gj"
             />
           </CardHeader>
-          <CardContent data-oid="ah29:ey">
-            <div className="text-2xl font-bold" data-oid="fc6zdii">
+          <CardContent data-oid="br0p5w.">
+            <div className="text-2xl font-bold" data-oid="x090zni">
               {pendingTasks}
             </div>
             {userRole === "Заказчик" && (
-              <p className="text-xs text-muted-foreground" data-oid="0m1pqq.">
+              <p className="text-xs text-muted-foreground" data-oid=":cloj:m">
                 Tasks awaiting review or action
               </p>
             )}
             {userRole === "Исполнитель" && (
-              <p className="text-xs text-muted-foreground" data-oid="a:zxo9o">
+              <p className="text-xs text-muted-foreground" data-oid="810b2:.">
                 Your assigned tasks requiring action
               </p>
             )}
             {(userRole === "Администратор" || userRole === "Модератор") && (
-              <p className="text-xs text-muted-foreground" data-oid="58e0upy">
+              <p className="text-xs text-muted-foreground" data-oid="e:pesct">
                 Total pending tasks on platform
               </p>
             )}
           </CardContent>
         </Card>
-        <Card data-oid="1x68:rf">
+        <Card data-oid="7njr6l0">
           <CardHeader
             className="flex flex-row items-center justify-between space-y-0 pb-2"
-            data-oid="cmmjlle"
+            data-oid="iro4092"
           >
-            <CardTitle className="text-sm font-medium" data-oid="iid.vp1">
+            <CardTitle className="text-sm font-medium" data-oid="e1u-:.h">
               Account Balance
             </CardTitle>
             <DollarSign
               className="h-4 w-4 text-muted-foreground"
-              data-oid="ke-t2ka"
+              data-oid="phkpj45"
             />
           </CardHeader>
-          <CardContent data-oid="mo:gr7-">
-            <div className="text-2xl font-bold" data-oid="g2tntph">
+          <CardContent data-oid="_g.lq:d">
+            <div className="text-2xl font-bold" data-oid="zxyc5m_">
               {currency} {currentBalance.toFixed(2)}
             </div>
-            <p className="text-xs text-muted-foreground" data-oid="8wlflsi">
+            <p className="text-xs text-muted-foreground" data-oid="q0x9lm7">
               Your current internal balance
             </p>
             {/* Link to finance page */}
-            <Link href="/finance" passHref data-oid="jdx:zsc">
+            <Link href="/finance" passHref data-oid="584wcpp">
               <Button
                 variant="link"
                 size="sm"
                 className="p-0 h-auto mt-1"
-                data-oid="zdifiix"
+                data-oid="g0zehxn"
               >
                 View Finance
               </Button>
@@ -216,15 +216,15 @@ export default function DashboardPage() {
       </div>
 
       {/* Placeholder for recent activity or project list */}
-      <Card data-oid="ui1r:af">
-        <CardHeader data-oid="ga-rwa:">
-          <CardTitle data-oid="0l-w9g8">Recent Activity</CardTitle>
-          <CardDescription data-oid="m43sxft">
+      <Card data-oid="b-w1lg7">
+        <CardHeader data-oid=".bmaupz">
+          <CardTitle data-oid="lzcif2e">Recent Activity</CardTitle>
+          <CardDescription data-oid="a2tiz1a">
             Overview of recent actions and updates relevant to you.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="o5.bys1">
-          <p className="text-sm text-muted-foreground" data-oid="9ip.v7d">
+        <CardContent data-oid="yu9quq4">
+          <p className="text-sm text-muted-foreground" data-oid="9wu77re">
             No recent activity to display.
           </p>
           {/* TODO: Populate with actual recent activity data (e.g., bids placed, tasks completed, messages received) */}

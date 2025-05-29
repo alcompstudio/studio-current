@@ -40,10 +40,10 @@ export default function ProjectStatusesPage() {
     const fetchProjectStatuses = async () => {
       try {
         setIsLoading(true);
-        
+
         // Запрашиваем данные из БД через API
         const response = await fetch("/api/settings/project-statuses");
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(
@@ -51,7 +51,7 @@ export default function ProjectStatusesPage() {
               `Ошибка получения статусов проектов: ${response.statusText}`,
           );
         }
-        
+
         const data = await response.json();
         setProjectStatuses(data);
         setError(null);
@@ -78,118 +78,165 @@ export default function ProjectStatusesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" data-oid="jf6v3_9">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold">Статусы проектов</h1>
-          <p className="text-sm text-muted-foreground">
+      <div className="flex items-center justify-between" data-oid=".49x883">
+        <div data-oid=":tq0ewd">
+          <h1 className="text-xl font-semibold" data-oid="vzc_zga">
+            Статусы проектов
+          </h1>
+          <p className="text-sm text-muted-foreground" data-oid="1bi9le_">
             Управление различными статусами для ваших проектов.
           </p>
         </div>
-        <div className="flex gap-2">
-          <ViewToggle view={view} onViewChange={setView} />
-          <Button asChild>
-            <Link href="/settings/project-statuses/new">
-              <Plus className="w-4 h-4 mr-2" /> Создать статус проекта
+        <div className="flex gap-2" data-oid="cp4m29m">
+          <ViewToggle view={view} onViewChange={setView} data-oid="jbxf.ds" />
+          <Button asChild data-oid="_jtlt4.">
+            <Link href="/settings/project-statuses/new" data-oid="_w02:92">
+              <Plus className="w-4 h-4 mr-2" data-oid="fncvoh_" /> Создать
+              статус проекта
             </Link>
           </Button>
         </div>
       </div>
 
       {/* Status List Content */}
-      <div>
+      <div data-oid="c_r8blb">
         {isLoading && (
-          <Card className="shadow-sm border-none">
-            <CardContent className="flex items-center justify-center gap-2 py-6 text-muted-foreground">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              <p>Загрузка статусов проектов...</p>
+          <Card className="shadow-sm border-none" data-oid="c10ypgg">
+            <CardContent
+              className="flex items-center justify-center gap-2 py-6 text-muted-foreground"
+              data-oid="edfq9qh"
+            >
+              <Loader2 className="h-5 w-5 animate-spin" data-oid="q4iwstr" />
+              <p data-oid="3douk86">Загрузка статусов проектов...</p>
             </CardContent>
           </Card>
         )}
         {error && (
-          <Card className="shadow-sm border-destructive bg-destructive/10">
-            <CardContent className="flex items-center gap-2 text-destructive py-4">
-              <AlertTriangle className="h-5 w-5" />
-              <p className="text-sm font-semibold">
+          <Card
+            className="shadow-sm border-destructive bg-destructive/10"
+            data-oid="5aqou:j"
+          >
+            <CardContent
+              className="flex items-center gap-2 text-destructive py-4"
+              data-oid="g8v212x"
+            >
+              <AlertTriangle className="h-5 w-5" data-oid="9x2__g5" />
+              <p className="text-sm font-semibold" data-oid="q.i7alp">
                 Ошибка загрузки статусов проектов: {error}
               </p>
             </CardContent>
           </Card>
         )}
-        
-        {!isLoading && !error && (
-          view === "table" ? (
-            <Card>
-              <StatusTable 
-                items={projectStatuses} 
-                basePath="/settings/project-statuses" 
-                onDelete={handleDelete} 
+
+        {!isLoading &&
+          !error &&
+          (view === "table" ? (
+            <Card data-oid=".f-8171">
+              <StatusTable
+                items={projectStatuses}
+                basePath="/settings/project-statuses"
+                onDelete={handleDelete}
+                data-oid="_:hdsfz"
               />
             </Card>
           ) : (
-            <div className="space-y-4">
-              {projectStatuses.length > 0 ? projectStatuses.map((status) => (
-                <Card
-                  key={status.id}
-                  className="shadow-sm hover:shadow-md transition-shadow border-none"
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg font-semibold flex items-center">
-                        <Palette className="mr-2 h-5 w-5" style={{ color: status.textColor }} />
-                        {status.name}
-                      </CardTitle>
+            <div className="space-y-4" data-oid="ywar_aa">
+              {projectStatuses.length > 0 ? (
+                projectStatuses.map((status) => (
+                  <Card
+                    key={status.id}
+                    className="shadow-sm hover:shadow-md transition-shadow border-none"
+                    data-oid="yt9.gpj"
+                  >
+                    <CardHeader className="pb-3" data-oid="4zo9fjd">
                       <div
-                        className="rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent flex items-center"
-                        style={{
-                          backgroundColor: status.backgroundColor,
-                          color: status.textColor,
-                          borderColor: status.textColor
-                        }}
+                        className="flex justify-between items-start"
+                        data-oid="h86x6xr"
                       >
-                        {status.name}
+                        <CardTitle
+                          className="text-lg font-semibold flex items-center"
+                          data-oid="3eztstf"
+                        >
+                          <Palette
+                            className="mr-2 h-5 w-5"
+                            style={{ color: status.textColor }}
+                            data-oid="7cu7qu3"
+                          />
+
+                          {status.name}
+                        </CardTitle>
+                        <div
+                          className="rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent flex items-center"
+                          style={{
+                            backgroundColor: status.backgroundColor,
+                            color: status.textColor,
+                            borderColor: status.textColor,
+                          }}
+                          data-oid="82h1k.i"
+                        >
+                          {status.name}
+                        </div>
                       </div>
-                    </div>
-                    <CardDescription>
-                      ID: {status.id}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        asChild
+                      <CardDescription data-oid="_cql729">
+                        ID: {status.id}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent data-oid="lg3i_93">
+                      <div
+                        className="flex items-center gap-2"
+                        data-oid="ckuk08t"
                       >
-                        <Link href={`/settings/project-statuses/${status.id}/edit`}>
-                          <Edit3 className="mr-1 h-3.5 w-3.5" /> Редактировать
-                        </Link>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => handleDelete(status.id)}
-                      >
-                        <Trash2 className="mr-1 h-3.5 w-3.5" /> Удалить
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-              : (
-                <Card className="shadow-sm border-none">
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground py-4 text-center">
-                      Статусы проектов не найдены. Создайте статус, чтобы начать работу.
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          data-oid="6oftxh3"
+                        >
+                          <Link
+                            href={`/settings/project-statuses/${status.id}/edit`}
+                            data-oid="1sl6j9f"
+                          >
+                            <Edit3
+                              className="mr-1 h-3.5 w-3.5"
+                              data-oid="0b9ru9e"
+                            />{" "}
+                            Редактировать
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => handleDelete(status.id)}
+                          data-oid="fdsw8w3"
+                        >
+                          <Trash2
+                            className="mr-1 h-3.5 w-3.5"
+                            data-oid="zi1u3xj"
+                          />{" "}
+                          Удалить
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card className="shadow-sm border-none" data-oid="9gqjenx">
+                  <CardContent data-oid="4vs9jc:">
+                    <p
+                      className="text-sm text-muted-foreground py-4 text-center"
+                      data-oid="s6czwka"
+                    >
+                      Статусы проектов не найдены. Создайте статус, чтобы начать
+                      работу.
                     </p>
                   </CardContent>
                 </Card>
               )}
             </div>
-          )
-        )}
+          ))}
       </div>
     </div>
   );

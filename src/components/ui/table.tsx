@@ -1,6 +1,16 @@
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
+
+// Контекст для управления стилями таблицы
+interface TableContextValue {
+  isInHeader: boolean;
+}
+
+const TableContext = React.createContext<TableContextValue>({
+  isInHeader: false,
+});
+
+const useTableContext = () => React.useContext(TableContext);
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -9,7 +19,10 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto shadow-none border-0 rounded-t-2xl">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm border-none shadow-none", className)}
+      className={cn(
+        "w-full caption-bottom text-sm border-none shadow-none",
+        className,
+      )}
       {...props}
     />
   </div>
@@ -19,9 +32,26 @@ Table.displayName = "Table";
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b-[3px] [&_tr]:border-[#f9fafb] bg-sidebar-accent", className)} {...props} />
-));
+>(({ className, children, ...props }, ref) => {
+  const contextValue = React.useMemo(
+    () => ({
+      isInHeader: true,
+    }),
+    [],
+  );
+
+  return (
+    <TableContext.Provider value={contextValue}>
+      <thead
+        ref={ref}
+        className={cn("bg-sidebar-accent", className)}
+        {...props}
+      >
+        {children}
+      </thead>
+    </TableContext.Provider>
+  );
+});
 TableHeader.displayName = "TableHeader";
 
 const TableBody = React.forwardRef<
@@ -30,7 +60,7 @@ const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("[&_tr:last-child]:border-0", className)}
+    className={cn("", className)}
     {...props}
   />
 ));
@@ -54,16 +84,21 @@ TableFooter.displayName = "TableFooter";
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b-[3px] border-[#f9fafb] transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className,
-    )}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { isInHeader } = useTableContext();
+
+  return (
+    <tr
+      ref={ref}
+      className={cn(
+        "border-b border-[#f9fafb] transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+        isInHeader && "border-b-0",
+        className,
+      )}
+      {...props}
+    />
+  );
+});
 TableRow.displayName = "TableRow";
 
 const TableHead = React.forwardRef<
@@ -87,7 +122,12 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    className={cn(
+      "p-4 align-middle [&:has([role=checkbox])]:pr-0", 
+      // Улучшаем вертикальное выравнивание элементов внутри ячейки
+      "[&>div]:flex [&>div]:items-center [&>div]:justify-start [&>div]:gap-2",
+      className
+    )}
     {...props}
   />
 ));

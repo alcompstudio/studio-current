@@ -11,57 +11,62 @@ flowchart TD
     db_ts --> models
 ```
 
-### `sequelize` (BindingElement)
+### `sequelize` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `Sequelize` (BindingElement)
+### `Sequelize` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `User` (BindingElement)
+### `User` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `Customer` (BindingElement)
+### `Customer` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `Project` (BindingElement)
+### `Project` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `Order` (BindingElement)
+### `Order` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `ProjectStatusOS` (BindingElement)
+### `ProjectStatusOS` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `CurrencyOS` (BindingElement)
+### `CurrencyOS` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `Stage` (BindingElement)
+### `Stage` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `StageOption` (BindingElement)
+### `StageOption` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 
 ---
-### `connectDB` (Variable (Identifier))
+### `UnitOs` (Variable (PropertyAccessExpression))
+
+*Источник: `src/lib\db.ts`*
+
+---
+### `connectDB` (Variable (PropertyAccessExpression))
 
 *Источник: `src/lib\db.ts`*
 

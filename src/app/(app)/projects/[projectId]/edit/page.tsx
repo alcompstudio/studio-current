@@ -35,7 +35,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Project, ProjectStatus, Customer, Order, Currency } from "@/types"; 
+import type {
+  Project,
+  ProjectStatus,
+  Customer,
+  Order,
+  Currency,
+} from "@/types";
 // REMOVE MOCK DATA IMPORT
 // import { mockProjects } from '../../mockProjects';
 import { useToast } from "@/hooks/use-toast";
@@ -46,9 +52,11 @@ import { useToast } from "@/hooks/use-toast";
 const projectFormSchema = z.object({
   name: z.string().min(1, { message: "Project name is required." }),
   description: z.string().nullable().optional(), // Allow null or undefined
-  status: z.coerce.number({ required_error: "Статус обязателен" })
+  status: z.coerce
+    .number({ required_error: "Статус обязателен" })
     .min(1, { message: "Выберите допустимый статус" }),
-  currency: z.coerce.number({ required_error: "Валюта обязательна" })
+  currency: z.coerce
+    .number({ required_error: "Валюта обязательна" })
     .min(1, { message: "Выберите допустимую валюту" }),
   // budget comes as number or null, form input gives string or ""
   budget: z.preprocess(
@@ -68,8 +76,12 @@ export default function ProjectEditPage() {
   const projectId = params?.projectId;
   const router = useRouter();
   const { toast } = useToast();
-  const [availableStatuses, setAvailableStatuses] = React.useState<ProjectStatus[]>([]);
-  const [availableCurrencies, setAvailableCurrencies] = React.useState<Currency[]>([]);
+  const [availableStatuses, setAvailableStatuses] = React.useState<
+    ProjectStatus[]
+  >([]);
+  const [availableCurrencies, setAvailableCurrencies] = React.useState<
+    Currency[]
+  >([]);
 
   const [project, setProject] = React.useState<Project | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -157,17 +169,17 @@ export default function ProjectEditPage() {
     const fetchData = async () => {
       try {
         // Загрузка статусов
-        const statusResponse = await fetch('/api/project-statuses');
+        const statusResponse = await fetch("/api/project-statuses");
         if (!statusResponse.ok) {
-          throw new Error('Failed to fetch project statuses');
+          throw new Error("Failed to fetch project statuses");
         }
         const statusData: ProjectStatus[] = await statusResponse.json();
         setAvailableStatuses(statusData);
-        
+
         // Загрузка валют
-        const currencyResponse = await fetch('/api/currencies');
+        const currencyResponse = await fetch("/api/currencies");
         if (!currencyResponse.ok) {
-          throw new Error('Failed to fetch currencies');
+          throw new Error("Failed to fetch currencies");
         }
         const currencyData: Currency[] = await currencyResponse.json();
         setAvailableCurrencies(currencyData);
@@ -180,7 +192,7 @@ export default function ProjectEditPage() {
         });
       }
     };
-    
+
     fetchData();
   }, [toast]);
 
@@ -199,7 +211,7 @@ export default function ProjectEditPage() {
     // Data is already validated by Zod schema with preprocess
     // Ensure budget is null if it's NaN after preprocess (e.g., user typed non-numeric)
     const dataToSend = {
-      title: data.name,         // переименовываем name в title для соответствия API
+      title: data.name, // переименовываем name в title для соответствия API
       description: data.description,
       status: data.status,
       currency: data.currency,
@@ -258,9 +270,9 @@ export default function ProjectEditPage() {
     return (
       <div
         className="flex justify-center items-center min-h-[300px]"
-        data-oid="7dbx7up"
+        data-oid="kpbhjoi"
       >
-        <p data-oid="wz7fmw8">Loading project details...</p>
+        <p data-oid="c3rio.o">Loading project details...</p>
       </div>
     );
   }
@@ -270,9 +282,9 @@ export default function ProjectEditPage() {
     return (
       <div
         className="flex justify-center items-center min-h-[300px]"
-        data-oid=":61ppyh"
+        data-oid="0p7gluu"
       >
-        <p className="text-destructive" data-oid="7g.bm39">
+        <p className="text-destructive" data-oid="ctbvpkx">
           Could not load project details.
         </p>
       </div>
@@ -280,17 +292,17 @@ export default function ProjectEditPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6" data-oid="rh3crit">
+    <div className="flex flex-col gap-6" data-oid="-mu01fq">
       {/* Header */}
-      <div className="flex items-center justify-between" data-oid="4-e8m-o">
-        <div className="flex items-center gap-4" data-oid="_pyvumt">
-          <Link href={`/projects/${projectId}`} passHref data-oid="by9r9-i">
-            <Button variant="outline" size="icon" data-oid="yjot_-r">
-              <ArrowLeft className="h-4 w-4" data-oid="zej_g_i" />
+      <div className="flex items-center justify-between" data-oid="jebxfc.">
+        <div className="flex items-center gap-4" data-oid="k2d645k">
+          <Link href={`/projects/${projectId}`} passHref data-oid="1_-5k4t">
+            <Button variant="outline" size="icon" data-oid="ihyep7p">
+              <ArrowLeft className="h-4 w-4" data-oid="a-jf_4o" />
             </Button>
           </Link>
           {/* Display project name from fetched data */}
-          <h2 className="text-2xl font-bold tracking-tight" data-oid="92hyun1">
+          <h2 className="text-2xl font-bold tracking-tight" data-oid="yjyp7j6">
             Edit Project: {project.title}
           </h2>
         </div>
@@ -298,155 +310,169 @@ export default function ProjectEditPage() {
           type="submit"
           form="project-edit-form"
           disabled={form.formState.isSubmitting}
-          data-oid="8q8yflh"
+          data-oid="h4u4xw."
         >
           {form.formState.isSubmitting ? (
             "Saving..."
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4" data-oid="6irchpw" /> Save Changes
+              <Save className="mr-2 h-4 w-4" data-oid="c31:f:m" /> Save Changes
             </>
           )}
         </Button>
       </div>
 
       {/* Edit Form Card */}
-      <Card data-oid="ix_p7kj">
-        <CardHeader data-oid="0dwkq5e">
-          <CardTitle data-oid="9gb_7zv">Project Details</CardTitle>
-          <CardDescription data-oid="9s4l:.f">
+      <Card data-oid="7_y_bm8">
+        <CardHeader data-oid="7u678rf">
+          <CardTitle data-oid="-6m113j">Project Details</CardTitle>
+          <CardDescription data-oid="g-w65ly">
             Update the project information below.
           </CardDescription>
         </CardHeader>
-        <CardContent data-oid="lzkzsbm">
-          <Form {...form} data-oid="f1cjph:">
+        <CardContent data-oid="tj6qzus">
+          <Form {...form} data-oid=":5thvzd">
             <form
               id="project-edit-form"
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-6"
-              data-oid=".kn3341"
+              data-oid="w4_gy96"
             >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem data-oid="ah-ilf5">
-                    <FormLabel data-oid="2.rtf78">Project Name</FormLabel>
-                    <FormControl data-oid="b:rpe5f">
+                  <FormItem data-oid="ai:rp:u">
+                    <FormLabel data-oid="p1_es5_">Project Name</FormLabel>
+                    <FormControl data-oid="wz6wkip">
                       <Input
                         placeholder="Enter project name"
                         {...field}
-                        data-oid="aa_fpki"
+                        data-oid="6ppaxsj"
                       />
                     </FormControl>
-                    <FormMessage data-oid="bpmjwuh" />
+                    <FormMessage data-oid="3sk7ix3" />
                   </FormItem>
                 )}
-                data-oid="t1q8jd."
+                data-oid="gcnak_c"
               />
 
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem data-oid="bxbjqyw">
-                    <FormLabel data-oid=":9udbdi">Description</FormLabel>
-                    <FormControl data-oid=".sb7opo">
+                  <FormItem data-oid="b:wwh8f">
+                    <FormLabel data-oid="z3:-0u4">Description</FormLabel>
+                    <FormControl data-oid="96fjwfx">
                       <Textarea
                         placeholder="Describe the project..."
                         className="min-h-[100px]"
                         {...field}
                         value={field.value ?? ""}
-                        data-oid="6hq4xho"
+                        data-oid="jwhh_tc"
                       />
                     </FormControl>
-                    <FormMessage data-oid="hs2e_zg" />
+                    <FormMessage data-oid="13pafl4" />
                   </FormItem>
                 )}
-                data-oid="lo2_63y"
+                data-oid="q2ca-cy"
               />
 
               <div
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                data-oid="5nul-bl"
+                data-oid="dqjk4hu"
               >
                 <FormField
                   control={form.control}
                   name="status"
                   render={({ field }) => (
-                    <FormItem data-oid="rnfhdgq">
-                      <FormLabel data-oid="8ses6-g">Status</FormLabel>
+                    <FormItem data-oid="zr9kf.2">
+                      <FormLabel data-oid=":deykdo">Status</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value !== undefined ? String(field.value) : undefined}
-                        data-oid="uqe5cpk"
+                        value={
+                          field.value !== undefined
+                            ? String(field.value)
+                            : undefined
+                        }
+                        data-oid="qodvigj"
                       >
-                        <FormControl data-oid="_whqop0">
-                          <SelectTrigger data-oid="19bm14x">
+                        <FormControl data-oid="bl12oc9">
+                          <SelectTrigger data-oid="ilmkn2q">
                             <SelectValue
                               placeholder="Select status"
-                              data-oid="gjp1tqx"
+                              data-oid="j2j00sj"
                             />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent data-oid="sxb9kk0">
-                          {availableStatuses.map((statusItem: ProjectStatus) => (
-                            <SelectItem key={statusItem.id} value={String(statusItem.id)}>
-                              {statusItem.name}
-                            </SelectItem>
-                          ))}
+                        <SelectContent data-oid="q9zi._3">
+                          {availableStatuses.map(
+                            (statusItem: ProjectStatus) => (
+                              <SelectItem
+                                key={statusItem.id}
+                                value={String(statusItem.id)}
+                                data-oid="227a:j5"
+                              >
+                                {statusItem.name}
+                              </SelectItem>
+                            ),
+                          )}
                         </SelectContent>
                       </Select>
-                      <FormMessage data-oid="d7p0r0q" />
+                      <FormMessage data-oid="imiza3i" />
                     </FormItem>
                   )}
-                  data-oid="miv-6nl"
+                  data-oid="owpcjgb"
                 />
 
                 <FormField
                   control={form.control}
                   name="currency"
                   render={({ field }) => (
-                    <FormItem data-oid="ojscmhj">
-                      <FormLabel data-oid="_ogb9iq">Currency</FormLabel>
+                    <FormItem data-oid="l7.xoe5">
+                      <FormLabel data-oid="-webwp5">Currency</FormLabel>
                       <Select
                         onValueChange={(value) => field.onChange(Number(value))}
-                        value={field.value !== undefined ? String(field.value) : undefined}
-                        data-oid="v9tx3:k"
+                        value={
+                          field.value !== undefined
+                            ? String(field.value)
+                            : undefined
+                        }
+                        data-oid="69v:o6_"
                       >
-                        <FormControl data-oid="vje292j">
-                          <SelectTrigger data-oid="dnivyti">
+                        <FormControl data-oid="0caovg8">
+                          <SelectTrigger data-oid="ibnke99">
                             <SelectValue
                               placeholder="Select currency"
-                              data-oid="3f7k51i"
+                              data-oid="hzbbqq7"
                             />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent data-oid="z_u_9_:">
+                        <SelectContent data-oid="ihhiyal">
                           {availableCurrencies.map((currency) => (
                             <SelectItem
                               key={currency.id}
                               value={String(currency.id)}
-                              data-oid="_stvvm2"
+                              data-oid="2ttl11:"
                             >
                               {currency.isoCode}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage data-oid="n4gnl7s" />
+                      <FormMessage data-oid=".tq35gl" />
                     </FormItem>
                   )}
-                  data-oid="cry2c7c"
+                  data-oid="5m_i_kj"
                 />
 
                 <FormField
                   control={form.control}
                   name="budget"
                   render={({ field }) => (
-                    <FormItem data-oid="8rj4g71">
-                      <FormLabel data-oid="qnwleif">Budget</FormLabel>
-                      <FormControl data-oid="_-y2ob9">
+                    <FormItem data-oid="l97_w.b">
+                      <FormLabel data-oid="di1vcz5">Budget</FormLabel>
+                      <FormControl data-oid="1ernt-i">
                         <Input
                           type="number"
                           placeholder="Enter budget amount"
@@ -464,21 +490,21 @@ export default function ProjectEditPage() {
                               value === "" ? null : parseFloat(value),
                             );
                           }}
-                          data-oid=".wkjk8:"
+                          data-oid="gmj5y8t"
                         />
                       </FormControl>
-                      <FormMessage data-oid="93bz30g" />
+                      <FormMessage data-oid="ilyd.3l" />
                     </FormItem>
                   )}
-                  data-oid="ksj1ng6"
+                  data-oid=":9wzw46"
                 />
               </div>
-              <div data-oid="8md14mf">
-                <Label data-oid="l0jydri">Client</Label>
+              <div data-oid="2l3c7hd">
+                <Label data-oid="vt4x_af">Client</Label>
                 {/* Access client name from the nested customer object */}
                 <p
                   className="text-sm text-muted-foreground mt-1"
-                  data-oid="9.97qzg"
+                  data-oid="u01uurf"
                 >
                   {project?.customer?.name || "N/A"}
                 </p>

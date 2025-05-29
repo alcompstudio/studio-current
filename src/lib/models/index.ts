@@ -15,6 +15,7 @@ import defineStage from './Stage'; // Импорт модели этапов з�
 import defineStageOption from './StageOption'; // Импорт модели опций этапов
 import defineStageWorkTypeOS from './StageWorkTypeOS'; // Импорт модели типов работы этапов
 import definePricingTypeOs from './PricingTypeOs'; // Импорт модели типов ценообразования опций
+import defineUnitOs from './UnitOs'; // Импорт модели единиц измерения
 // TODO: Импортировать другие модели по мере необходимости
 
 dotenv.config(); // Загружает переменные из .env файла
@@ -56,6 +57,7 @@ db.OrderStatusOS = defineOrderStatusOS(sequelize); // Инициализация
 db.CurrencyOS = defineCurrencyOS(sequelize); // Инициализация модели валют
 db.StageWorkTypeOS = defineStageWorkTypeOS(sequelize); // Инициализация модели типов работы этапов
 db.PricingTypeOs = definePricingTypeOs(sequelize); // Инициализация модели типов ценообразования опций
+db.UnitOs = defineUnitOs(sequelize); // Инициализация модели единиц измерения
 db.Stage = defineStage(sequelize); // Инициализация модели этапов заказа
 db.StageOption = defineStageOption(sequelize); // Инициализация модели опций этапов
 

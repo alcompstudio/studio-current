@@ -29,8 +29,12 @@ import { useToast } from "@/hooks/use-toast";
 // Схема валидации для формы статуса заказа
 const orderStatusFormSchema = z.object({
   name: z.string().min(1, { message: "Название статуса обязательно" }),
-  textColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, { message: "Неверный формат HEX цвета (например, #RRGGBB)" }),
-  backgroundColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, { message: "Неверный формат HEX цвета (например, #RRGGBB)" }),
+  textColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, {
+    message: "Неверный формат HEX цвета (например, #RRGGBB)",
+  }),
+  backgroundColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, {
+    message: "Неверный формат HEX цвета (например, #RRGGBB)",
+  }),
 });
 
 type OrderStatusFormValues = z.infer<typeof orderStatusFormSchema>;
@@ -76,7 +80,7 @@ export default function CreateOrderStatusPage() {
 
       // Здесь в реальном приложении будет актуальное сохранение в БД
       // Например: await prisma.orderStatus.create({ data: { ...data, allowBids: false, isDefault: false } })
-      
+
       toast({
         title: "Статус заказа создан",
         description: `Статус "${data.name}" успешно создан.`,
@@ -99,98 +103,161 @@ export default function CreateOrderStatusPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/settings/order-statuses">
-            <Button variant="outline" className="h-10 w-10 p-0 flex items-center justify-center">
-              <ArrowLeft className="h-5 w-5" />
+    <div className="flex flex-col gap-6" data-oid="8rg.5n1">
+      <div className="flex items-center justify-between" data-oid="o9t0b-q">
+        <div className="flex items-center gap-4" data-oid="9.6b_m9">
+          <Link href="/settings/order-statuses" data-oid="f5-o2xe">
+            <Button
+              variant="outline"
+              className="h-10 w-10 p-0 flex items-center justify-center"
+              data-oid="dwp7:_c"
+            >
+              <ArrowLeft className="h-5 w-5" data-oid="vl3zz8t" />
             </Button>
           </Link>
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
+          <div data-oid="3fylllt">
+            <h2
+              className="text-2xl font-bold tracking-tight"
+              data-oid="2gg1xhu"
+            >
               Создание нового статуса заказа
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground" data-oid="1170-w:">
               Добавление нового статуса для заказов.
             </p>
           </div>
         </div>
-        <Button onClick={form.handleSubmit(onSubmit)} disabled={isLoading || !form.formState.isValid}>
-          <Save className="mr-2 h-4 w-4" /> {isLoading ? "Сохранение..." : "Сохранить статус"}
+        <Button
+          onClick={form.handleSubmit(onSubmit)}
+          disabled={isLoading || !form.formState.isValid}
+          data-oid="z3iwucn"
+        >
+          <Save className="mr-2 h-4 w-4" data-oid="spl0zhc" />{" "}
+          {isLoading ? "Сохранение..." : "Сохранить статус"}
         </Button>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Детали статуса</CardTitle>
-          <CardDescription>Укажите название и цветовую схему для нового статуса заказа.</CardDescription>
+      <Card data-oid="xkj1oh-">
+        <CardHeader data-oid="tlxhg:x">
+          <CardTitle data-oid=".xh7f9v">Детали статуса</CardTitle>
+          <CardDescription data-oid="8nj9lqd">
+            Укажите название и цветовую схему для нового статуса заказа.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <CardContent data-oid=":lzj3oy">
+          <Form {...form} data-oid="51772jn">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+              data-oid="3sfm3i2"
+            >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Название статуса</FormLabel>
-                    <FormControl>
-                      <Input placeholder="например, Ожидание оплаты, Отправлен" {...field} />
+                  <FormItem data-oid="f2l0cpa">
+                    <FormLabel data-oid="7t1_l31">Название статуса</FormLabel>
+                    <FormControl data-oid="s0yws4x">
+                      <Input
+                        placeholder="например, Ожидание оплаты, Отправлен"
+                        {...field}
+                        data-oid="ukor5le"
+                      />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage data-oid="xvn87.o" />
                   </FormItem>
                 )}
+                data-oid="sfjzp.u"
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                data-oid="9d-4f9g"
+              >
                 <FormField
                   control={form.control}
                   name="textColor"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center">
-                        <Palette className="mr-2 h-4 w-4" /> Цвет текста (HEX)
+                    <FormItem data-oid="2o0pmzs">
+                      <FormLabel
+                        className="flex items-center"
+                        data-oid="ftt6z:0"
+                      >
+                        <Palette className="mr-2 h-4 w-4" data-oid="1ymtp3-" />{" "}
+                        Цвет текста (HEX)
                       </FormLabel>
-                      <FormControl>
-                        <div className="flex items-center gap-2">
-                          <Input type="color" {...field} className="p-1 h-10 w-14 block" />
-                          <Input placeholder="#FFFFFF" {...field} />
+                      <FormControl data-oid="_sgc-qj">
+                        <div
+                          className="flex items-center gap-2"
+                          data-oid="bvwvh1f"
+                        >
+                          <Input
+                            type="color"
+                            {...field}
+                            className="p-1 h-10 w-14 block"
+                            data-oid="u_tddso"
+                          />
+
+                          <Input
+                            placeholder="#FFFFFF"
+                            {...field}
+                            data-oid="z1jjssm"
+                          />
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage data-oid="08omtd-" />
                     </FormItem>
                   )}
+                  data-oid="dr:u257"
                 />
 
                 <FormField
                   control={form.control}
                   name="backgroundColor"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center">
-                        <Palette className="mr-2 h-4 w-4" /> Цвет фона (HEX)
+                    <FormItem data-oid="ke0kwie">
+                      <FormLabel
+                        className="flex items-center"
+                        data-oid="fq1y3xv"
+                      >
+                        <Palette className="mr-2 h-4 w-4" data-oid=":mmy5qt" />{" "}
+                        Цвет фона (HEX)
                       </FormLabel>
-                      <FormControl>
-                        <div className="flex items-center gap-2">
-                          <Input type="color" {...field} className="p-1 h-10 w-14 block" />
-                          <Input placeholder="#2563EB" {...field} />
+                      <FormControl data-oid=":ljpaey">
+                        <div
+                          className="flex items-center gap-2"
+                          data-oid="d7z-c6b"
+                        >
+                          <Input
+                            type="color"
+                            {...field}
+                            className="p-1 h-10 w-14 block"
+                            data-oid="124mh60"
+                          />
+
+                          <Input
+                            placeholder="#2563EB"
+                            {...field}
+                            data-oid="zj-2n2r"
+                          />
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage data-oid="2lc:j-l" />
                     </FormItem>
                   )}
+                  data-oid="ncz2nb5"
                 />
               </div>
-              
-              <FormItem>
-                <FormLabel>Предпросмотр</FormLabel>
-                <div 
+
+              <FormItem data-oid="os:wp5p">
+                <FormLabel data-oid="-tknb3r">Предпросмотр</FormLabel>
+                <div
                   className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent"
                   style={{
-                    color: form.watch("textColor"), 
+                    color: form.watch("textColor"),
                     backgroundColor: form.watch("backgroundColor"),
                   }}
+                  data-oid="w5_aey1"
                 >
                   {form.watch("name") || "Пример статуса"}
                 </div>

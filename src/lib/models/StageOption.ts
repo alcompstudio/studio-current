@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import { UnitOs } from './UnitOs';
 
 export interface StageOptionAttributes {
   id: number;
@@ -6,10 +7,11 @@ export interface StageOptionAttributes {
   name: string;
   description: string | null;
   pricing_type: 'calculable' | 'included'; // Тип ценообразования: Калькулируемая или Входит в стоимость
+  volume_unit_id: number | null; // Ссылка на таблицу единиц измерения
   // Поля для диапазона объема
   volume_min: number | null;
   volume_max: number | null;
-  volume_unit: string | null; // Единица измерения объема (шт., симв., %, слов, ч и т.д.)
+  volume_unit: string | null; // Единица измерения объема (шт., симв., %, слов, ч и т.д.) - оставлено для обратной совместимости
   nominal_volume: number | null; // Номинальный объем для расчета
   price_per_unit: number | null; // Цена за единицу объема
   // Рассчитанная стоимость (мин и макс)
@@ -31,6 +33,7 @@ class StageOption extends Model<StageOptionAttributes, StageOptionCreationAttrib
   public name!: string;
   public description!: string | null;
   public pricing_type!: 'calculable' | 'included';
+  public volume_unit_id!: number | null; // Добавлено свойство
   public volume_min!: number | null;
   public volume_max!: number | null;
   public volume_unit!: string | null;
@@ -81,6 +84,11 @@ class StageOption extends Model<StageOptionAttributes, StageOptionCreationAttrib
       as: 'stage',
       onDelete: 'CASCADE',
     });
+    
+    StageOption.belongsTo(models.UnitOs, {
+      foreignKey: 'volume_unit_id',
+      as: 'volumeUnit',
+    });
   }
 }
 
@@ -122,6 +130,14 @@ const defineStageOption = (sequelize: Sequelize) => {
         type: DataTypes.DECIMAL(12, 4),
         allowNull: true,
       },
+      volume_unit_id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: 'unit_os',
+          key: 'id',
+        },
+      },
       volume_unit: {
         type: DataTypes.STRING(20),
         allowNull: true,
@@ -161,8 +177,33 @@ const defineStageOption = (sequelize: Sequelize) => {
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       hooks: {
-        beforeSave: (option: StageOption) => {
+        beforeSave: async (option: StageOption) => {
           option.calculatePrices();
+
+          // Синхронизация полей volume_unit и volume_unit_id
+          if (option.volume_unit_id && !option.volume_unit) {
+            try {
+              // Получаем единицу измерения по ID
+              const unitOs = await sequelize.models.UnitOs.findByPk(option.volume_unit_id);
+              if (unitOs) {
+                option.volume_unit = unitOs.get('short_name') as string;
+              }
+            } catch (error) {
+              console.error('Ошибка при синхронизации volume_unit_id → volume_unit:', error);
+            }
+          } else if (option.volume_unit && !option.volume_unit_id) {
+            try {
+              // Получаем единицу измерения по краткому названию
+              const unitOs = await sequelize.models.UnitOs.findOne({
+                where: { short_name: option.volume_unit }
+              });
+              if (unitOs) {
+                option.volume_unit_id = unitOs.get('id') as number;
+              }
+            } catch (error) {
+              console.error('Ошибка при синхронизации volume_unit → volume_unit_id:', error);
+            }
+          }
         },
       },
     }

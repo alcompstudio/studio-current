@@ -1,0 +1,24 @@
+{
+  "component": "POST",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\api\\settings\\units-migrate\\route.ts",
+  "props": [],
+  "params": [],
+  "returnType": "Promise<import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<{ success: boolean; message: string; updated: number; errors: number; }> | import(\"E:/Business/Projects/studio/node_modules/next/dist/server/web/spec-extension/response\").NextResponse<{ success: boolean; error: string; details: string; }>>",
+  "dependencies": [
+    "@/lib/db",
+    "next/server"
+  ],
+  "history": [
+    {
+      "date": "2025-05-29",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

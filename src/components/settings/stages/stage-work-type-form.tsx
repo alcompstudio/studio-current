@@ -46,7 +46,11 @@ interface WorkTypeFormProps {
   onCancel: () => void;
 }
 
-export function StageWorkTypeForm({ initialData, onSave, onCancel }: WorkTypeFormProps) {
+export function StageWorkTypeForm({
+  initialData,
+  onSave,
+  onCancel,
+}: WorkTypeFormProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -66,8 +70,8 @@ export function StageWorkTypeForm({ initialData, onSave, onCancel }: WorkTypeFor
     setIsSubmitting(true);
     const method = initialData ? "PATCH" : "POST";
     const url = "/api/stage-work-types-os";
-    const body = initialData 
-      ? { id: initialData.id, name: data.name } 
+    const body = initialData
+      ? { id: initialData.id, name: data.name }
       : { name: data.name };
 
     try {
@@ -82,7 +86,8 @@ export function StageWorkTypeForm({ initialData, onSave, onCancel }: WorkTypeFor
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          errorData.error || `Ошибка сохранения типа работы: ${response.statusText}`
+          errorData.error ||
+            `Ошибка сохранения типа работы: ${response.statusText}`,
         );
       }
 
@@ -100,7 +105,10 @@ export function StageWorkTypeForm({ initialData, onSave, onCancel }: WorkTypeFor
       console.error("Не удалось сохранить тип работы:", error);
       toast({
         title: "Ошибка",
-        description: error instanceof Error ? error.message : "Произошла неизвестная ошибка",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Произошла неизвестная ошибка",
         variant: "destructive",
       });
     } finally {
@@ -109,51 +117,62 @@ export function StageWorkTypeForm({ initialData, onSave, onCancel }: WorkTypeFor
   };
 
   return (
-    <Card className="shadow-sm border-none">
-      <CardHeader>
-        <CardTitle>{initialData ? "Редактирование типа работы" : "Создание типа работы"}</CardTitle>
-        <CardDescription>
+    <Card className="shadow-sm border-none" data-oid=":zqb-3l">
+      <CardHeader data-oid="kk2nk1c">
+        <CardTitle data-oid="f19.wi2">
+          {initialData ? "Редактирование типа работы" : "Создание типа работы"}
+        </CardTitle>
+        <CardDescription data-oid="ycd.8hk">
           {initialData
             ? "Измените данные типа работы и сохраните изменения"
             : "Заполните форму для создания нового типа работы"}
         </CardDescription>
       </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <CardContent className="space-y-4">
+      <Form {...form} data-oid="s_nverx">
+        <form onSubmit={form.handleSubmit(handleSubmit)} data-oid="3clxs61">
+          <CardContent className="space-y-4" data-oid="7_18f8s">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Название типа работы</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Введите название типа работы" />
+                <FormItem data-oid="q.i.7j9">
+                  <FormLabel data-oid="sb-y9mf">Название типа работы</FormLabel>
+                  <FormControl data-oid="58lvy60">
+                    <Input
+                      {...field}
+                      placeholder="Введите название типа работы"
+                      data-oid="meuu5j8"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage data-oid="yf01lk7" />
                 </FormItem>
               )}
+              data-oid="ek.zr1r"
             />
           </CardContent>
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-between" data-oid="yxljbr5">
             <Button
               type="button"
               variant="outline"
               onClick={onCancel}
               disabled={isSubmitting}
+              data-oid="8slmc2d"
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 h-4 w-4" data-oid="wbt.2c5" />
               Назад
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} data-oid="qtng:2d">
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2
+                    className="mr-2 h-4 w-4 animate-spin"
+                    data-oid="a:_7t:k"
+                  />
                   Сохранение...
                 </>
               ) : (
                 <>
-                  <Save className="mr-2 h-4 w-4" />
+                  <Save className="mr-2 h-4 w-4" data-oid="_f84.i0" />
                   Сохранить
                 </>
               )}

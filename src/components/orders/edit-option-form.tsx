@@ -138,63 +138,63 @@ export default function EditOptionForm({
   };
 
   return (
-    <Form {...form} data-oid="dz10.e:">
+    <Form {...form} data-oid=":.eqmpu">
       <form
         id={`edit-option-form-${option.id}`}
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
-        data-oid="a7kt-y0"
+        data-oid="wdj-c36"
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem data-oid="76_w_dq">
-              <FormLabel data-oid="ni-nc7n">Option Name</FormLabel>
-              <FormControl data-oid="l_fwhwx">
+            <FormItem data-oid="7mkzt-k">
+              <FormLabel data-oid="m3mtx0.">Option Name</FormLabel>
+              <FormControl data-oid="g_75byy">
                 <Input
                   placeholder="Enter option name"
                   {...field}
-                  data-oid="8.5b1.w"
+                  data-oid="momykke"
                 />
               </FormControl>
-              <FormMessage data-oid="7w40h3y" />
+              <FormMessage data-oid="4awm4il" />
             </FormItem>
           )}
-          data-oid="w6-cv-h"
+          data-oid="k3s:mzz"
         />
 
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem data-oid="pwa0t_7">
-              <FormLabel data-oid="ezyedk4">Description (Optional)</FormLabel>
-              <FormControl data-oid=".2i_1yb">
+            <FormItem data-oid="0b9-690">
+              <FormLabel data-oid="2.451ar">Description (Optional)</FormLabel>
+              <FormControl data-oid="dlbys-y">
                 <Textarea
                   placeholder="Describe the option..."
                   className="min-h-[60px]"
                   {...field}
                   value={field.value ?? ""}
-                  data-oid="12xh-2y"
+                  data-oid="xdhm4u2"
                 />
               </FormControl>
-              <FormMessage data-oid="x1qv_3t" />
+              <FormMessage data-oid="4hrur5l" />
             </FormItem>
           )}
-          data-oid="516-qcf"
+          data-oid="0iaoqeb"
         />
 
-        <div className="flex items-center space-x-2" data-oid="6m-4rcq">
+        <div className="flex items-center space-x-2" data-oid="bzbsfx:">
           <FormField
             control={form.control}
             name="isCalculable"
             render={({ field }) => (
               <FormItem
                 className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 shadow-sm"
-                data-oid="65:kbns"
+                data-oid="6tpbda2"
               >
-                <FormControl data-oid="csza4m:">
+                <FormControl data-oid="b4y38pt">
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={(checked) => {
@@ -209,34 +209,34 @@ export default function EditOptionForm({
                         });
                       }
                     }}
-                    data-oid="07u_o0a"
+                    data-oid="wsvu4gz"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none" data-oid="o9roens">
-                  <FormLabel data-oid="a.qi9mu">Calculable Option</FormLabel>
-                  <FormDescription data-oid="prxrqn2">
+                <div className="space-y-1 leading-none" data-oid="wy1jb-r">
+                  <FormLabel data-oid="24i_.fs">Calculable Option</FormLabel>
+                  <FormDescription data-oid="qxsvlf1">
                     Does this option affect the price calculation?
                   </FormDescription>
-                  <FormMessage data-oid="-:2e-uw" />
+                  <FormMessage data-oid="b1zx:we" />
                 </div>
               </FormItem>
             )}
-            data-oid="mjsw98:"
+            data-oid="al.i91q"
           />
         </div>
 
         {isCalculable && (
           <div
             className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded-md"
-            data-oid="e3v-emi"
+            data-oid="vmo9hrk"
           >
             <FormField
               control={form.control}
               name="planUnits"
               render={({ field }) => (
-                <FormItem data-oid=":.jvjx0">
-                  <FormLabel data-oid="l8l0bx0">Plan Units</FormLabel>
-                  <FormControl data-oid="hk4yscb">
+                <FormItem data-oid="ktji4o4">
+                  <FormLabel data-oid="87o3mqo">Plan Units</FormLabel>
+                  <FormControl data-oid="uhptouj">
                     <Input
                       type="number"
                       placeholder="e.g., 2500"
@@ -249,22 +249,22 @@ export default function EditOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="1:umy:s"
+                      data-oid=":vw17g-"
                     />
                   </FormControl>
-                  <FormMessage data-oid="-0_cniz" />
+                  <FormMessage data-oid="8fzgbj7" />
                 </FormItem>
               )}
-              data-oid="9fu3jsf"
+              data-oid="vub2f.f"
             />
 
             <FormField
               control={form.control}
               name="unitDivider"
               render={({ field }) => (
-                <FormItem data-oid="hqcp7ef">
-                  <FormLabel data-oid="t1_gvzr">Unit Divider</FormLabel>
-                  <FormControl data-oid="74pz06w">
+                <FormItem data-oid="wxx:gwj">
+                  <FormLabel data-oid=":1chket">Unit Divider</FormLabel>
+                  <FormControl data-oid="eqbdi86">
                     <Input
                       type="number"
                       placeholder="e.g., 1000"
@@ -277,24 +277,24 @@ export default function EditOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="jskw_yd"
+                      data-oid="t:fi0s2"
                     />
                   </FormControl>
-                  <FormMessage data-oid="7_c.koi" />
+                  <FormMessage data-oid="nykmna:" />
                 </FormItem>
               )}
-              data-oid="ci2ba2h"
+              data-oid="eia4e76"
             />
 
             <FormField
               control={form.control}
               name="pricePerUnit"
               render={({ field }) => (
-                <FormItem data-oid="r3-q9hl">
-                  <FormLabel data-oid="9-3yez1">
+                <FormItem data-oid="ug7qp16">
+                  <FormLabel data-oid="mn8m_ay">
                     Price / Unit ({currency})
                   </FormLabel>
-                  <FormControl data-oid="8qvurf-">
+                  <FormControl data-oid="qtek-44">
                     <Input
                       type="number"
                       placeholder="e.g., 2.5"
@@ -308,62 +308,62 @@ export default function EditOptionForm({
                             : parseFloat(e.target.value),
                         )
                       }
-                      data-oid="_wa:3bd"
+                      data-oid="h4::l0j"
                     />
                   </FormControl>
-                  <FormMessage data-oid="oijh.28" />
+                  <FormMessage data-oid="wbpi4-4" />
                 </FormItem>
               )}
-              data-oid="a2ic4ea"
+              data-oid="e1916gl"
             />
           </div>
         )}
 
-        <div className="flex items-center space-x-2" data-oid="lqtnf5q">
+        <div className="flex items-center space-x-2" data-oid="duhp7kp">
           <FormField
             control={form.control}
             name="includedInPrice"
             render={({ field }) => (
               <FormItem
                 className="flex flex-row items-center space-x-2"
-                data-oid="q0uhyts"
+                data-oid="rcpyz.l"
               >
-                <FormControl data-oid="2_iu7ql">
+                <FormControl data-oid="3efyye2">
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     disabled={isCalculable}
-                    data-oid="cr7xthp"
+                    data-oid="1r1rpi0"
                   />
                 </FormControl>
-                <FormLabel className="text-sm font-normal" data-oid="9p_9rmk">
+                <FormLabel className="text-sm font-normal" data-oid="pwab3ax">
                   Included in Estimated Price
                   {isCalculable && (
                     <span
                       className="text-xs text-muted-foreground"
-                      data-oid="k-8:0o."
+                      data-oid="ak28eb6"
                     >
                       {" "}
                       (Calculable options always included)
                     </span>
                   )}
                 </FormLabel>
-                <FormMessage data-oid="u0r5tf8" />
+                <FormMessage data-oid="k4vtey4" />
               </FormItem>
             )}
-            data-oid="i0pxsp3"
+            data-oid="ox2ncby"
           />
         </div>
 
         {/* Form Action Buttons */}
-        <div className="flex justify-end gap-2 pt-2" data-oid="r8-9j9-">
+        <div className="flex justify-end gap-2 pt-2" data-oid="0ysz3g1">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={onCancel}
             className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
-            data-oid="h_08et2"
+            data-oid="mdaxu_e"
           >
             Cancel
           </Button>
@@ -371,7 +371,7 @@ export default function EditOptionForm({
             type="submit"
             size="sm"
             disabled={form.formState.isSubmitting}
-            data-oid="_8p5zyi"
+            data-oid="3mptan5"
           >
             {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
           </Button>

@@ -10,5 +10,5 @@ export default function AuthenticatedAppLayout({
   // No need for an additional check here.
 
   // The AppLayout component itself handles fetching user data and rendering the main structure.
-  return <AppLayout data-oid="bhc8epr">{children}</AppLayout>;
+  return <AppLayout data-oid="x362jm3">{children}</AppLayout>;
 }

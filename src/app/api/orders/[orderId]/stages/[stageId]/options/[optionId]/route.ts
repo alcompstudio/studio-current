@@ -124,11 +124,10 @@ export async function PUT(
     const updateData = {
       name: data.name,
       description: data.description !== undefined ? data.description : existingOption.description,
-      pricing_type: data.pricing_type || existingOption.pricing_type, // Сохраняем для обратной совместимости
-      pricing_type_id: data.pricing_type_id !== undefined ? data.pricing_type_id : existingOption.pricing_type_id, // Новое поле
+      pricing_type_id: data.pricing_type_id !== undefined ? data.pricing_type_id : existingOption.pricing_type_id,
       volume_min: data.volume_min !== undefined ? data.volume_min : existingOption.volume_min,
       volume_max: data.volume_max !== undefined ? data.volume_max : existingOption.volume_max,
-      volume_unit: data.volume_unit !== undefined ? data.volume_unit : existingOption.volume_unit,
+      volume_unit_id: data.volume_unit_id !== undefined ? data.volume_unit_id : existingOption.volume_unit_id,
       nominal_volume: data.nominal_volume !== undefined ? data.nominal_volume : existingOption.nominal_volume,
       price_per_unit: data.price_per_unit !== undefined ? data.price_per_unit : existingOption.price_per_unit
     };
@@ -137,15 +136,11 @@ export async function PUT(
     let calculated_price_min = null;
     let calculated_price_max = null;
     
-    // Проверяем калькулируемый тип по новому или старому полю
-    const isCalculable = 
-      (updateData.pricing_type_id === 1) || // ID=1 для Калькулируемая
-      (updateData.pricing_type === 'calculable') || 
-      (updateData.pricing_type === 'Калькулируемая');
+    // Проверяем, является ли тип калькулируемым
+    const isCalculable = updateData.pricing_type_id === 1; // ID=1 для Калькулируемая
     
     if (isCalculable && updateData.nominal_volume && updateData.price_per_unit) {
       console.log('Рассчитываем стоимость для калькулируемой опции при обновлении:', {
-        pricing_type: updateData.pricing_type,
         pricing_type_id: updateData.pricing_type_id,
         volume_min: updateData.volume_min,
         volume_max: updateData.volume_max,
@@ -167,30 +162,29 @@ export async function PUT(
     // Обновляем запись в БД
     const result = await db.sequelize.query(
       `UPDATE order_stage_options 
-      SET name = $1, description = $2, pricing_type = $3, pricing_type_id = $4,
-          volume_min = $5, volume_max = $6, volume_unit = $7, 
-          nominal_volume = $8, price_per_unit = $9, 
-          calculated_price_min = $10, calculated_price_max = $11,
+      SET name = $1, description = $2, pricing_type_id = $3,
+          volume_min = $4, volume_max = $5, volume_unit_id = $6,
+          nominal_volume = $7, price_per_unit = $8, 
+          calculated_price_min = $9, calculated_price_max = $10,
           updated_at = CURRENT_TIMESTAMP
-      WHERE id::text = $12 AND order_stage_id::text = $13
+      WHERE id::text = $11 AND order_stage_id::text = $12
       RETURNING *`,
       { 
         bind: [
           updateData.name,
           updateData.description,
-          updateData.pricing_type,
           updateData.pricing_type_id,
           updateData.volume_min,
           updateData.volume_max,
-          updateData.volume_unit,
+          updateData.volume_unit_id,
           updateData.nominal_volume,
           updateData.price_per_unit,
           calculated_price_min,
           calculated_price_max,
-          String(optionId),
-          String(stageId)
+          optionId,
+          stageId
         ],
-        type: db.sequelize.QueryTypes.SELECT
+        type: db.sequelize.QueryTypes.UPDATE
       }
     );
     

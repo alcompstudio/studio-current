@@ -35,6 +35,8 @@ flowchart TD
     index_ts --> StageWorkTypeOS
     PricingTypeOs[./PricingTypeOs]
     index_ts --> PricingTypeOs
+    UnitOs[./UnitOs]
+    index_ts --> UnitOs
 ```
 
 ### `connectDB` (Function)

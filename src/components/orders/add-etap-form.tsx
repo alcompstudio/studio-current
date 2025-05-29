@@ -89,109 +89,109 @@ export default function AddEtapForm({
   };
 
   return (
-    <Form {...form} data-oid="s_:t71g">
+    <Form {...form} data-oid="2qvv8.a">
       <form
         id="add-etap-form"
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
-        data-oid="rwghdbw"
+        data-oid="q.mi69e"
       >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem data-oid="3t-:k30">
-              <FormLabel data-oid=":1tx:jl">Stage Name</FormLabel>
-              <FormControl data-oid="uy7hhr-">
+            <FormItem data-oid="0y6udn6">
+              <FormLabel data-oid="u08lgra">Stage Name</FormLabel>
+              <FormControl data-oid="rxcjp-1">
                 <Input
                   placeholder="Enter stage name"
                   {...field}
-                  data-oid="7dc0jf4"
+                  data-oid="nrext6h"
                 />
               </FormControl>
-              <FormMessage data-oid="vpndhnb" />
+              <FormMessage data-oid="qfa.c8g" />
             </FormItem>
           )}
-          data-oid="cqobb39"
+          data-oid=".0kjm1r"
         />
 
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
-            <FormItem data-oid="1nglqsw">
-              <FormLabel data-oid="_rm9eit">Description (Optional)</FormLabel>
-              <FormControl data-oid="4:3s-yf">
+            <FormItem data-oid="m8ln07q">
+              <FormLabel data-oid="hy0uwyf">Description (Optional)</FormLabel>
+              <FormControl data-oid="d965jrg">
                 <Textarea
                   placeholder="Describe the stage..."
                   className="min-h-[80px]"
                   {...field}
                   value={field.value ?? ""}
-                  data-oid="_kphrvl"
+                  data-oid="uae6x2:"
                 />
               </FormControl>
-              <FormMessage data-oid="nmu51jh" />
+              <FormMessage data-oid="hfdzlhf" />
             </FormItem>
           )}
-          data-oid="i3vp:iu"
+          data-oid="lz:fgsx"
         />
 
-        <div data-oid="35_g7_k">
+        <div data-oid="v7qjanx">
           <FormField
             control={form.control}
             name="workType"
             render={({ field }) => (
-              <FormItem data-oid="-uerovq">
-                <FormLabel data-oid="d907h52">Work Type</FormLabel>
+              <FormItem data-oid="6sy3rmt">
+                <FormLabel data-oid="xqlh7t:">Work Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   value={field.value}
-                  data-oid="mt0vtb1"
+                  data-oid="f7mol3."
                 >
-                  <FormControl data-oid="p:gslky">
-                    <SelectTrigger data-oid="sni18uv">
+                  <FormControl data-oid="svsyrhy">
+                    <SelectTrigger data-oid="zvdjzar">
                       <SelectValue
                         placeholder="Select work type"
-                        data-oid="9f1d2pd"
+                        data-oid=":dxsi2p"
                       />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent data-oid="qbq3vh3">
+                  <SelectContent data-oid="1d6t23h">
                     {etapWorkTypes.map((type) => (
-                      <SelectItem key={type} value={type} data-oid="sb1nkm_">
+                      <SelectItem key={type} value={type} data-oid="3e-oaws">
                         {type}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <FormMessage data-oid="oh2:702" />
+                <FormMessage data-oid="fgpg-ms" />
               </FormItem>
             )}
-            data-oid="lq7col7"
+            data-oid="fekd0wi"
           />
         </div>
 
-        <div className="flex justify-end gap-2 pt-4" data-oid="ysfsx3q">
+        <div className="flex justify-end gap-2 pt-4" data-oid="qzwza:d">
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             className="hover:bg-destructive/10 hover:text-destructive" // Added destructive hover
-            data-oid="siammhs"
+            data-oid="mhbekl."
           >
             Cancel
           </Button>
           <Button
             type="submit"
             disabled={form.formState.isSubmitting || isSaveDisabled}
-            data-oid="wui8j-n"
+            data-oid="-n9-mfq"
           >
             {form.formState.isSubmitting ? "Adding..." : "Add Stage"}
           </Button>
         </div>
         <p
           className="text-xs text-muted-foreground pt-2 text-right"
-          data-oid="d8gpqxz"
+          data-oid="z1r8gi7"
         >
           Note: Add options in the right panel. Save is enabled once options are
           added.

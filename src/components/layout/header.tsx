@@ -60,82 +60,82 @@ export function Header({ userEmail, userRole }: HeaderProps) {
 
   return (
     <header
-      className="sticky top-0 z-30 flex h-[70px] items-center gap-4 bg-card px-8"
-      data-oid="ye294j1"
+      className="sticky top-0 z-30 flex bg-card p-0 px-[32px] py-0 gap-4 flex-row items-center h-[70px]"
+      data-oid="90qa4c."
     >
       {" "}
       {/* Adjusted height, bg, border, padding */}
       {/* Mobile Sidebar Trigger is now part of the Sidebar component */}
       {/* Page Title */}
-      <div className="flex-1" data-oid="l3v.w8a">
-        <h1 className="text-xl font-light text-foreground" data-oid="4xwq0qp">
+      {/* Search Bar */}
+      {/* User Actions */}
+      <div className="flex-1" data-oid="hfo0b68">
+        <h1 className="text-xl font-light text-foreground" data-oid="sjypn:a">
           {pageTitle}
         </h1>{" "}
         {/* Adjusted font weight */}
       </div>
-      {/* Search Bar */}
-      <div className="relative ml-auto hidden md:block" data-oid="wpd0jp0">
+      <div className="relative ml-auto hidden md:block" data-oid="x2.5aeo">
         {" "}
         {/* Hide on mobile */}
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
-          data-oid="arr67.9"
+          data-oid="e8vyl:r"
         />{" "}
         {/* Adjusted icon size and position */}
         <Input
           type="search"
           placeholder="Search..."
           className="w-full rounded-md bg-muted border-border py-2 pl-10 pr-4 text-sm focus:ring-primary focus:border-primary lg:w-[300px]"
-          /* Adjusted styles */ data-oid="ct2-.2q"
+          /* Adjusted styles */ data-oid="bcixne7"
         />
       </div>
-      {/* User Actions */}
-      <div className="flex items-center gap-4" data-oid="84:s2ra">
+      <div className="flex items-center gap-4" data-oid="3_-q19s">
         {" "}
         {/* Adjusted gap */}
         <Button
           variant="ghost"
           size="icon"
           className="text-muted-foreground hover:text-primary"
-          data-oid="sqq3:tw"
+          data-oid="c_bb8bn"
         >
-          <Bell className="h-6 w-6" data-oid="r3l9c34" />
-          <span className="sr-only" data-oid="alfrkpj">
+          <Bell className="h-6 w-6" data-oid="jg_3zz." />
+          <span className="sr-only" data-oid="kjzjgsr">
             Toggle notifications
           </span>
         </Button>
         {/* Removed Calendar and explicit Search button from header */}
-        <DropdownMenu data-oid="b:2yh:1">
-          <DropdownMenuTrigger asChild data-oid="gjn28yx">
+        <DropdownMenu data-oid="x52e4uy">
+          <DropdownMenuTrigger asChild data-oid="8tt4:c5">
             <Button
               variant="ghost"
               size="icon"
               className="rounded-full shrink-0"
-              data-oid="15ppf5h"
+              data-oid="_jfnu0a"
             >
-              <Avatar className="h-8 w-8" data-oid="4n6hig6">
+              <Avatar className="h-8 w-8" data-oid="0k1g7nd">
                 {/* Use placeholder image or fallback */}
                 {/* <AvatarImage src="/placeholder-user.jpg" alt={userEmail} /> */}
-                <AvatarFallback data-oid="wzkuya-">
+                <AvatarFallback data-oid="sq4le.o">
                   {userInitial}
                 </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" data-oid="7aa7uld">
-            <DropdownMenuLabel data-oid="i8vi.ax">{userRole}</DropdownMenuLabel>
-            <DropdownMenuSeparator data-oid="6nub6fc" />
+          <DropdownMenuContent align="end" data-oid="y5iipoc">
+            <DropdownMenuLabel data-oid="f2d-4xq">{userRole}</DropdownMenuLabel>
+            <DropdownMenuSeparator data-oid=".tx-gff" />
             <DropdownMenuItem
               onClick={() => router.push("/settings")}
-              data-oid="-jysl6b"
+              data-oid="wmfej:w"
             >
-              <Settings className="mr-2 h-4 w-4" data-oid="oarsb64" />
-              <span data-oid="zwg.mbi">Settings</span>
+              <Settings className="mr-2 h-4 w-4" data-oid=".9jxwx6" />
+              <span data-oid=":a7z:2p">Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator data-oid="6sb5sbu" />
-            <DropdownMenuItem onClick={handleLogout} data-oid="7-z_u.c">
-              <LogOut className="mr-2 h-4 w-4" data-oid="vag4nbd" />
-              <span data-oid="582ab8y">Logout</span>
+            <DropdownMenuSeparator data-oid="l8x6ptc" />
+            <DropdownMenuItem onClick={handleLogout} data-oid="haqw7w_">
+              <LogOut className="mr-2 h-4 w-4" data-oid="ow9wmt5" />
+              <span data-oid="rvti6yv">Logout</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

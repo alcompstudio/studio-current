@@ -34,24 +34,31 @@ interface StatusTableProps {
   onEdit: (item: StatusItem) => void; // Добавляем onEdit prop
 }
 
-export function StatusTable({ items, basePath, onDelete, onEdit }: StatusTableProps) {
+export function StatusTable({
+  items,
+  basePath,
+  onDelete,
+  onEdit,
+}: StatusTableProps) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Название</TableHead>
-          <TableHead>Пример</TableHead>
-          <TableHead className="w-[150px]">Действия</TableHead>
+    <Table data-oid="l4bof0a">
+      <TableHeader data-oid="pcak6fr">
+        <TableRow data-oid="n875u4p">
+          <TableHead data-oid="v-z4gba">ID</TableHead>
+          <TableHead data-oid="mixk1zv">Название</TableHead>
+          <TableHead data-oid="hd6ux2v">Пример</TableHead>
+          <TableHead className="w-[150px]" data-oid="-p993ga">
+            Действия
+          </TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody data-oid="ektqtyy">
         {items.length > 0 ? (
           items.map((status) => (
-            <TableRow key={status.id}>
-              <TableCell>{status.id}</TableCell>
-              <TableCell>{status.name}</TableCell>
-              <TableCell>
+            <TableRow key={status.id} data-oid="21jze-l">
+              <TableCell data-oid="pp1j25a">{status.id}</TableCell>
+              <TableCell data-oid="fnowj_k">{status.name}</TableCell>
+              <TableCell data-oid="p:7.k-b">
                 <div
                   className="rounded-full border px-2.5 py-0.5 text-xs font-semibold inline-block"
                   style={{
@@ -59,36 +66,43 @@ export function StatusTable({ items, basePath, onDelete, onEdit }: StatusTablePr
                     color: status.textColor,
                     borderColor: status.textColor,
                   }}
+                  data-oid="7o4.fih"
                 >
                   {status.name}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="ghost" 
+              <TableCell data-oid="l.dln2w">
+                <div className="flex items-center gap-2" data-oid="o5fyfv8">
+                  <Button
+                    variant="ghost"
                     size="icon"
                     onClick={() => onEdit(status)}
                     title="Редактировать"
+                    data-oid="733ye:h"
                   >
-                    <SquarePen className="h-4 w-4" />
+                    <SquarePen className="h-4 w-4" data-oid="q9now.6" />
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                     onClick={() => onDelete(status.id)}
                     title="Удалить"
+                    data-oid="agx-f.n"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" data-oid="86tv:i-" />
                   </Button>
                 </div>
               </TableCell>
             </TableRow>
           ))
         ) : (
-          <TableRow>
-            <TableCell colSpan={4} className="text-center py-4">
+          <TableRow data-oid="ffemfy0">
+            <TableCell
+              colSpan={4}
+              className="text-center py-4"
+              data-oid="p1-tvs."
+            >
               Статусы не найдены
             </TableCell>
           </TableRow>
