@@ -25,6 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FormQuillEditor, QuillToolbarType } from "@/components/editor/quill";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -286,15 +287,15 @@ export default function OrderCreatePage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem data-oid="6icca1o">
-                    <FormLabel data-oid="g:e1vmv">Description</FormLabel>
+                    <FormLabel data-oid="g:e1vmv">Описание</FormLabel>
                     <FormControl data-oid="3ije5np">
-                      <Textarea
-                        placeholder="Describe the order..."
-                        className="min-h-[100px]"
-                        {...field}
-                        value={field.value ?? ""}
-                        data-oid="pjlvsk."
-                      />
+                      <div className="quill-wrapper" id="«rr»-form-item">
+                        <FormQuillEditor
+                          name="description"
+                          placeholder="Опишите заказ..."
+                          defaultToolbarType={QuillToolbarType.MEDIUM}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage data-oid="k-nv2g3" />
                   </FormItem>

@@ -1,0 +1,806 @@
+# Варианты панелей инструментов в tiptap: настройка и использование
+
+На основе изученной документации, я могу предоставить подробную информацию о возможных вариантах панелей инструментов (toolbar) в tiptap, их настройке и использовании в вашем локальном веб-приложении.
+
+## Типы панелей инструментов в tiptap
+
+tiptap предлагает несколько типов панелей инструментов, каждый со своими преимуществами:
+
+### 1. Фиксированная панель инструментов (Fixed Toolbar)
+Постоянно отображается в определенном месте, обычно над редактором. Это наиболее традиционный и знакомый для пользователей вариант.
+
+### 2. Плавающая панель (Bubble Menu)
+Появляется рядом с выделенным текстом. Идеально подходит для быстрого форматирования выделенного текста.
+
+### 3. Плавающее меню (Floating Menu)
+Появляется, когда курсор находится на пустой строке. Полезно для вставки блочных элементов.
+
+### 4. Слэш-команды (Slash Commands)
+Активируются при вводе "/" в начале строки, открывая всплывающее меню с командами (экспериментальная возможность).
+
+## Готовые компоненты панелей инструментов
+
+tiptap предлагает официальный набор UI-компонентов, которые вы можете использовать:
+
+### Минимальная панель инструментов
+```jsx
+import { Toolbar, ToolbarGroup, ToolbarSeparator } from '@/components/tiptap-ui-primitive/toolbar'
+import { Button } from '@/components/tiptap-ui-primitive/button'
+
+const MinimalToolbar = ({ editor }) => {
+  if (!editor) return null
+  
+  return (
+    <Toolbar variant="default">
+      <ToolbarGroup>
+        <Button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          B
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          I
+        </Button>
+      </ToolbarGroup>
+    </Toolbar>
+  )
+}
+```
+
+### Средняя панель инструментов
+С большим набором форматирования и возможностей:
+
+```jsx
+const MediumToolbar = ({ editor }) => {
+  if (!editor) return null
+  
+  return (
+    <Toolbar variant="default">
+      <ToolbarGroup>
+        {/* Заголовки */}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button>Заголовок</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+              H1
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+              H2
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
+              H3
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        {/* Текстовое форматирование */}
+        <Button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          B
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          I
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={editor.isActive('underline') ? 'is-active' : ''}
+        >
+          U
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={editor.isActive('strike') ? 'is-active' : ''}
+        >
+          S
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        {/* Списки */}
+        <Button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={editor.isActive('bulletList') ? 'is-active' : ''}
+        >
+          • Список
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={editor.isActive('orderedList') ? 'is-active' : ''}
+        >
+          1. Нумерованный
+        </Button>
+      </ToolbarGroup>
+    </Toolbar>
+  )
+}
+```
+
+### Полная панель инструментов
+С максимальным набором возможностей:
+
+```jsx
+const FullToolbar = ({ editor }) => {
+  if (!editor) return null
+  
+  return (
+    <Toolbar variant="default">
+      {/* Первая группа: форматирование текста */}
+      <ToolbarGroup>
+        {/* Заголовки */}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button>Заголовок</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {[1, 2, 3, 4, 5, 6].map(level => (
+              <DropdownMenuItem 
+                key={level}
+                onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+                className={editor.isActive('heading', { level }) ? 'is-active' : ''}
+              >
+                H{level}
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuItem 
+              onClick={() => editor.chain().focus().setParagraph().run()}
+              className={editor.isActive('paragraph') ? 'is-active' : ''}
+            >
+              Параграф
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      {/* Вторая группа: стили текста */}
+      <ToolbarGroup>
+        <Button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          B
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          I
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={editor.isActive('underline') ? 'is-active' : ''}
+        >
+          U
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={editor.isActive('strike') ? 'is-active' : ''}
+        >
+          S
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          className={editor.isActive('code') ? 'is-active' : ''}
+        >
+          <CodeIcon />
+        </Button>
+        <Button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+          Очистить форматирование
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      {/* Третья группа: выравнивание */}
+      <ToolbarGroup>
+        <Button
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
+        >
+          <AlignLeftIcon />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}
+        >
+          <AlignCenterIcon />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
+        >
+          <AlignRightIcon />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          className={editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''}
+        >
+          <AlignJustifyIcon />
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      {/* Четвертая группа: списки */}
+      <ToolbarGroup>
+        <Button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={editor.isActive('bulletList') ? 'is-active' : ''}
+        >
+          <BulletListIcon />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={editor.isActive('orderedList') ? 'is-active' : ''}
+        >
+          <OrderedListIcon />
+        </Button>
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+      
+      {/* Пятая группа: специальные элементы */}
+      <ToolbarGroup>
+        <Button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editor.isActive('blockquote') ? 'is-active' : ''}
+        >
+          <QuoteIcon />
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          className={editor.isActive('codeBlock') ? 'is-active' : ''}
+        >
+          <CodeBlockIcon />
+        </Button>
+        <Button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+          <HorizontalRuleIcon />
+        </Button>
+        {/* Кнопка для вставки ссылки */}
+        <Popover>
+          <PopoverTrigger>
+            <Button className={editor.isActive('link') ? 'is-active' : ''}>
+              <LinkIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <LinkEditor editor={editor} />
+          </PopoverContent>
+        </Popover>
+      </ToolbarGroup>
+    </Toolbar>
+  )
+}
+
+const LinkEditor = ({ editor }) => {
+  const [url, setUrl] = useState('')
+
+  const setLink = () => {
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      return
+    }
+    
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
+
+  return (
+    <div className="link-editor">
+      <input 
+        type="text" 
+        value={url} 
+        onChange={e => setUrl(e.target.value)} 
+        placeholder="https://example.com" 
+      />
+      <Button onClick={setLink}>Сохранить</Button>
+    </div>
+  )
+}
+```
+
+## Настройка иконок для инструментов
+
+Для иконок tiptap не предоставляет собственный набор, но вы можете использовать любые иконки по вашему выбору:
+
+### Рекомендуемые наборы иконок:
+1. [Remix Icon](https://remixicon.com/#editor) (используется в демо tiptap)
+2. [Font Awesome](https://fontawesome.com/icons?c=editors)
+3. [UI icons](https://www.ibm.com/design/language/iconography/ui-icons/library/)
+
+Пример использования с Remix Icon:
+
+```jsx
+import 'remixicon/fonts/remixicon.css'; // Импорт стилей иконок
+
+const BoldButton = ({ editor }) => {
+  return (
+    <Button
+      onClick={() => editor.chain().focus().toggleBold().run()}
+      className={editor.isActive('bold') ? 'is-active' : ''}
+    >
+      <i className="ri-bold"></i>
+    </Button>
+  )
+}
+```
+
+## Реализация Bubble Menu (плавающей панели)
+
+Плавающая панель, которая появляется при выделении текста:
+
+```jsx
+import { BubbleMenu } from '@tiptap/extension-bubble-menu'
+
+// В конфигурации редактора
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    BubbleMenu.configure({
+      element: document.querySelector('.bubble-menu'),
+      shouldShow: ({ editor, view, state, oldState, from, to }) => {
+        // Показывать только при выделении текста
+        return from !== to
+      }
+    }),
+  ],
+})
+
+// JSX компонент
+return (
+  <div>
+    <EditorContent editor={editor} />
+    
+    {editor && (
+      <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+        <Button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          B
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          I
+        </Button>
+        <Button
+          onClick={() => editor.chain().focus().toggleCode().run()}
+          className={editor.isActive('code') ? 'is-active' : ''}
+        >
+          <CodeIcon />
+        </Button>
+      </BubbleMenu>
+    )}
+  </div>
+)
+```
+
+## Интеграция с Tailwind CSS
+
+Панель инструментов с использованием Tailwind:
+
+```jsx
+const TailwindToolbar = ({ editor }) => {
+  if (!editor) return null
+  
+  return (
+    <div className="flex flex-wrap gap-1 p-2 bg-white border border-gray-200 rounded-t-lg shadow">
+      <button
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        className={`p-2 rounded hover:bg-gray-100 ${
+          editor.isActive('bold') ? 'bg-gray-200' : ''
+        }`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
+          <path d="M8 11h4.5a2.5 2.5 0 1 0 0-5H8v5Zm10 4.5a4.5 4.5 0 0 1-4.5 4.5H6V4h6.5a4.5 4.5 0 0 1 3.256 7.613A4.49 4.49 0 0 1 18 11.5ZM8 13v5h5.5a2.5 2.5 0 1 0 0-5H8Z"/>
+        </svg>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        className={`p-2 rounded hover:bg-gray-100 ${
+          editor.isActive('italic') ? 'bg-gray-200' : ''
+        }`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
+          <path d="M15 20H7v-2h2.927l2.116-12H9V4h8v2h-2.927l-2.116 12H15v2Z"/>
+        </svg>
+      </button>
+      
+      <div className="h-6 mx-1 border-r border-gray-300"></div>
+      
+      <button
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={`p-2 rounded hover:bg-gray-100 ${
+          editor.isActive('bulletList') ? 'bg-gray-200' : ''
+        }`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
+          <path d="M9 7h12a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2ZM21 17H9a1 1 0 0 0 0 2h12a1 1 0 0 0 0-2ZM21 11H9a1 1 0 0 0 0 2h12a1 1 0 0 0 0-2ZM5 7a2 2 0 1 0-2-2a2 2 0 0 0 2 2ZM5 19a2 2 0 1 0-2-2a2 2 0 0 0 2 2ZM5 13a2 2 0 1 0-2-2a2 2 0 0 0 2 2Z"/>
+        </svg>
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={`p-2 rounded hover:bg-gray-100 ${
+          editor.isActive('orderedList') ? 'bg-gray-200' : ''
+        }`}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24">
+          <path d="M10 5h11a1 1 0 0 0 0-2H10a1 1 0 0 0 0 2ZM21 19H10a1 1 0 0 0 0 2h11a1 1 0 0 0 0-2ZM21 11H10a1 1 0 0 0 0 2h11a1 1 0 0 0 0-2ZM5.29 3.29a1 1 0 0 0-1.09-.21A.79.79 0 0 0 4 3a1 1 0 0 0-.29.71V9a1 1 0 0 0 2 0V5.41l.29.29a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.41ZM6 15H4v-1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1h3a1 1 0 0 0 0-2ZM5 19H4a1 1 0 0 0 0 2h1v1a1 1 0 0 0 2 0v-1.38a3 3 0 0 0 .25-5.62A1 1 0 0 0 6 16v1a1 1 0 0 1-1 2Z"/>
+        </svg>
+      </button>
+    </div>
+  )
+}
+```
+
+## Использование UI компонентов tiptap
+
+Tiptap предоставляет официальную библиотеку UI-компонентов, которые вы можете интегрировать через CLI:
+
+```bash
+npx @tiptap/cli add toolbar
+```
+
+И плавающую панель:
+
+```bash
+npx @tiptap/cli add toolbar-floating
+```
+
+## Полная реализация редактора со всеми типами панелей
+
+```jsx
+import React, { useState } from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import BubbleMenu from '@tiptap/extension-bubble-menu'
+import FloatingMenu from '@tiptap/extension-floating-menu'
+import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
+
+const Editor = () => {
+  const [editorContent, setEditorContent] = useState('<p>Начните вводить текст здесь...</p>')
+  
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Image,
+      Link,
+      BubbleMenu.configure({
+        pluginKey: 'bubbleMenu',
+        shouldShow: ({ editor }) => {
+          return !editor.isActive('image') && !editor.state.selection.empty
+        },
+      }),
+      FloatingMenu.configure({
+        pluginKey: 'floatingMenu',
+      }),
+    ],
+    content: editorContent,
+    onUpdate: ({ editor }) => {
+      setEditorContent(editor.getHTML())
+    },
+  })
+
+  return (
+    <div className="editor-container">
+      {/* Фиксированная панель инструментов */}
+      <div className="fixed-toolbar">
+        {editor && <FixedToolbar editor={editor} />}
+      </div>
+      
+      {/* Редактор */}
+      <EditorContent editor={editor} className="editor-content" />
+      
+      {/* Плавающее меню при выделении текста */}
+      {editor && (
+        <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
+          <div className="bubble-toolbar">
+            <button onClick={() => editor.chain().focus().toggleBold().run()}
+                    className={editor.isActive('bold') ? 'is-active' : ''}>
+              B
+            </button>
+            <button onClick={() => editor.chain().focus().toggleItalic().run()}
+                    className={editor.isActive('italic') ? 'is-active' : ''}>
+              I
+            </button>
+            <button onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={editor.isActive('underline') ? 'is-active' : ''}>
+              U
+            </button>
+            <button onClick={() => editor.chain().focus().toggleLink().run()}
+                    className={editor.isActive('link') ? 'is-active' : ''}>
+              🔗
+            </button>
+          </div>
+        </BubbleMenu>
+      )}
+      
+      {/* Плавающее меню на пустых строках */}
+      {editor && (
+        <FloatingMenu editor={editor} tippyOptions={{ duration: 100 }}>
+          <div className="floating-toolbar">
+            <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+              H1
+            </button>
+            <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+              H2
+            </button>
+            <button onClick={() => editor.chain().focus().toggleBulletList().run()}>
+              • Список
+            </button>
+            <button onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+              1. Нумерованный
+            </button>
+            <button onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+              Код
+            </button>
+          </div>
+        </FloatingMenu>
+      )}
+    </div>
+  )
+}
+
+// Компонент фиксированной панели инструментов
+const FixedToolbar = ({ editor }) => {
+  return (
+    <div className="toolbar">
+      {/* Группа форматирования заголовков */}
+      <div className="toolbar-group">
+        <select
+          onChange={(e) => {
+            const level = parseInt(e.target.value)
+            if (level === 0) {
+              editor.chain().focus().setParagraph().run()
+            } else {
+              editor.chain().focus().toggleHeading({ level }).run()
+            }
+          }}
+        >
+          <option value="0">Параграф</option>
+          <option value="1">Заголовок 1</option>
+          <option value="2">Заголовок 2</option>
+          <option value="3">Заголовок 3</option>
+        </select>
+      </div>
+      
+      <div className="toolbar-divider"></div>
+      
+      {/* Группа форматирования текста */}
+      <div className="toolbar-group">
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'is-active' : ''}
+        >
+          B
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'is-active' : ''}
+        >
+          I
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={editor.isActive('underline') ? 'is-active' : ''}
+        >
+          U
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={editor.isActive('strike') ? 'is-active' : ''}
+        >
+          S
+        </button>
+      </div>
+      
+      <div className="toolbar-divider"></div>
+      
+      {/* Группа выравнивания */}
+      <div className="toolbar-group">
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
+        >
+          ←
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''}
+        >
+          ↔
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
+        >
+          →
+        </button>
+      </div>
+      
+      <div className="toolbar-divider"></div>
+      
+      {/* Специальные элементы */}
+      <div className="toolbar-group">
+        <button
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editor.isActive('blockquote') ? 'is-active' : ''}
+        >
+          "
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        >
+          —
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default Editor
+```
+
+## Как стилизовать кнопки и панель инструментов
+
+Базовые стили CSS для панели инструментов:
+
+```css
+/* Общие стили для панелей инструментов */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: 0;
+}
+
+.toolbar-group {
+  display: flex;
+  margin-right: 8px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  background-color: #e1e4e8;
+  margin: 0 8px;
+}
+
+/* Стили кнопок */
+.toolbar button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+}
+
+.toolbar button:hover {
+  background-color: #e9ecef;
+}
+
+.toolbar button.is-active {
+  background-color: #e1e4e8;
+  border-color: #d1d5da;
+}
+
+/* Стили для плавающей панели */
+.bubble-toolbar {
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+.bubble-toolbar button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 2px;
+}
+
+.bubble-toolbar button:hover {
+  background-color: #f1f3f5;
+}
+
+.bubble-toolbar button.is-active {
+  background-color: #e9ecef;
+}
+
+/* Стили для плавающего меню на пустых строках */
+.floating-toolbar {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+.floating-toolbar button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  margin: 2px 0;
+}
+
+.floating-toolbar button:hover {
+  background-color: #f1f3f5;
+}
+
+/* Стили редактора */
+.editor-container {
+  position: relative;
+}
+
+.editor-content {
+  border: 1px solid #e1e4e8;
+  border-radius: 0 0 4px 4px;
+  padding: 16px;
+  min-height: 200px;
+}
+
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+```
+
+## Заключение
+
+Tiptap предлагает гибкую систему для создания панелей инструментов с различным уровнем сложности. Вы можете:
+
+1. Использовать готовые UI-компоненты из официальной библиотеки tiptap
+2. Создать собственные панели инструментов с нуля, используя API tiptap
+3. Комбинировать разные типы панелей (фиксированная, плавающая, плавающая на пустых строках)

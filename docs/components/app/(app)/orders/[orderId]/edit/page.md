@@ -33,6 +33,8 @@ flowchart TD
     page_tsx --> select
     textarea[@/components/ui/textarea]
     page_tsx --> textarea
+    quill[@/components/editor/quill]
+    page_tsx --> quill
     types[@/lib/types]
     page_tsx --> types
     order[@/lib/types/order]

@@ -22,6 +22,7 @@
     "@/components/ui/form",
     "@/components/ui/input",
     "@/components/ui/textarea",
+    "@/components/ui/tiptap",
     "@/components/ui/label",
     "@/components/ui/select",
     "@/types",
@@ -29,7 +30,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-29",
+      "date": "2025-06-01",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

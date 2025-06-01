@@ -23,13 +23,14 @@
     "@/components/ui/input",
     "@/components/ui/select",
     "@/components/ui/textarea",
+    "@/components/editor/quill",
     "@/lib/types",
     "@/lib/types/order",
     "@/hooks/use-toast"
   ],
   "history": [
     {
-      "date": "2025-05-29",
+      "date": "2025-06-01",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

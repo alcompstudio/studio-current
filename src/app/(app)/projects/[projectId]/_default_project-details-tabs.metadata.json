@@ -17,11 +17,12 @@
   "params": [],
   "returnType": "React.JSX.Element",
   "dependencies": [
-    "react"
+    "react",
+    "@/components/ui/tiptap"
   ],
   "history": [
     {
-      "date": "2025-05-29",
+      "date": "2025-06-01",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

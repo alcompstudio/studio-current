@@ -35,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { FormQuillEditor, QuillToolbarType } from "@/components/editor/quill";
 import type { Order } from "@/lib/types";
 import type { OrderStatusOS } from "@/lib/types/order"; // Импорт типа статуса заказа
 import { useToast } from "@/hooks/use-toast";
@@ -432,15 +433,15 @@ export default function OrderEditPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem data-oid="_6q1jio">
-                    <FormLabel data-oid="35iw77r">Description</FormLabel>
+                    <FormLabel data-oid="35iw77r">Описание</FormLabel>
                     <FormControl data-oid="5:dyh0-">
-                      <Textarea
-                        placeholder="Describe the order..."
-                        className="min-h-[100px]"
-                        {...field}
-                        value={field.value ?? ""}
-                        data-oid="3i05izm"
-                      />
+                      <div className="quill-wrapper" id="«rr»-form-item">
+                        <FormQuillEditor
+                          name="description"
+                          placeholder="Опишите заказ..."
+                          defaultToolbarType={QuillToolbarType.MEDIUM}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage data-oid="k_5fzhn" />
                   </FormItem>

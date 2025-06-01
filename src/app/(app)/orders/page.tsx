@@ -219,13 +219,17 @@ export default function OrdersPage() {
                 </div>
               </CardHeader>
               <CardContent data-oid="6ci8p4m">
-                <p
-                  className="text-sm text-muted-foreground mb-4 line-clamp-2"
-                  data-oid="gjdtqxl"
-                >
-                  {order.description}
-                </p>{" "}
-                {/* Use line-clamp */}
+                {order.description ? (
+                  <div 
+                    className="text-sm text-muted-foreground mb-4 line-clamp-2 quill-content"
+                    data-oid="gjdtqxl"
+                    dangerouslySetInnerHTML={{ __html: order.description }}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Описание не указано
+                  </p>
+                )}
                 <div
                   className="flex justify-between items-center"
                   data-oid="nbxrlj2"

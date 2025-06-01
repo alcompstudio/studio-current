@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TiptapContent } from "@/components/ui/tiptap";
 
 // Тип Project. В идеале, его следует вынести в общий файл типов (например, src/types.ts)
 // и импортировать сюда, а также в page.tsx.
@@ -199,9 +200,11 @@ export default function ProjectDetailsTabs({ project }: { project: Project }) {
                 className="prose max-w-none dark:prose-invert"
                 data-oid="c1t1fpx"
               >
-                <p className="text-foreground text-sm" data-oid="awwolr6">
-                  {project.description}
-                </p>
+                <TiptapContent 
+                  content={project.description}
+                  className="text-foreground text-sm"
+                  data-oid="awwolr6"
+                />
               </div>
             </div>
           )}

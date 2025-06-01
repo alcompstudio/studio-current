@@ -1,0 +1,52 @@
+{
+  "component": "FormQuillEditor",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "components\\editor\\quill\\index.ts",
+  "props": [
+    {
+      "name": "name",
+      "type": "string",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "defaultToolbarType",
+      "type": "QuillToolbarType",
+      "description": "",
+      "required": false
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [],
+  "history": [
+    {
+      "date": "2025-06-01",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}

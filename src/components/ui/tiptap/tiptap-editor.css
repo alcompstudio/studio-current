@@ -1,0 +1,278 @@
+.tiptap-editor-container {
+  width: 100%;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.tiptap-editor {
+  border: 1px solid var(--input, hsl(240 5.9% 90%));
+  border-radius: 0.375rem;
+  background-color: var(--background, white);
+  overflow: hidden;
+}
+
+.ProseMirror {
+  padding: 1rem;
+  min-height: 150px;
+  outline: none;
+  border: 1px solid var(--input, hsl(240 5.9% 90%)) !important; /* Добавляем границу */
+  border-top: none !important; /* Убираем верхнюю границу, так как она уже есть у панели инструментов */
+  background-color: var(--background, white);
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  box-shadow: none;
+}
+
+.tiptap-menu-bar {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--input, hsl(240 5.9% 90%));
+  background-color: #F9FAFB; /* Цвет фона как у сайдбара */
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.tiptap-menu-bar button {
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  border: none;
+  background: none;
+  border-radius: 16px; /* Скругление как у пунктов меню сайдбара */
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border-radius: 16px !important;
+}
+
+.tiptap-menu-separator {
+  display: inline-block;
+  width: 1px;
+  height: 24px;
+  background-color: var(--input, hsl(240 5.9% 90%));
+  margin: 0 0.25rem 0.25rem 0.25rem;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+.tiptap-menu-bar button:hover {
+  background-color: var(--sidebar-accent, #EEF2F6); /* Цвет как у ховера пунктов меню */
+  color: var(--sidebar-accent-foreground, #000);
+  box-shadow: none;
+}
+
+.tiptap-menu-bar button.is-active {
+  background-color: #EEF2FF; /* Светло-фиолетовый фон как у активного пункта меню */
+  color: var(--sidebar-accent-foreground, #000);
+  font-weight: 500;
+  box-shadow: none;
+}
+
+/* Стили для ProseMirror перенесены выше */
+
+.ProseMirror p {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+/* Стили для отображения контента в режиме чтения */
+.tiptap-content {
+  width: 100%;
+}
+
+.tiptap-content p {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+/* Стили для таблиц в режиме чтения */
+.tiptap-content table,
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+.tiptap-content table td,
+.tiptap-content table th,
+.ProseMirror table td,
+.ProseMirror table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  position: relative;
+  min-width: 100px;
+  background-color: #fff;
+}
+
+.tiptap-content table th,
+.ProseMirror table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.tiptap-content table tr:nth-child(even),
+.ProseMirror table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tiptap-content table tr:hover,
+.ProseMirror table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Стили для изменения размера ячеек таблицы */
+.tableWrapper {
+  padding: 1em 0;
+  overflow-x: auto;
+}
+
+.resize-cursor {
+  cursor: col-resize;
+}
+
+.tiptap-content h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap-content h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap-content h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.tiptap-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.tiptap-content blockquote {
+  border-left: 3px solid #e2e8f0;
+  padding-left: 1rem;
+  margin-left: 0;
+  font-style: italic;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.tiptap-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.tiptap-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.tiptap-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.tiptap-content th, .tiptap-content td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem;
+}
+
+.tiptap-content th {
+  background-color: #f8fafc;
+  font-weight: bold;
+}
+
+.ProseMirror h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.ProseMirror blockquote {
+  border-left: 2px solid var(--primary, hsl(221.2 83.2% 53.3%));
+  padding-left: 1rem;
+  margin-left: 0;
+  font-style: italic;
+}
+
+.ProseMirror code {
+  background-color: var(--muted, hsl(240 5.9% 96%));
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.ProseMirror pre {
+  background-color: var(--muted, hsl(240 5.9% 96%));
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ProseMirror a {
+  color: var(--primary, hsl(221.2 83.2% 53.3%));
+  text-decoration: underline;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: var(--muted-foreground, hsl(240 3.8% 46.1%));
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

@@ -20,6 +20,7 @@
     "@hookform/resolvers/zod",
     "zod",
     "@/components/ui/form",
+    "@/components/editor/quill",
     "@/components/ui/input",
     "@/components/ui/textarea",
     "@/components/ui/select",
@@ -29,7 +30,7 @@
   ],
   "history": [
     {
-      "date": "2025-05-29",
+      "date": "2025-06-01",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

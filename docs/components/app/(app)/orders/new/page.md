@@ -27,6 +27,8 @@ flowchart TD
     page_tsx --> zod
     form[@/components/ui/form]
     page_tsx --> form
+    quill[@/components/editor/quill]
+    page_tsx --> quill
     input[@/components/ui/input]
     page_tsx --> input
     textarea[@/components/ui/textarea]

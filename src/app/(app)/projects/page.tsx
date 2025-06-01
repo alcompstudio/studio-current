@@ -227,12 +227,21 @@ export default function ProjectsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent data-oid="n_.j3vb">
-                  <p
+                  <div
                     className="text-sm text-muted-foreground mb-4 line-clamp-2"
                     data-oid=":32rd4a"
+                    data-component-name="ProjectsPage"
                   >
-                    {project.description}
-                  </p>
+                    {project.description ? (
+                      <div 
+                        className="tiptap-content" 
+                        data-component-name="TiptapContent"
+                        dangerouslySetInnerHTML={{ __html: project.description }} 
+                      />
+                    ) : (
+                      <p>Нет описания</p>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2" data-oid="bilkn8:">
                     <Link
                       href={`/projects/${project.id}`}

@@ -1,0 +1,300 @@
+/* Пользовательские стили для Quill */
+
+.quill-editor-container {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* Общие стили для контейнера редактора */
+.quill-editor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Стили для контейнера и редактора */
+.ql-container {
+  font-family: inherit;
+  font-size: 0.875rem;
+  border-top: none !important;
+  border-bottom-left-radius: 0.375rem !important;
+  border-bottom-right-radius: 0.375rem !important;
+}
+
+/* Стили для панели инструментов */
+.ql-toolbar {
+  border-top-left-radius: 0.375rem !important;
+  border-top-right-radius: 0.375rem !important;
+  background-color: hsl(var(--muted) / 0.5) !important;
+  border-color: hsl(var(--input)) !important;
+  border-bottom: none;
+}
+
+/* Стили для редактора */
+.ql-editor {
+  min-height: 208px !important;
+  padding: 0.75rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Стиль для плейсхолдера */
+.ql-editor.ql-blank::before {
+  color: hsl(var(--muted-foreground)) !important;
+  font-style: normal !important;
+}
+
+.toolbar-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Стили для выпадающего списка шрифтов */
+.ql-picker-options {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
+
+/* Позиционирование выпадающего списка, чтобы не перекрывался */
+.ql-font .ql-picker-options {
+  z-index: 100 !important; /* Увеличиваем z-index для отображения поверх других элементов */
+  height: 200px !important; /* Фиксированная высота вместо max-height */
+  max-height: 200px !important; /* Максимальная высота тоже 200px */
+  padding-bottom: 5px;
+}
+
+/* Стили для опций выбора шрифтов */
+.ql-font .ql-picker-item {
+  display: block;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+/* Стили для выбранного шрифта в списке */
+.ql-font .ql-picker-item.ql-selected {
+  font-weight: bold;
+  color: #06c;
+}
+
+/* Добавляем полосу прокрутки */
+.ql-font .ql-picker-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ql-font .ql-picker-options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.ql-font .ql-picker-options::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.ql-font .ql-picker-options::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Стили для шрифтов */
+.ql-font-sans-serif {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+.ql-font-serif {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.ql-font-monospace {
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.ql-font-inter {
+  font-family: 'Inter', 'Arial', sans-serif;
+}
+
+.ql-font-arial {
+  font-family: 'Arial', sans-serif;
+}
+
+.ql-font-helvetica {
+  font-family: 'Helvetica', sans-serif;
+}
+
+.ql-font-times-new-roman {
+  font-family: 'Times New Roman', serif;
+}
+
+.ql-font-georgia {
+  font-family: 'Georgia', serif;
+}
+
+.ql-font-verdana {
+  font-family: 'Verdana', sans-serif;
+}
+
+.ql-font-tahoma {
+  font-family: 'Tahoma', sans-serif;
+}
+
+.ql-font-trebuchet-ms {
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.ql-font-roboto {
+  font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+/* Стили для просмотра в редакторе */
+.quill-editor-inner {
+  width: 100%;
+  height: 100%;
+}
+
+/* Стили для отображения контента Quill вне редактора */
+.quill-content {
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Форматирование параграфов */
+.quill-content p {
+  margin-bottom: 0.75rem;
+}
+
+/* Форматирование заголовков */
+.quill-content h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem 0 0.75rem;
+}
+
+.quill-content h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 1rem 0 0.75rem;
+}
+
+.quill-content h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 1rem 0 0.75rem;
+}
+
+/* Форматирование списков */
+.quill-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quill-content ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quill-content li {
+  margin-bottom: 0.25rem;
+}
+
+/* Форматирование цитат */
+.quill-content blockquote {
+  border-left: 3px solid hsl(var(--border));
+  padding-left: 0.75rem;
+  margin: 0.75rem 0;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Форматирование ссылок */
+.quill-content a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
+/* Форматирование выделений */
+.quill-content strong {
+  font-weight: bold;
+}
+
+.quill-content em {
+  font-style: italic;
+}
+
+.quill-content pre {
+  background-color: hsl(var(--muted));
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin: 0.75rem 0;
+  overflow-x: auto;
+}
+
+.quill-content code {
+  font-family: monospace;
+  background-color: hsl(var(--muted));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Стили для светлой темы */
+.light .quill-wrapper .ql-snow.ql-toolbar button:hover,
+.light .quill-wrapper .ql-snow .ql-toolbar button:hover,
+.light .quill-wrapper .ql-snow.ql-toolbar button.ql-active,
+.light .quill-wrapper .ql-snow .ql-toolbar button.ql-active,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label:hover,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label:hover,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item:hover,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item:hover,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: hsl(var(--primary));
+}
+
+.light .quill-wrapper .ql-snow.ql-toolbar button:hover .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar button:hover .ql-fill,
+.light .quill-wrapper .ql-snow.ql-toolbar button.ql-active .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar button.ql-active .ql-fill,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill,
+.light .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill,
+.light .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill {
+  fill: hsl(var(--primary));
+}
+
+/* Стили для темной темы */
+.dark .quill-wrapper .ql-snow.ql-toolbar {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+.dark .quill-wrapper .ql-snow.ql-toolbar button:hover,
+.dark .quill-wrapper .ql-snow .ql-toolbar button:hover,
+.dark .quill-wrapper .ql-snow.ql-toolbar button.ql-active,
+.dark .quill-wrapper .ql-snow .ql-toolbar button.ql-active,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label:hover,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label:hover,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label.ql-active,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item:hover,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item:hover,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: hsl(var(--primary));
+}
+
+.dark .quill-wrapper .ql-snow.ql-toolbar button:hover .ql-stroke,
+.dark .quill-wrapper .ql-snow .ql-toolbar button:hover .ql-stroke,
+.dark .quill-wrapper .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.dark .quill-wrapper .ql-snow .ql-toolbar button.ql-active .ql-stroke,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
+.dark .quill-wrapper .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.dark .quill-wrapper .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke {
+  stroke: hsl(var(--primary));
+}

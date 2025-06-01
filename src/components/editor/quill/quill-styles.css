@@ -1,0 +1,71 @@
+/* Импорт базовых стилей Quill */
+@import '~quill/dist/quill.snow.css';
+@import '~quill/dist/quill.bubble.css';
+
+/* Дополнительные стили для интеграции в наше приложение */
+.quill-editor-container {
+  width: 100%;
+}
+
+.quill-editor {
+  overflow-y: auto;
+  height: auto;
+  min-height: 200px;
+}
+
+.ql-container {
+  font-size: 16px;
+  height: auto;
+  min-height: 150px;
+  font-family: inherit;
+}
+
+.ql-editor {
+  min-height: 150px;
+  padding: 12px 15px;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+  background-color: #f9fafb;
+  border-color: hsl(var(--input));
+}
+
+.ql-container {
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+  border-color: hsl(var(--input));
+  border-top: none;
+}
+
+.ql-editor.ql-blank::before {
+  color: hsl(var(--muted-foreground));
+  font-style: normal;
+}
+
+/* Стили для селектора типа панели */
+.toolbar-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Стили для разных типов панелей */
+.ql-toolbar.minimal {
+  padding: 8px;
+}
+
+.ql-toolbar.medium {
+  padding: 8px;
+}
+
+.ql-toolbar.full {
+  padding: 8px;
+}
+
+/* Стили для режима ошибки */
+.quill-editor.error .ql-toolbar,
+.quill-editor.error .ql-container {
+  border-color: hsl(var(--destructive));
+}

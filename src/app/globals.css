@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Импорт стилей Quill */
+@import 'quill/dist/quill.snow.css';
+@import 'quill/dist/quill.bubble.css';
+@import '../components/editor/quill/quill-custom.css';
+
 /* Removed body font-family rule here */
 
 @layer base {

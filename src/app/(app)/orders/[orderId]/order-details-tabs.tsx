@@ -288,9 +288,15 @@ export default function OrderDetailsTabs({
             {/* Вкладка Описание */}
             {activeTab === "description" && (
               <div data-oid="o92drg0">
-                <p className="text-sm whitespace-pre-line" data-oid="qufghqg">
-                  {order.description || "Описание не указано"}
-                </p>
+                {order.description ? (
+                  <div 
+                    className="text-sm quill-content" 
+                    data-oid="qufghqg"
+                    dangerouslySetInnerHTML={{ __html: order.description }}
+                  />
+                ) : (
+                  <p className="text-sm">Описание не указано</p>
+                )}
               </div>
             )}
           </div>

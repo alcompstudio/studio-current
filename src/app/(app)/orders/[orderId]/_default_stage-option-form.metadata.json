@@ -46,23 +46,10 @@
   ],
   "params": [],
   "returnType": "React.JSX.Element",
-  "dependencies": [
-    "react",
-    "zod",
-    "react-hook-form",
-    "@hookform/resolvers/zod",
-    "@/components/ui/form",
-    "@/components/ui/input",
-    "@/components/ui/textarea",
-    "@/components/ui/button",
-    "@/components/ui/select",
-    "@/lib/types/stage",
-    "@/hooks/use-toast",
-    "lucide-react"
-  ],
+  "dependencies": [],
   "history": [
     {
-      "date": "2025-05-29",
+      "date": "2025-06-01",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

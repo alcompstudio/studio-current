@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { TiptapEditor } from "@/components/ui/tiptap";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -177,7 +178,7 @@ export default function ProjectEditPage() {
         setAvailableStatuses(statusData);
 
         // Загрузка валют
-        const currencyResponse = await fetch("/api/currencies");
+        const currencyResponse = await fetch("/api/settings/currencies");
         if (!currencyResponse.ok) {
           throw new Error("Failed to fetch currencies");
         }
@@ -364,11 +365,11 @@ export default function ProjectEditPage() {
                   <FormItem data-oid="b:wwh8f">
                     <FormLabel data-oid="z3:-0u4">Description</FormLabel>
                     <FormControl data-oid="96fjwfx">
-                      <Textarea
-                        placeholder="Describe the project..."
-                        className="min-h-[100px]"
-                        {...field}
-                        value={field.value ?? ""}
+                      <TiptapEditor
+                        name="description"
+                        control={form.control}
+                        placeholder="Опишите проект подробнее..."
+                        editorClassName="min-h-[150px]"
                         data-oid="jwhh_tc"
                       />
                     </FormControl>

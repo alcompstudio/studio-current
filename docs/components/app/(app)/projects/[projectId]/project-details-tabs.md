@@ -9,6 +9,8 @@ flowchart TD
     project_details_tabs_tsx[project-details-tabs.tsx]
     react[react]
     project_details_tabs_tsx --> react
+    tiptap[@/components/ui/tiptap]
+    project_details_tabs_tsx --> tiptap
 ```
 
 ### `default` (ReactComponent)

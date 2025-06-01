@@ -1,0 +1,50 @@
+{
+  "component": "default",
+  "version": "1.0.0",
+  "description": "",
+  "tags": [],
+  "maintainer": "AI Agent / Auto-generated",
+  "type": "ReactComponent",
+  "path": "app\\(app)\\orders\\[orderId]\\components\\price-calculation.tsx",
+  "props": [
+    {
+      "name": "calculatedPrices",
+      "type": "CalculatedPrices",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "form",
+      "type": "UseFormReturn<StageOptionFormValues>",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "units",
+      "type": "VolumeUnit[]",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "orderCurrency",
+      "type": "string",
+      "description": "",
+      "required": true
+    }
+  ],
+  "params": [],
+  "returnType": "React.JSX.Element",
+  "dependencies": [
+    "react",
+    "react-hook-form",
+    "./types"
+  ],
+  "history": [
+    {
+      "date": "2025-06-01",
+      "author": "code-structure-extractor.js",
+      "changes": "Автоматически сгенерировано/обновлено."
+    }
+  ],
+  "notes": "Эта информация была частично сгенерирована автоматически. Требуется проверка и дополнение."
+}
