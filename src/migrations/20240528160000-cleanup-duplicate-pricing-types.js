@@ -1,16 +1,17 @@
+// Эта миграция была перенесена на более позднюю дату, чтобы выполняться после создания таблицы pricing_type_os
 'use strict';
+
+// Эта миграция была перенесена в файл 20240720000000-cleanup-duplicate-pricing-types.js
+// чтобы выполняться после создания таблицы pricing_type_os
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // Удаляем дублирующиеся записи с id 3 и 4
-    await queryInterface.sequelize.query(`DELETE FROM pricing_type_os WHERE id IN (3, 4);`);
-    
-    // Проверяем, что осталось только две записи
-    console.log('Выполнена очистка дублирующихся записей в таблице pricing_type_os');
+    // Пустая миграция, реальная логика перенесена в 20240720000000-cleanup-duplicate-pricing-types.js
+    console.log('Эта миграция отключена, используйте 20240720000000-cleanup-duplicate-pricing-types.js');
   },
 
   async down(queryInterface, Sequelize) {
-    // Восстанавливаем удаленные записи (не требуется, так как они были дубликатами)
-    console.log('Это операция удаления дубликатов, откат не требуется');
+    // Пустая миграция
+    console.log('Эта миграция отключена, используйте 20240720000000-cleanup-duplicate-pricing-types.js');
   }
 };

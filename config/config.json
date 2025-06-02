@@ -1,25 +1,25 @@
 {
   "development": {
-    "username": "userstudio",
-    "password": "userstudio",
-    "database": "userstudio",
-    "host": "localhost",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "studio_db",
+    "host": "db",
     "port": 5432,
     "dialect": "postgres"
   },
   "test": {
-    "username": "userstudio",
-    "password": "userstudio",
-    "database": "userstudio",
-    "host": "localhost",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "studio_db",
+    "host": "db",
     "port": 5432,
     "dialect": "postgres"
   },
   "production": {
-    "username": "userstudio",
-    "password": "userstudio",
-    "database": "userstudio",
-    "host": "localhost",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "studio_db",
+    "host": "db",
     "port": 5432,
     "dialect": "postgres"
   }

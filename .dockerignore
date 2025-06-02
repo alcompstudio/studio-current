@@ -1,0 +1,29 @@
+# Зависимости
+node_modules
+npm-debug.log
+
+# Директории сборки
+.next
+out
+
+# Кэш
+.npm
+.git
+.github
+.husky
+.vscode
+.idx
+.trae
+.codux
+_codux
+
+# Другие файлы
+*.tar.gz
+*.zip
+*.log
+tsconfig.tsbuildinfo
+
+# Среда выполнения
+.env
+.env.*
+!.env.example
