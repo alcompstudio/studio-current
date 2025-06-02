@@ -6,25 +6,27 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-      # Используем buildkit для ускорения сборки
+      # Передаем необходимые аргументы для сборки
       args:
-        - NODE_ENV=${NODE_ENV:-development}
+        - NODE_ENV=${NODE_ENV:-production}
+        - DB_NAME=${DB_NAME:-studio_db}
+        - DB_USERNAME=${DB_USERNAME:-postgres}
+        - DB_PASSWORD=${DB_PASSWORD:-postgres}
+        - DB_HOST=${DB_HOST:-db}
+        - DB_PORT=${DB_PORT:-5432}
+        - DB_DIALECT=${DB_DIALECT:-postgres}
     container_name: studio_app
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
+      - NODE_ENV=${NODE_ENV:-production}
       - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-studio_db}
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USERNAME=${POSTGRES_USER:-postgres}
       - DB_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - DB_NAME=${POSTGRES_DB:-studio_db}
-    volumes:
-      # В режиме разработки монтируем директории для hot-reload
-      - .:/app
-      - /app/node_modules
-      - /app/.next
+      - DOCKER_ENV=true
     depends_on:
       - db
     restart: unless-stopped

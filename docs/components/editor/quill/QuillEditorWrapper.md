@@ -11,23 +11,27 @@ flowchart TD
     QuillEditorWrapper_tsx --> react
     QuillEditor[./QuillEditor]
     QuillEditorWrapper_tsx --> QuillEditor
-    types[@/components/ui/tiptap/types]
-    QuillEditorWrapper_tsx --> types
+    image[@/types/image]
+    QuillEditorWrapper_tsx --> image
+    react_hook_form[react-hook-form]
+    QuillEditorWrapper_tsx --> react_hook_form
 ```
 
 ### `QuillEditorWrapper` (ReactComponent)
 
 **Описание:**
 
-> Компонент-обертка для QuillEditor, совместимый с интерфейсом TiptapEditorCore
+> Компонент-обертка для QuillEditor, совместимый с интерфейсом react-hook-form
 > для простой замены редактора
 
 **Пропсы (Props):**
 
 | Имя | Тип | Обязательный | Описание |
 |---|---|---|---|
-| `content` | `string` | Да |  |
-| `onChange` | `(content: string) => void` | Да |  |
+| `name` | `FieldPath<TFieldValues>` | Нет |  |
+| `control` | `Control<TFieldValues>` | Нет |  |
+| `content` | `string` | Нет |  |
+| `onChange` | `(content: string) => void` | Нет |  |
 | `placeholder` | `string` | Нет |  |
 | `className` | `string` | Нет |  |
 | `editorClassName` | `string` | Нет |  |

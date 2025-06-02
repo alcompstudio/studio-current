@@ -1,23 +1,35 @@
 {
   "component": "QuillEditorWrapper",
   "version": "1.0.0",
-  "description": "Компонент-обертка для QuillEditor, совместимый с интерфейсом TiptapEditorCore\nдля простой замены редактора",
+  "description": "Компонент-обертка для QuillEditor, совместимый с интерфейсом react-hook-form\nдля простой замены редактора",
   "tags": [],
   "maintainer": "AI Agent / Auto-generated",
   "type": "ReactComponent",
   "path": "components\\editor\\quill\\QuillEditorWrapper.tsx",
   "props": [
     {
+      "name": "name",
+      "type": "FieldPath<TFieldValues>",
+      "description": "",
+      "required": false
+    },
+    {
+      "name": "control",
+      "type": "Control<TFieldValues>",
+      "description": "",
+      "required": false
+    },
+    {
       "name": "content",
       "type": "string",
       "description": "",
-      "required": true
+      "required": false
     },
     {
       "name": "onChange",
       "type": "(content: string) => void",
       "description": "",
-      "required": true
+      "required": false
     },
     {
       "name": "placeholder",
@@ -55,11 +67,12 @@
   "dependencies": [
     "react",
     "./QuillEditor",
-    "@/components/ui/tiptap/types"
+    "@/types/image",
+    "react-hook-form"
   ],
   "history": [
     {
-      "date": "2025-06-01",
+      "date": "2025-06-02",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }

@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { TiptapEditor } from "@/components/ui/tiptap";
+import { QuillEditorWrapper } from "@/components/editor/quill/QuillEditorWrapper";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -365,11 +365,11 @@ export default function ProjectEditPage() {
                   <FormItem data-oid="b:wwh8f">
                     <FormLabel data-oid="z3:-0u4">Description</FormLabel>
                     <FormControl data-oid="96fjwfx">
-                      <TiptapEditor
+                      <QuillEditorWrapper
                         name="description"
                         control={form.control}
                         placeholder="Опишите проект подробнее..."
-                        editorClassName="min-h-[150px]"
+                        className="min-h-[150px]"
                         data-oid="jwhh_tc"
                       />
                     </FormControl>

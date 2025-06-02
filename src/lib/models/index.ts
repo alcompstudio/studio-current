@@ -20,11 +20,22 @@ import defineUnitOs from './UnitOs'; // Импорт модели единиц �
 
 dotenv.config(); // Загружает переменные из .env файла
 
+// Определяем, запущено ли приложение в Docker
+const isRunningInDocker = process.env.DOCKER_ENV === 'true';
+
+// Настройки базы данных
 const dbName = process.env.DB_NAME;
 const dbUser = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
-const dbHost = process.env.DB_HOST;
+
+// Определяем хост базы данных автоматически
+// Если запущено в Docker, используем имя сервиса 'db', иначе 'localhost'
+const dbHost = isRunningInDocker ? 'db' : (process.env.DB_HOST || 'localhost');
 const dbPort = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432;
+
+// Лог для отладки
+console.log(`[Database] Connecting to ${dbHost}:${dbPort} (${isRunningInDocker ? 'Docker' : 'Local'} environment)`);
+
 
 if (!dbName || !dbUser || !dbPassword || !dbHost) {
   console.error('Database configuration is missing in .env file. Please check DB_NAME, DB_USERNAME, DB_PASSWORD, DB_HOST.');

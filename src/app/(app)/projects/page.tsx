@@ -234,8 +234,7 @@ export default function ProjectsPage() {
                   >
                     {project.description ? (
                       <div 
-                        className="tiptap-content" 
-                        data-component-name="TiptapContent"
+                        className="prose-content" 
                         dangerouslySetInnerHTML={{ __html: project.description }} 
                       />
                     ) : (

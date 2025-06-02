@@ -31,7 +31,7 @@ flowchart TD
 | `page` | `void` | Да |  |
 | `ua` | `void` | Да |  |
 | `url` | `string` | Да |  |
-| `__@INTERNALS@2866` | `{
+| `__@INTERNALS@2867` | `{
         cookies: RequestCookies;
         url: string;
         nextUrl: NextURL;

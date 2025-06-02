@@ -31,8 +31,8 @@ flowchart TD
     page_tsx --> input
     textarea[@/components/ui/textarea]
     page_tsx --> textarea
-    tiptap[@/components/ui/tiptap]
-    page_tsx --> tiptap
+    QuillEditorWrapper[@/components/editor/quill/QuillEditorWrapper]
+    page_tsx --> QuillEditorWrapper
     label[@/components/ui/label]
     page_tsx --> label
     select[@/components/ui/select]

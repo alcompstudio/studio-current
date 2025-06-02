@@ -38,7 +38,7 @@
       "required": true
     },
     {
-      "name": "__@INTERNALS@2866",
+      "name": "__@INTERNALS@2867",
       "type": "{\n        cookies: RequestCookies;\n        url: string;\n        nextUrl: NextURL;\n    }",
       "description": "",
       "required": true
@@ -181,7 +181,7 @@
   ],
   "history": [
     {
-      "date": "2025-06-01",
+      "date": "2025-06-02",
       "author": "code-structure-extractor.js",
       "changes": "Автоматически сгенерировано/обновлено."
     }
