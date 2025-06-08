@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Project, Customer, Order, ProjectStatusOS, CurrencyOS } from '@/lib/db'; // Импортируем необходимые модели из db.ts
 
 export async function GET() {
+  console.log(`[API_PROJECTS_GET_HANDLER_SIMPLIFIED] Received request at ${new Date().toISOString()}`);
   try {
     const projects = await Project.findAll({
       include: [
@@ -24,24 +25,31 @@ export async function GET() {
       ],
     });
     return NextResponse.json(projects);
+    // return NextResponse.json([{ id: 1, name: "Test Project (Simplified)" }, { id: 2, name: "Another Test (Simplified)" }]);
   } catch (error) {
-    console.error('[API_PROJECTS_ERROR] Failed to fetch projects. Full error object:', error);
+    console.error('[API_PROJECTS_ERROR_SIMPLIFIED] Failed to fetch projects. Full error object:', error);
     let errorDetails = 'An unknown error occurred';
     if (error instanceof Error) {
       errorDetails = error.message;
       if (error.stack) {
-        console.error('[API_PROJECTS_ERROR_STACK]:', error.stack);
+        console.error('[API_PROJECTS_ERROR_STACK_SIMPLIFIED]:', error.stack);
         errorDetails += ` | Stack: ${error.stack}`;
       }
     }
     return NextResponse.json(
-      { error: 'Failed to fetch projects from API', details: errorDetails },
+      { error: 'Failed to fetch projects from API (Simplified)', details: errorDetails },
       { status: 500 }
     );
   }
 }
 
 export async function POST(request: Request) {
+  console.log(`[API_PROJECTS_POST_HANDLER_SIMPLIFIED] Received request at ${new Date().toISOString()}`);
+  // Temporarily simplify POST to avoid side-effects during GET testing
+  return NextResponse.json({ message: "POST endpoint is temporarily simplified for GET testing" }, { status: 200 });
+}
+
+/*
   try {
     const body = await request.json();
     const { name, description, status, customerId, currency, budget } = body;
@@ -87,3 +95,4 @@ export async function POST(request: Request) {
     );
   }
 }
+*/

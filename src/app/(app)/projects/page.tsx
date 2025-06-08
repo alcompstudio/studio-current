@@ -95,9 +95,11 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     const fetchProjects = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+      console.log('[ProjectsPage] Fetching projects from URL:', `${apiUrl}/api/projects`);
       try {
         setIsLoading(true);
-        const response = await fetch("/api/projects");
+        const response = await fetch(`${apiUrl}/api/projects`);
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(

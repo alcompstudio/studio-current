@@ -43,6 +43,7 @@ import { Button } from "@/components/ui/button"; // Import Button
 import { useToast } from "@/hooks/use-toast"; // Import useToast
 
 interface AuthUser {
+  userId: number; // Добавлено поле userId, так как оно приходит из localStorage
   email: string;
   role: UserRole;
 }
@@ -61,7 +62,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { toast } = useToast(); // Initialize useToast
   const [authUser, setAuthUser] = React.useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoadingAuth, setIsLoadingAuth] = React.useState(true); // Переименовано для ясности
+  const [isRedirecting, setIsRedirecting] = React.useState(false); // Новое состояние для отслеживания перенаправления
   // Default communication panel to collapsed (width 70px)
   const [isCommPanelExpanded, setIsCommPanelExpanded] = React.useState(false);
   // Ссылки на DOM элементы для прокрутки
@@ -168,50 +170,128 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     setTimeout(tryScroll, 50);
   }, [scrollAreaRef]);
 
+  // Эффект для проверки аутентификации при монтировании компонента
   React.useEffect(() => {
-    // Check auth status from localStorage on mount
+    console.log("AppLayout: Checking auth status...");
     const storedUser = localStorage.getItem("authUser");
     if (storedUser) {
       try {
         const user: AuthUser = JSON.parse(storedUser);
         if (user && user.email && user.role) {
+          console.log("AppLayout: User found in localStorage", user);
           setAuthUser(user);
         } else {
-          // Invalid user data, redirect to auth
+          console.log("AppLayout: Invalid user data in localStorage.");
           localStorage.removeItem("authUser");
-          router.replace("/auth");
+          setAuthUser(null); // Убедимся, что authUser сброшен
         }
       } catch (error) {
-        console.error("Error parsing authUser from localStorage", error);
+        console.error("AppLayout: Error parsing authUser from localStorage", error);
         localStorage.removeItem("authUser");
-        router.replace("/auth");
+        setAuthUser(null); // Убедимся, что authUser сброшен
       }
     } else {
-      // Not authenticated, redirect to auth
-      router.replace("/auth");
+      console.log("AppLayout: No user in localStorage.");
+      setAuthUser(null); // Убедимся, что authUser сброшен
     }
-    setIsLoading(false);
+    setIsLoadingAuth(false);
+  }, []);
 
-    // Listen for storage changes to update layout if needed (e.g., logout)
+  // Эффект для выполнения перенаправления после проверки аутентификации
+  React.useEffect(() => {
+    // Если статус аутентификации все еще загружается, ждем.
+    if (isLoadingAuth) {
+        console.log(`AppLayout: Auth status loading. Skipping redirect check. isLoadingAuth: ${isLoadingAuth}, authUser:`, authUser ? { userId: authUser.userId, email: authUser.email, role: authUser.role } : null);
+        return;
+    }
+
+    // Если перенаправление уже выполняется, ничего не делаем.
+    // Это помогает предотвратить множественные попытки перенаправления.
+    if (isRedirecting) {
+        console.log("AppLayout: Redirect already in progress. Skipping further checks.");
+        return;
+    }
+
+    console.log("AppLayout: Auth redirect check initiated. Pathname:", pathname, "AuthUser:", authUser ? { userId: authUser.userId, email: authUser.email, role: authUser.role } : null, "isLoadingAuth:", isLoadingAuth);
+
+    // Условие для перенаправления на /auth:
+    // 1. Пользователь не аутентифицирован (authUser === null).
+    // 2. Текущий путь не /auth (чтобы избежать зацикливания).
+    // 3. Текущий путь не API-маршрут.
+    if (!authUser && pathname !== "/auth" && !pathname.startsWith("/api/")) {
+        console.log(`AppLayout: User not authenticated (authUser is falsy) and current path is "${pathname}" (not /auth or /api/*). Redirecting to /auth.`);
+        setIsRedirecting(true); // Устанавливаем флаг, что начинаем перенаправление.
+        router.replace("/auth"); // Выполняем перенаправление.
+    } else if (pathname === "/auth" && authUser !== null && typeof authUser === 'object') {
+        // Условие для перенаправления с /auth на / (главную), если пользователь уже аутентифицирован.
+        // Проверки `authUser !== null && typeof authUser === 'object'` должны убедить TypeScript, что authUser здесь - это AuthUser.
+        const userToLog = authUser as AuthUser; // Используем утверждение типа для ясности
+
+        console.log(
+            `AppLayout: Condition MET for redirect from /auth to /. User is authenticated. AuthUser details:`,
+            { 
+                userId: userToLog.userId, 
+                email: userToLog.email, 
+                role: userToLog.role 
+            }
+        );
+        setIsRedirecting(true); // Устанавливаем флаг.
+        router.replace("/"); // Перенаправляем на главную.
+    } else {
+        // Условия для перенаправления не выполнены.
+        console.log(`AppLayout: Conditions NOT MET for redirect. Pathname: ${pathname}, AuthUser:`, authUser ? { userId: authUser.userId, email: authUser.email, role: authUser.role } : null, `Is API route: ${pathname.startsWith("/api/")}`);
+        // Если ранее выполнялось перенаправление, но условия больше не соблюдаются (например, authUser появился), сбрасываем флаг.
+        if (isRedirecting) {
+            console.log("AppLayout: Conditions for redirect no longer met. Resetting isRedirecting.");
+            setIsRedirecting(false);
+        }
+    }
+}, [authUser, isLoadingAuth, pathname, router, isRedirecting]); // Убедимся, что все зависимости перечислены.
+
+  // Эффект для отслеживания изменений в localStorage (например, при выходе из системы в другой вкладке)
+  React.useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === "authUser") {
+        console.log("AppLayout: localStorage authUser changed.");
+        setIsLoadingAuth(true); // Перезапускаем проверку
         if (event.newValue) {
           try {
             const updatedUser: AuthUser = JSON.parse(event.newValue);
             setAuthUser(updatedUser);
-          } catch {
+          } catch (error) {
+            console.error("AppLayout: Error parsing updated authUser from storage change", error);
             setAuthUser(null);
-            router.replace("/auth");
+            localStorage.removeItem("authUser"); // Очищаем, если данные некорректны
           }
         } else {
           setAuthUser(null);
-          router.replace("/auth");
         }
+        setIsLoadingAuth(false); // Завершаем перезагрузку
+        // Перенаправление будет обработано другим useEffect
       }
     };
+
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [router]);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [router]); // Добавляем router в зависимости, если он используется внутри
+
+  // Пока идет проверка аутентификации или перенаправление, показываем заглушку
+  if (isLoadingAuth || isRedirecting) {
+    return (
+      <div className="flex h-screen items-center justify-center" data-oid="loading-auth-placeholder">
+        <p data-oid="loading-text">{isRedirecting ? "Перенаправление..." : "Проверка аутентификации..."}</p>
+      </div>
+    );
+  }
+
+  // Если пользователь не аутентифицирован и мы не на странице /auth (хотя это состояние должно быть обработано редиректом)
+  // Этот блок может быть избыточен, если логика редиректа работает корректно, но служит дополнительной защитой.
+  if (!authUser && pathname !== "/auth") {
+     console.log("AppLayout: Rendering null (should have been redirected).");
+     return null; // Или компонент "Доступ запрещен"
+  }
 
   const handleLogout = () => {
     // Clear authentication state (localStorage in this case)
@@ -378,7 +458,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = getNavItems(authUser?.role);
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return (
       <div className="flex items-center justify-center h-screen w-screen bg-background">
         <div className="animate-pulse">

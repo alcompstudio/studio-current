@@ -20,6 +20,13 @@ import {
 } from "./getOrderStatusVariant"; // Импорт новых функций
 import { cn } from "@/lib/utils"; // Import cn for conditional classes
 import { DeleteOrderDialog } from "@/components/orders/delete-order-dialog"; // Импорт компонента для удаления заказа
+import type { UserRole as AppUserRole } from "@/lib/types"; // Импортируем UserRole
+
+// Определяем интерфейс AuthUser здесь или импортируем, если он уже есть в types
+interface AuthUser {
+  email: string;
+  role: AppUserRole; // Используем импортированный UserRole
+}
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -27,50 +34,83 @@ export default function OrdersPage() {
     { id: number; title: string; currency?: string }[]
   >([]);
   const [orderStatuses, setOrderStatuses] = useState<OrderStatusOS[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingData, setLoadingData] = useState(true); // Переименовано для ясности (было loading)
   const [error, setError] = useState<string | null>(null);
 
+  // Состояние для проверки аутентификации на уровне страницы
+  const [pageAuthUser, setPageAuthUser] = useState<AuthUser | null>(null);
+  const [isPageAuthLoading, setIsPageAuthLoading] = useState(true);
+
   // Роль пользователя (в будущем может быть получена из контекста аутентификации)
+  // Эта логика userRole остается, если она нужна для UI до полной загрузки authUser
   const CUSTOMER_ROLE = "Заказчик" as const;
   const FREELANCER_ROLE = "Исполнитель" as const;
-  type UserRole = typeof CUSTOMER_ROLE | typeof FREELANCER_ROLE;
-  const userRole: UserRole = CUSTOMER_ROLE;
+  type UserRoleType = typeof CUSTOMER_ROLE | typeof FREELANCER_ROLE; // Переименовано, чтобы не конфликтовать с импортом
+  const userRole: UserRoleType = CUSTOMER_ROLE; // Это значение может быть временным или заменено на pageAuthUser.role
+
+  // Первоначальная проверка аутентификации на уровне страницы
+  useEffect(() => {
+    console.log("OrdersPage: Initial auth check...");
+    const storedUser = localStorage.getItem("authUser");
+    if (storedUser) {
+      try {
+        const user: AuthUser = JSON.parse(storedUser);
+        if (user && user.email && user.role) {
+          console.log("OrdersPage: User found in localStorage", user);
+          setPageAuthUser(user);
+        } else {
+          console.log("OrdersPage: Invalid user data in localStorage on page.");
+          setPageAuthUser(null);
+        }
+      } catch (e) {
+        console.error("OrdersPage: Error parsing authUser from localStorage on page", e);
+        setPageAuthUser(null);
+      }
+    } else {
+      console.log("OrdersPage: No user in localStorage on page.");
+      setPageAuthUser(null);
+    }
+    setIsPageAuthLoading(false);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (isPageAuthLoading) {
+        console.log("OrdersPage: Waiting for page-level auth check to complete before fetching data.");
+        return;
+      }
+
+      if (!pageAuthUser) {
+        console.log("OrdersPage: No authenticated user found at page level. Skipping data fetch.");
+        setLoadingData(false);
+        setError("Пользователь не аутентифицирован. Данные не могут быть загружены.");
+        return;
+      }
+      
+      console.log("OrdersPage: Page-level auth check complete and user found. Fetching data...");
+      setLoadingData(true); // Убедимся, что setLoadingData(true) вызывается перед fetch
+      setError(null); // Сбрасываем предыдущие ошибки перед новой попыткой
+
       try {
-        // Загружаем одновременно заказы, проекты и статусы заказов
         const [ordersRes, projectsRes, statusesRes] = await Promise.all([
           fetch("/api/orders"),
           fetch("/api/projects"),
           fetch("/api/order-statuses-os"),
         ]);
 
-        if (!ordersRes.ok)
-          throw new Error(
-            `Ошибка при загрузке заказов: ${ordersRes.statusText}`,
-          );
-        if (!projectsRes.ok)
-          throw new Error(
-            `Ошибка при загрузке проектов: ${projectsRes.statusText}`,
-          );
-        if (!statusesRes.ok)
-          throw new Error(
-            `Ошибка при загрузке статусов заказов: ${statusesRes.statusText}`,
-          );
+        if (!ordersRes.ok) throw new Error(`Ошибка при загрузке заказов: ${ordersRes.statusText} (${ordersRes.status})`);
+        if (!projectsRes.ok) throw new Error(`Ошибка при загрузке проектов: ${projectsRes.statusText} (${projectsRes.status})`);
+        if (!statusesRes.ok) throw new Error(`Ошибка при загрузке статусов заказов: ${statusesRes.statusText} (${statusesRes.status})`);
 
         const ordersData: Order[] = await ordersRes.json();
-        const projectsData: { id: number; title: string; currency?: string }[] =
-          await projectsRes.json();
+        const projectsData: { id: number; title: string; currency?: string }[] = await projectsRes.json();
         const statusesData: OrderStatusOS[] = await statusesRes.json();
 
-        // Форматируем даты для заказов
         const ordersWithFormattedDates = ordersData.map((order) => ({
           ...order,
           createdAt: order.createdAt ? new Date(order.createdAt) : null,
           updatedAt: order.updatedAt ? new Date(order.updatedAt) : null,
         }));
-
         setOrders(ordersWithFormattedDates);
         setProjects(
           Array.isArray(projectsData)
@@ -84,16 +124,20 @@ export default function OrdersPage() {
         setOrderStatuses(Array.isArray(statusesData) ? statusesData : []);
       } catch (err) {
         console.error("Ошибка при загрузке данных:", err);
-        setError("Не удалось загрузить заказы, проекты или статусы.");
+        if (err instanceof Error) {
+            setError(`Не удалось загрузить данные: ${err.message}`);
+        } else {
+            setError("Не удалось загрузить данные: произошла неизвестная ошибка.");
+        }
       } finally {
-        setLoading(false);
+        setLoadingData(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [isPageAuthLoading, pageAuthUser]);
 
-  if (loading) {
+  if (isPageAuthLoading || loadingData) {
     return (
       <div className="flex flex-col gap-6" data-oid="8q8y.oc">
         Loading orders...
@@ -116,8 +160,8 @@ export default function OrdersPage() {
         <h2 className="text-2xl font-bold tracking-tight" data-oid="3kdpc2:">
           Orders
         </h2>
-        {/* Используем константы для сравнения */}
-        {userRole === CUSTOMER_ROLE && (
+        {/* Используем pageAuthUser.role для определения роли, если пользователь загружен */}
+        {pageAuthUser?.role === CUSTOMER_ROLE && (
           <Link href="/orders/new" passHref data-oid="mg.7v6r">
             <Button data-oid="f-d67r5">
               <PlusCircle className="mr-2 h-4 w-4" data-oid="nrmngwu" /> Create
@@ -125,7 +169,7 @@ export default function OrdersPage() {
             </Button>
           </Link>
         )}
-        {userRole === FREELANCER_ROLE && (
+        {pageAuthUser?.role === FREELANCER_ROLE && (
           <Button variant="outline" data-oid="yye8ayt">
             <Filter className="mr-2 h-4 w-4" data-oid="h3.8ed9" /> Filter Orders
           </Button>
@@ -151,10 +195,8 @@ export default function OrdersPage() {
               className="shadow-sm hover:shadow-md transition-shadow border-none"
               data-oid="du9kgwc"
             >
-              {" "}
               {/* Removed border */}
               <CardHeader className="pb-2" data-oid="63qtl7u">
-                {" "}
                 {/* Reduce padding */}
                 <div
                   className="flex justify-between items-start gap-2"
@@ -166,7 +208,7 @@ export default function OrdersPage() {
                       data-oid="qzvj:pn"
                     >
                       {order.title}
-                    </CardTitle>{" "}
+                    </CardTitle>
                     {/* Use order.title */}
                     <CardDescription data-oid="q9igrnh">
                       Проект:{" "}
@@ -220,7 +262,7 @@ export default function OrdersPage() {
               </CardHeader>
               <CardContent data-oid="6ci8p4m">
                 {order.description ? (
-                  <div 
+                  <div
                     className="text-sm text-muted-foreground mb-4 line-clamp-2 quill-content"
                     data-oid="gjdtqxl"
                     dangerouslySetInnerHTML={{ __html: order.description }}
