@@ -272,41 +272,15 @@ async function detectTriggeredCheckpoints() {
   return allTriggered;
 }
 
-const { processCheckpointsAndGenerateProposal } = require('./documentation-updater');
-
 // Если скрипт запускается напрямую (например, для тестирования или из CI)
 if (require.main === module) {
   detectTriggeredCheckpoints()
-    .then(async triggered => { // Делаем колбэк асинхронным
+    .then(triggered => {
       if (triggered.length > 0) {
-        const proposalResult = await processCheckpointsAndGenerateProposal(triggered);
-
-        if (proposalResult && proposalResult.shouldUpdate && proposalResult.checkpoints) {
-          console.log(`\nФайл с предложениями создан: ${proposalResult.proposalPath}`);
-          console.log("Автоматический запуск выполнения всех предложенных действий...");
-
-          // Собираем все уникальные действия из всех сработавших чекпоинтов
-          const allActionsToExecute = new Set();
-          proposalResult.checkpoints.forEach(checkpoint => {
-            checkpoint.actions.forEach(action => allActionsToExecute.add(action));
-          });
-          
-          const uniqueActionsArray = Array.from(allActionsToExecute);
-
-          if (uniqueActionsArray.length > 0) {
-            // Импортируем executeDocumentationUpdates здесь, чтобы избежать проблем с require вверху файла,
-            // если documentation-updater тоже что-то требует из checkpoint-detector (хотя мы это исправили)
-            const { executeDocumentationUpdates } = require('./documentation-updater');
-            await executeDocumentationUpdates(uniqueActionsArray);
-            console.log("\nПолный цикл автоматического обновления документации завершен.");
-          } else {
-            console.log("\nНет уникальных действий для выполнения из предложений.");
-          }
-        } else {
-          console.log("\nНе удалось создать файл предложений или нет чекпоинтов для обработки.");
-        }
+        console.log(`\nОбнаружено ${triggered.length} сработавших чекпоинтов документации.`);
+        console.log("Для обновления документации запустите: node scripts/docs/documentation-updater.cjs");
       } else {
-        console.log("\nСработавших чекпоинтов не обнаружено, автоматическое обновление не запускается.");
+        console.log("\nСработавших чекпоинтов не обнаружено.");
       }
     })
     .catch(error => {
