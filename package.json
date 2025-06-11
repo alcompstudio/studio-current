@@ -75,7 +75,7 @@
       "node ./scripts/docs/docs-validator.cjs"
     ],
     "src/**/*.{ts,tsx,js,jsx}": [
-      "node scripts/docs/checkpoint-detector.js --interactive"
+      "node scripts/docs/checkpoint-detector.cjs --interactive"
     ]
   },
   "devDependencies": {
