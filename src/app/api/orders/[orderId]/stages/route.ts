@@ -31,7 +31,7 @@ function handleError(error: unknown, defaultMessage: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   // Важно: добавлен await перед доступом к params в Next.js
   const { orderId } = await params;
@@ -80,7 +80,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { orderId: string } }
+  { params }: { params: Promise<{ orderId: string }> }
 ) {
   // Важно: добавлен await перед доступом к params в Next.js
   const { orderId } = await params;

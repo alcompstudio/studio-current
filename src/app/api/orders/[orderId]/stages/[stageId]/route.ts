@@ -27,7 +27,7 @@ function handleError(error: unknown, defaultMessage: string) {
 // GET /api/orders/[orderId]/stages/[stageId]
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string }> }
 ) {
   // Важно: добавлен await перед доступом к params в Next.js
   const { orderId, stageId } = await params;
@@ -83,7 +83,7 @@ export async function GET(
 // PUT /api/orders/[orderId]/stages/[stageId]
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string }> }
 ) {
   // Важно: добавлен await перед доступом к params в Next.js
   const { orderId, stageId } = await params;
@@ -195,7 +195,7 @@ export async function PUT(
 // DELETE /api/orders/[orderId]/stages/[stageId]
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string }> }
 ) {
   // Важно: добавлен await перед доступом к params в Next.js
   const { orderId, stageId } = await params;

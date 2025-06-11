@@ -22,76 +22,74 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { Etap, EtapWorkType, EtapOption } from "@/lib/types"; // Import EtapOption
+import type { Stage, StageOption } from "@/lib/types"; // Import StageOption
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
+const stageWorkTypes = ["Параллельный", "Последовательный"];
 
 // Define the form schema using Zod
-const etapFormSchema = z.object({
+const stageFormSchema = z.object({
   name: z.string().min(1, { message: "Stage name is required." }),
   description: z.string().optional(),
-  workType: z
-    .enum(etapWorkTypes, { required_error: "Work type is required." })
-    .default("Параллельный"),
+  // workType: z
+  //   .enum(stageWorkTypes, { required_error: "Work type is required." })
+  //   .default("Параллельный"),
   // estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(), // Removed direct price input
 });
 
-type EtapFormValues = z.infer<typeof etapFormSchema>;
+type StageFormValues = z.infer<typeof stageFormSchema>;
 
-interface AddEtapFormProps {
+interface AddStageFormProps {
   orderId: string;
   currency: string;
-  onEtapAdded: (
-    newEtapData: Omit<Etap, "id" | "createdAt" | "updatedAt" | "options">,
+  onStageAdded: (
+    newStageData: Omit<Stage, "id" | "createdAt" | "updatedAt" | "options">,
   ) => void; // Pass data up
   onCancel: () => void;
   isSaveDisabled: boolean; // Control save button from parent
 }
 
-export default function AddEtapForm({
+export default function AddStageForm({
   orderId,
   currency,
-  onEtapAdded,
+  onStageAdded,
   onCancel,
   isSaveDisabled,
-}: AddEtapFormProps) {
+}: AddStageFormProps) {
   const { toast } = useToast();
 
-  const form = useForm<EtapFormValues>({
-    resolver: zodResolver(etapFormSchema),
+  const form = useForm<StageFormValues>({
+    resolver: zodResolver(stageFormSchema),
     defaultValues: {
       name: "",
       description: "",
-      workType: "Параллельный",
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: EtapFormValues) => {
+  const onSubmit = (data: StageFormValues) => {
     console.log("Attempting to add new stage with data:", data);
 
     // Validation is now handled by the parent via isSaveDisabled prop
 
-    // Pass the form data up, parent will create the full Etap object
-    onEtapAdded({
-      orderId: orderId, // Parent already knows this, but can be redundant
+    // Pass the form data up, parent will create the full Stage object
+    onStageAdded({
+      order_id: orderId, // Parent already knows this, but can be redundant
       name: data.name,
       description: data.description || "",
-      workType: data.workType,
       estimatedPrice: 0, // Initial price is 0, calculated from options later
       sequence: 0, // Parent will determine sequence
     });
 
-    // Reset and closing logic is handled in the parent's `handleEtapAdded`
+    // Reset and closing logic is handled in the parent's `handleStageAdded`
     form.reset(); // Reset form after passing data up
   };
 
   return (
     <Form {...form} data-oid="2qvv8.a">
       <form
-        id="add-etap-form"
+        id="add-stage-form"
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
         data-oid="q.mi69e"
@@ -136,40 +134,7 @@ export default function AddEtapForm({
           data-oid="lz:fgsx"
         />
 
-        <div data-oid="v7qjanx">
-          <FormField
-            control={form.control}
-            name="workType"
-            render={({ field }) => (
-              <FormItem data-oid="6sy3rmt">
-                <FormLabel data-oid="xqlh7t:">Work Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  data-oid="f7mol3."
-                >
-                  <FormControl data-oid="svsyrhy">
-                    <SelectTrigger data-oid="zvdjzar">
-                      <SelectValue
-                        placeholder="Select work type"
-                        data-oid=":dxsi2p"
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent data-oid="1d6t23h">
-                    {etapWorkTypes.map((type) => (
-                      <SelectItem key={type} value={type} data-oid="3e-oaws">
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage data-oid="fgpg-ms" />
-              </FormItem>
-            )}
-            data-oid="fekd0wi"
-          />
-        </div>
+
 
         <div className="flex justify-end gap-2 pt-4" data-oid="qzwza:d">
           <Button

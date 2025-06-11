@@ -7,7 +7,7 @@ import { Client } from 'pg';
 // GET /api/orders/[orderId]/stages/[stageId]/options - Получение всех опций этапа
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string }> }
 ) {
   try {
     const { orderId, stageId } = await params;
@@ -112,7 +112,7 @@ export async function GET(
 // POST /api/orders/[orderId]/stages/[stageId]/options - Создание новой опции для этапа
 export async function POST(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string }> }
 ) {
   try {
     const { orderId, stageId } = await params;

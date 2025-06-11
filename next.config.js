@@ -1,18 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // Рекомендуется для выявления потенциальных проблем
+  reactStrictMode: true,
   transpilePackages: ['sequelize'],
   experimental: {
     allowedDevOrigins: [
-      "http://localhost:3000", // Для обычного доступа
-      "http://127.0.0.1:3000", // На случай, если fetch резолвится на IP
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "http://157.180.87.32:3000",
     ],
   },
-  // Если у вас есть другие конфигурации, их нужно будет добавить сюда
-  // Например, если вы используете env переменные:
-  // env: {
-  //   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  // },
+  // Настройки для production
+  poweredByHeader: false,
+  compress: true,
+  // Настройки для статических файлов
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
 };
 
-export default nextConfig; // Используем export default для ES Modules
+export default nextConfig;

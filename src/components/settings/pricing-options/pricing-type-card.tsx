@@ -55,7 +55,7 @@ export function PricingTypeCard({
             variant="outline"
             size="sm"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => onDelete(item.id)}
+            onClick={() => item.id && onDelete(item.id)}
             data-oid="5mr0ln_"
           >
             <Trash2 className="mr-1 h-3.5 w-3.5" data-oid="qkcr1b1" /> Удалить

@@ -1,16 +1,21 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import db from './db';
 
 console.log('[MIGRATE_SCRIPT_START] Script migrate.ts is starting.');
+
+// Получаем __dirname для ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function runMigrations() {
   console.log('[MIGRATE_SCRIPT_START_FUNC] runMigrations() called.');
   try {
     // Корректируем путь к папке миграций
-    // __dirname для src/lib/migrate.ts будет f:\Business\Projects\studio\src\lib
-    // Нам нужна папка f:\Business\Projects\studio\src\migrations
-    const migrationsDir = path.resolve(__dirname, '../migrations'); 
+    // __dirname для src/lib/migrate.ts будет /var/www/studio-app/src/lib
+    // Нам нужна папка /var/www/studio-app/src/migrations
+    const migrationsDir = path.resolve(__dirname, '../migrations');
     console.log(`[MIGRATE_SCRIPT_DEBUG] Looking for migrations in: ${migrationsDir}`);
     
     let files;

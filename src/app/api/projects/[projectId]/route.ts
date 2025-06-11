@@ -5,7 +5,7 @@ import { Transaction } from 'sequelize';
 
 export async function GET(
   request: Request,
-  context: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   const { projectId: projectIdStr } = await context.params;
   const projectIdNum = parseInt(projectIdStr, 10);
@@ -78,7 +78,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  context: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   const { projectId: projectIdStr } = await context.params;
   const projectIdNum = parseInt(projectIdStr, 10);
@@ -135,7 +135,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  context: { params: { projectId: string } }
+  context: { params: Promise<{ projectId: string }> }
 ) {
   const { projectId: projectIdStr } = await context.params;
   const projectIdNum = parseInt(projectIdStr, 10);

@@ -40,10 +40,10 @@ type Project = {
 };
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     projectId: string;
-  };
-  // searchParams?: { [key: string]: string | string[] | undefined };
+  }>;
+  // searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ProjectPage(props: ProjectPageProps) {

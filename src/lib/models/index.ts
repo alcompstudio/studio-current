@@ -86,8 +86,15 @@ export const connectDB = async () => {
     console.log('Attempting sequelize.authenticate() from models/index.ts...');
     await sequelize.authenticate();
     console.log('Connection to PostgreSQL has been established successfully via authenticate() from models/index.ts.');
+
+    // Синхронизируем модели с базой данных (создаем таблицы если их нет)
+    await sequelize.sync({ alter: false }); // alter: false чтобы не изменять существующие таблицы
+    console.log('Database models synchronized successfully.');
+
+    return true;
   } catch (error) {
     console.error('Unable to connect to the PostgreSQL database via authenticate() from models/index.ts:', error);
+    throw error; // Перебрасываем ошибку для обработки в вызывающем коде
   }
 };
 

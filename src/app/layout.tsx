@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Toaster from "@/components/layout/toaster-client";
 import { cn } from "@/lib/utils";
 import { inter } from "@/utils/fonts";
 
@@ -39,7 +38,6 @@ export default function RootLayout({
         data-oid="o8kd3zy"
       >
         {children}
-        <Toaster data-oid="fsw8t4:" />
       </body>
     </html>
   );

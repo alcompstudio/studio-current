@@ -77,6 +77,11 @@ export default function OrderStatusesPage() {
     // setOrderStatuses(orderStatuses.filter(status => status.id !== statusId));
   };
 
+  const handleEdit = (status: OrderStatus) => {
+    // Перенаправляем на страницу редактирования
+    window.location.href = `/settings/order-statuses/${status.id}/edit`;
+  };
+
   return (
     <div className="flex flex-col gap-6" data-oid="mg6magh">
       {/* Page Header */}
@@ -138,6 +143,7 @@ export default function OrderStatusesPage() {
                 items={orderStatuses}
                 basePath="/settings/order-statuses"
                 onDelete={handleDelete}
+                onEdit={handleEdit}
                 data-oid="oznwbcs"
               />
             </Card>

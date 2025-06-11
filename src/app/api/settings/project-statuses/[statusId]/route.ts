@@ -7,10 +7,11 @@ const { ProjectStatusOS } = db;
 // GET запрос для получения конкретного статуса
 export async function GET(
   request: NextRequest,
-  { params }: { params: { statusId: string } }
+  { params }: { params: Promise<{ statusId: string }> }
 ) {
   try {
-    const statusId = parseInt(params.statusId);
+    const { statusId: statusIdStr } = await params;
+    const statusId = parseInt(statusIdStr);
     
     if (isNaN(statusId)) {
       return NextResponse.json(
@@ -42,11 +43,12 @@ export async function GET(
 // PUT запрос для обновления статуса
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { statusId: string } }
+  { params }: { params: Promise<{ statusId: string }> }
 ) {
   try {
-    const statusId = parseInt(params.statusId);
-    
+    const { statusId: statusIdStr } = await params;
+    const statusId = parseInt(statusIdStr);
+
     if (isNaN(statusId)) {
       return NextResponse.json(
         { error: "Некорректный ID статуса" },
@@ -97,11 +99,12 @@ export async function PUT(
 // DELETE запрос для удаления статуса проекта
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { statusId: string } }
+  { params }: { params: Promise<{ statusId: string }> }
 ) {
   try {
-    const statusId = parseInt(params.statusId);
-    
+    const { statusId: statusIdStr } = await params;
+    const statusId = parseInt(statusIdStr);
+
     if (isNaN(statusId)) {
       return NextResponse.json(
         { error: "Некорректный ID статуса" },

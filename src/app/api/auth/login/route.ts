@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { User, Customer } from '@/lib/db'; // Импортируем User и Customer
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +40,9 @@ export async function POST(request: Request) {
     }
     // TODO: Добавить поиск профиля Freelancer, если роль 'Исполнитель'
 
+    // Генерируем токен авторизации
+    const authToken = crypto.randomBytes(32).toString('hex');
+
     // Возвращаем данные пользователя и ID профиля, если найден
     const userResponse: { userId: number; email: string; role: string; customerId?: number } = {
         userId: user.id,
@@ -49,7 +53,27 @@ export async function POST(request: Request) {
         userResponse.customerId = customerId;
     }
 
-    return NextResponse.json(userResponse, { status: 200 });
+    // Создаем ответ с cookies
+    const response = NextResponse.json(userResponse, { status: 200 });
+
+    // Устанавливаем cookies для авторизации
+    response.cookies.set('auth-token', authToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 дней
+      path: '/'
+    });
+
+    response.cookies.set('auth-user', JSON.stringify(userResponse), {
+      httpOnly: false, // Доступно для клиентского JS
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 дней
+      path: '/'
+    });
+
+    return response;
 
   } catch (error) {
     console.error('[API_LOGIN_ERROR]', error);

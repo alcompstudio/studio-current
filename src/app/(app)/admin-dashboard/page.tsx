@@ -44,6 +44,7 @@ import {
   CardDescription,
 } from "@/components/ui/card"; // Import Card components
 import { cn } from "@/lib/utils"; // Import cn utility
+import { CommunicationPanel } from "@/components/layout/communication-panel";
 
 export default function AdminDashboardPage() {
   const fontFamily = useGoogleFont("Inter");

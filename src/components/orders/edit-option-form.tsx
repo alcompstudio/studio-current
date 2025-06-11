@@ -15,55 +15,65 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import type { EtapOption } from "@/lib/types";
+import type { StageOption } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-// Define the form schema using Zod for EtapOption (same as add form)
+// Define the form schema using Zod for StageOption (same as add form)
 const optionFormSchema = z
   .object({
     name: z.string().min(1, { message: "Option name is required." }),
     description: z.string().optional(),
-    isCalculable: z.boolean().default(false),
-    includedInPrice: z.boolean().default(true),
-    planUnits: z.coerce
+    pricing_type: z.enum(['calculable', 'included']).default('included'),
+    volume_min: z.coerce
       .number()
-      .positive({ message: "Plan units must be positive if provided." })
+      .min(0, { message: "Volume min must be non-negative." })
       .optional(),
-    unitDivider: z.coerce
+    volume_max: z.coerce
       .number()
-      .positive({ message: "Unit divider must be positive if provided." })
+      .min(0, { message: "Volume max must be non-negative." })
       .optional(),
-    pricePerUnit: z.coerce
+    nominal_volume: z.coerce
       .number()
-      .min(0, { message: "Price must be non-negative if provided." })
+      .min(0, { message: "Nominal volume must be non-negative." })
+      .optional(),
+    price_per_unit: z.coerce
+      .number()
+      .min(0, { message: "Price per unit must be non-negative." })
       .optional(),
   })
   .refine(
     (data) =>
-      !data.isCalculable ||
-      (data.planUnits && data.unitDivider && data.pricePerUnit !== undefined),
+      data.pricing_type !== 'calculable' ||
+      (data.nominal_volume !== undefined && data.price_per_unit !== undefined),
     {
       message:
-        "Calculable options require Plan Units, Unit Divider, and Price Per Unit.",
-      path: ["isCalculable"],
+        "Calculable options require Nominal Volume and Price Per Unit.",
+      path: ["nominal_volume"],
     },
   );
 
 type OptionFormValues = z.infer<typeof optionFormSchema>;
 
 interface EditOptionFormProps {
-  etapId: string;
-  option: EtapOption; // The option to edit
+  stageId: string;
+  option: StageOption; // The option to edit
   currency: string;
-  onOptionUpdated: (updatedOption: EtapOption) => void; // Callback to notify parent
+  onOptionUpdated: (updatedOption: StageOption) => void; // Callback to notify parent
   onCancel: () => void; // Callback to cancel/hide the form
 }
 
 export default function EditOptionForm({
-  etapId,
+  stageId,
   option,
   currency,
   onOptionUpdated,
@@ -76,12 +86,11 @@ export default function EditOptionForm({
     defaultValues: {
       name: option.name || "",
       description: option.description || "",
-      isCalculable: option.isCalculable || false,
-      includedInPrice:
-        option.includedInPrice === undefined ? true : option.includedInPrice, // Default to true if undefined
-      planUnits: option.planUnits,
-      unitDivider: option.unitDivider,
-      pricePerUnit: option.pricePerUnit,
+      pricing_type: option.pricing_type || 'included',
+      volume_min: option.volume_min || undefined,
+      volume_max: option.volume_max || undefined,
+      nominal_volume: option.nominal_volume || undefined,
+      price_per_unit: option.price_per_unit || undefined,
     },
     mode: "onChange",
   });
@@ -91,43 +100,43 @@ export default function EditOptionForm({
     form.reset({
       name: option.name || "",
       description: option.description || "",
-      isCalculable: option.isCalculable || false,
-      includedInPrice:
-        option.includedInPrice === undefined ? true : option.includedInPrice,
-      planUnits: option.planUnits,
-      unitDivider: option.unitDivider,
-      pricePerUnit: option.pricePerUnit,
+      pricing_type: option.pricing_type || 'included',
+      volume_min: option.volume_min || undefined,
+      volume_max: option.volume_max || undefined,
+      nominal_volume: option.nominal_volume || undefined,
+      price_per_unit: option.price_per_unit || undefined,
     });
   }, [option, form]);
 
-  const isCalculable = form.watch("isCalculable");
+  const pricingType = form.watch("pricing_type");
 
   const onSubmit = (data: OptionFormValues) => {
     console.log("Attempting to update option with data:", data);
 
-    let calculatedPlanPrice: number | undefined = undefined;
+    let calculatedPriceMin: number | undefined = undefined;
+    let calculatedPriceMax: number | undefined = undefined;
+
     if (
-      data.isCalculable &&
-      data.planUnits &&
-      data.unitDivider &&
-      data.pricePerUnit !== undefined
+      data.pricing_type === 'calculable' &&
+      data.nominal_volume &&
+      data.price_per_unit !== undefined
     ) {
-      calculatedPlanPrice = parseFloat(
-        ((data.planUnits / data.unitDivider) * data.pricePerUnit).toFixed(2),
-      );
+      calculatedPriceMin = parseFloat((data.nominal_volume * data.price_per_unit).toFixed(2));
+      calculatedPriceMax = calculatedPriceMin; // For now, min and max are the same
     }
 
-    const updatedOption: EtapOption = {
-      ...option, // Spread existing properties like id, etapId, createdAt
+    const updatedOption: StageOption = {
+      ...option, // Spread existing properties like id, order_stage_id, createdAt
       name: data.name,
       description: data.description || "",
-      isCalculable: data.isCalculable,
-      includedInPrice: data.includedInPrice,
-      planUnits: data.isCalculable ? data.planUnits : undefined,
-      unitDivider: data.isCalculable ? data.unitDivider : undefined,
-      pricePerUnit: data.isCalculable ? data.pricePerUnit : undefined,
-      calculatedPlanPrice: calculatedPlanPrice,
-      updatedAt: new Date(),
+      pricing_type: data.pricing_type,
+      volume_min: data.volume_min,
+      volume_max: data.volume_max,
+      nominal_volume: data.pricing_type === 'calculable' ? data.nominal_volume : undefined,
+      price_per_unit: data.pricing_type === 'calculable' ? data.price_per_unit : undefined,
+      calculated_price_min: calculatedPriceMin,
+      calculated_price_max: calculatedPriceMax,
+      updatedAt: new Date().toISOString(),
     };
 
     // --- Simulate successful update ---
@@ -185,120 +194,107 @@ export default function EditOptionForm({
           data-oid="0iaoqeb"
         />
 
-        <div className="flex items-center space-x-2" data-oid="bzbsfx:">
+        <FormField
+          control={form.control}
+          name="pricing_type"
+          render={({ field }) => (
+            <FormItem data-oid="6tpbda2">
+              <FormLabel data-oid="24i_.fs">Pricing Type</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value} data-oid="bzbsfx:">
+                <FormControl data-oid="b4y38pt">
+                  <SelectTrigger data-oid="wsvu4gz">
+                    <SelectValue placeholder="Select pricing type" data-oid="wy1jb-r" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent data-oid="qxsvlf1">
+                  <SelectItem value="included" data-oid="b1zx:we">Included in Price</SelectItem>
+                  <SelectItem value="calculable" data-oid="al.i91q">Calculable</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription data-oid="qxsvlf1">
+                Choose whether this option is included in the base price or calculated separately.
+              </FormDescription>
+              <FormMessage data-oid="b1zx:we" />
+            </FormItem>
+          )}
+          data-oid="al.i91q"
+        />
+
+        {/* Volume range fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-oid="vmo9hrk">
           <FormField
             control={form.control}
-            name="isCalculable"
+            name="volume_min"
             render={({ field }) => (
-              <FormItem
-                className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 shadow-sm"
-                data-oid="6tpbda2"
-              >
-                <FormControl data-oid="b4y38pt">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={(checked) => {
-                      const isChecked = Boolean(checked); // Ensure boolean
-                      field.onChange(isChecked);
-                      if (!isChecked) {
-                        form.reset({
-                          ...form.getValues(),
-                          planUnits: undefined,
-                          unitDivider: undefined,
-                          pricePerUnit: undefined,
-                        });
-                      }
-                    }}
-                    data-oid="wsvu4gz"
+              <FormItem data-oid="ktji4o4">
+                <FormLabel data-oid="87o3mqo">Volume Min</FormLabel>
+                <FormControl data-oid="uhptouj">
+                  <Input
+                    type="number"
+                    placeholder="e.g., 1000"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === ""
+                          ? undefined
+                          : parseFloat(e.target.value),
+                      )
+                    }
+                    data-oid=":vw17g-"
                   />
                 </FormControl>
-                <div className="space-y-1 leading-none" data-oid="wy1jb-r">
-                  <FormLabel data-oid="24i_.fs">Calculable Option</FormLabel>
-                  <FormDescription data-oid="qxsvlf1">
-                    Does this option affect the price calculation?
-                  </FormDescription>
-                  <FormMessage data-oid="b1zx:we" />
-                </div>
+                <FormMessage data-oid="8fzgbj7" />
               </FormItem>
             )}
-            data-oid="al.i91q"
+            data-oid="vub2f.f"
+          />
+
+          <FormField
+            control={form.control}
+            name="volume_max"
+            render={({ field }) => (
+              <FormItem data-oid="wxx:gwj">
+                <FormLabel data-oid=":1chket">Volume Max</FormLabel>
+                <FormControl data-oid="eqbdi86">
+                  <Input
+                    type="number"
+                    placeholder="e.g., 5000"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === ""
+                          ? undefined
+                          : parseFloat(e.target.value),
+                      )
+                    }
+                    data-oid="t:fi0s2"
+                  />
+                </FormControl>
+                <FormMessage data-oid="nykmna:" />
+              </FormItem>
+            )}
+            data-oid="eia4e76"
           />
         </div>
 
-        {isCalculable && (
+        {/* Conditionally render calculable fields */}
+        {pricingType === 'calculable' && (
           <div
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 border rounded-md"
-            data-oid="vmo9hrk"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 border rounded-md"
+            data-oid="calc_fields"
           >
             <FormField
               control={form.control}
-              name="planUnits"
-              render={({ field }) => (
-                <FormItem data-oid="ktji4o4">
-                  <FormLabel data-oid="87o3mqo">Plan Units</FormLabel>
-                  <FormControl data-oid="uhptouj">
-                    <Input
-                      type="number"
-                      placeholder="e.g., 2500"
-                      {...field}
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value === ""
-                            ? undefined
-                            : parseFloat(e.target.value),
-                        )
-                      }
-                      data-oid=":vw17g-"
-                    />
-                  </FormControl>
-                  <FormMessage data-oid="8fzgbj7" />
-                </FormItem>
-              )}
-              data-oid="vub2f.f"
-            />
-
-            <FormField
-              control={form.control}
-              name="unitDivider"
-              render={({ field }) => (
-                <FormItem data-oid="wxx:gwj">
-                  <FormLabel data-oid=":1chket">Unit Divider</FormLabel>
-                  <FormControl data-oid="eqbdi86">
-                    <Input
-                      type="number"
-                      placeholder="e.g., 1000"
-                      {...field}
-                      value={field.value ?? ""}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value === ""
-                            ? undefined
-                            : parseFloat(e.target.value),
-                        )
-                      }
-                      data-oid="t:fi0s2"
-                    />
-                  </FormControl>
-                  <FormMessage data-oid="nykmna:" />
-                </FormItem>
-              )}
-              data-oid="eia4e76"
-            />
-
-            <FormField
-              control={form.control}
-              name="pricePerUnit"
+              name="nominal_volume"
               render={({ field }) => (
                 <FormItem data-oid="ug7qp16">
-                  <FormLabel data-oid="mn8m_ay">
-                    Price / Unit ({currency})
-                  </FormLabel>
+                  <FormLabel data-oid="mn8m_ay">Nominal Volume</FormLabel>
                   <FormControl data-oid="qtek-44">
                     <Input
                       type="number"
-                      placeholder="e.g., 2.5"
-                      step="0.01"
+                      placeholder="e.g., 2500"
                       {...field}
                       value={field.value ?? ""}
                       onChange={(e) =>
@@ -316,44 +312,41 @@ export default function EditOptionForm({
               )}
               data-oid="e1916gl"
             />
+
+            <FormField
+              control={form.control}
+              name="price_per_unit"
+              render={({ field }) => (
+                <FormItem data-oid="price_per_unit">
+                  <FormLabel data-oid="price_label">
+                    Price per Unit ({currency})
+                  </FormLabel>
+                  <FormControl data-oid="price_control">
+                    <Input
+                      type="number"
+                      placeholder="e.g., 2.5"
+                      step="0.01"
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === ""
+                            ? undefined
+                            : parseFloat(e.target.value),
+                        )
+                      }
+                      data-oid="price_input"
+                    />
+                  </FormControl>
+                  <FormMessage data-oid="price_message" />
+                </FormItem>
+              )}
+              data-oid="price_field"
+            />
           </div>
         )}
 
-        <div className="flex items-center space-x-2" data-oid="duhp7kp">
-          <FormField
-            control={form.control}
-            name="includedInPrice"
-            render={({ field }) => (
-              <FormItem
-                className="flex flex-row items-center space-x-2"
-                data-oid="rcpyz.l"
-              >
-                <FormControl data-oid="3efyye2">
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={isCalculable}
-                    data-oid="1r1rpi0"
-                  />
-                </FormControl>
-                <FormLabel className="text-sm font-normal" data-oid="pwab3ax">
-                  Included in Estimated Price
-                  {isCalculable && (
-                    <span
-                      className="text-xs text-muted-foreground"
-                      data-oid="ak28eb6"
-                    >
-                      {" "}
-                      (Calculable options always included)
-                    </span>
-                  )}
-                </FormLabel>
-                <FormMessage data-oid="k4vtey4" />
-              </FormItem>
-            )}
-            data-oid="ox2ncby"
-          />
-        </div>
+
 
         {/* Form Action Buttons */}
         <div className="flex justify-end gap-2 pt-2" data-oid="0ysz3g1">

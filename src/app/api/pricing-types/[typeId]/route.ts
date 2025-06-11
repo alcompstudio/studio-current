@@ -3,15 +3,15 @@ import { connectDB } from '@/lib/models';
 import db from '@/lib/models'; // db экспортируется как default export
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     typeId: string;
-  };
+  }>;
 }
 
 // Получение конкретного типа ценообразования по ID
 export async function GET(request: Request, { params }: RouteParams) {
   try {
-    const { typeId } = params;
+    const { typeId } = await params;
     const id = parseInt(typeId, 10);
 
     if (isNaN(id)) {
@@ -44,7 +44,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 // Обновление типа ценообразования
 export async function PUT(request: Request, { params }: RouteParams) {
   try {
-    const { typeId } = params;
+    const { typeId } = await params;
     const id = parseInt(typeId, 10);
 
     if (isNaN(id)) {
@@ -97,7 +97,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 // Удаление типа ценообразования
 export async function DELETE(request: Request, { params }: RouteParams) {
   try {
-    const { typeId } = params;
+    const { typeId } = await params;
     const id = parseInt(typeId, 10);
 
     if (isNaN(id)) {

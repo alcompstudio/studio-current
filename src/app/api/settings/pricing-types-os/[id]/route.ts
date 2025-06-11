@@ -13,10 +13,10 @@ const pricingTypeSchema = z.object({
 // GET - Получение конкретного типа ценообразования
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id  } = await params;
     
     if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: 'Некорректный ID' }, { status: 400 });
@@ -42,10 +42,10 @@ export async function GET(
 // PUT - Обновление типа ценообразования
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id  } = await params;
     
     if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: 'Некорректный ID' }, { status: 400 });
@@ -90,10 +90,10 @@ export async function PUT(
 // DELETE - Удаление типа ценообразования
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id  } = await params;
     
     if (!id || isNaN(Number(id))) {
       return NextResponse.json({ error: 'Некорректный ID' }, { status: 400 });

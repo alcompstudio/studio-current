@@ -77,6 +77,11 @@ export default function ProjectStatusesPage() {
     // setProjectStatuses(projectStatuses.filter(status => status.id !== statusId));
   };
 
+  const handleEdit = (status: ProjectStatus) => {
+    // Перенаправляем на страницу редактирования
+    window.location.href = `/settings/project-statuses/${status.id}/edit`;
+  };
+
   return (
     <div className="flex flex-col gap-6" data-oid="jf6v3_9">
       {/* Page Header */}
@@ -138,6 +143,7 @@ export default function ProjectStatusesPage() {
                 items={projectStatuses}
                 basePath="/settings/project-statuses"
                 onDelete={handleDelete}
+                onEdit={handleEdit}
                 data-oid="_:hdsfz"
               />
             </Card>

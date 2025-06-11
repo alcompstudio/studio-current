@@ -6,7 +6,7 @@ import { Client } from 'pg';
 // GET /api/orders/[orderId]/stages/[stageId]/options/[optionId] - Получение конкретной опции
 export async function GET(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string; optionId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string; optionId: string }> }
 ) {
   try {
     const { orderId, stageId, optionId } = await params;
@@ -46,7 +46,7 @@ export async function GET(
 // PUT /api/orders/[orderId]/stages/[stageId]/options/[optionId] - Обновление опции
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string; optionId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string; optionId: string }> }
 ) {
   try {
     const { orderId, stageId, optionId } = await params;
@@ -205,7 +205,7 @@ export async function PUT(
 // DELETE /api/orders/[orderId]/stages/[stageId]/options/[optionId] - Удаление опции
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { orderId: string; stageId: string; optionId: string } }
+  { params }: { params: Promise<{ orderId: string; stageId: string; optionId: string }> }
 ) {
   try {
     const { orderId, stageId, optionId } = await params;

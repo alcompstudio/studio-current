@@ -22,62 +22,57 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { Etap, EtapWorkType } from "@/lib/types";
+import type { Stage } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-const etapWorkTypes: EtapWorkType[] = ["Параллельный", "Последовательный"];
-
 // Define the form schema using Zod - same as add form
-const etapFormSchema = z.object({
+const stageFormSchema = z.object({
   name: z.string().min(1, { message: "Stage name is required." }),
   description: z.string().optional(),
-  workType: z.enum(etapWorkTypes, { required_error: "Work type is required." }),
   // estimatedPrice: z.coerce.number().min(0, { message: "Estimated price must be non-negative." }).optional(), // Removed direct price input
 });
 
-type EtapFormValues = z.infer<typeof etapFormSchema>;
+type StageFormValues = z.infer<typeof stageFormSchema>;
 
-interface EditEtapFormProps {
-  etap: Etap;
+interface EditStageFormProps {
+  stage: Stage;
   currency: string;
-  onEtapUpdated: (updatedEtap: Etap) => void;
+  onStageUpdated: (updatedStage: Stage) => void;
   onCancel: () => void;
 }
 
-export default function EditEtapForm({
-  etap,
+export default function EditStageForm({
+  stage,
   currency,
-  onEtapUpdated,
+  onStageUpdated,
   onCancel,
-}: EditEtapFormProps) {
+}: EditStageFormProps) {
   const { toast } = useToast();
 
-  const form = useForm<EtapFormValues>({
-    resolver: zodResolver(etapFormSchema),
+  const form = useForm<StageFormValues>({
+    resolver: zodResolver(stageFormSchema),
     defaultValues: {
-      name: etap.name || "",
-      description: etap.description || "",
-      workType: etap.workType || "Параллельный",
-      // estimatedPrice: etap.estimatedPrice, // Removed
+      name: stage.name || "",
+      description: stage.description || "",
+      // estimatedPrice: stage.estimatedPrice, // Removed
     },
     mode: "onChange",
   });
 
   useEffect(() => {
     form.reset({
-      name: etap.name || "",
-      description: etap.description || "",
-      workType: etap.workType || "Параллельный",
-      // estimatedPrice: etap.estimatedPrice, // Removed
+      name: stage.name || "",
+      description: stage.description || "",
+      // estimatedPrice: stage.estimatedPrice, // Removed
     });
-  }, [etap, form]);
+  }, [stage, form]);
 
-  const onSubmit = (data: EtapFormValues) => {
+  const onSubmit = (data: StageFormValues) => {
     console.log("Attempting to update stage with data:", data);
 
-    // Validation: Check if the etap (which already exists) still has options
-    if (!etap.options || etap.options.length === 0) {
+    // Validation: Check if the stage (which already exists) still has options
+    if (!stage.options || stage.options.length === 0) {
       toast({
         title: "Validation Error",
         description:
@@ -88,27 +83,26 @@ export default function EditEtapForm({
     }
 
     // Recalculate estimated price based on current options (important if options were edited separately)
-    const calculatedPrice = (etap.options || [])
-      .filter((opt) => opt.isCalculable && opt.includedInPrice)
-      .reduce((sum, opt) => sum + (opt.calculatedPlanPrice || 0), 0);
+    const calculatedPrice = (stage.options || [])
+      .filter((opt) => opt.pricing_type === 'calculable')
+      .reduce((sum, opt) => sum + (opt.calculated_price_min || 0), 0);
 
-    const updatedEtap: Etap = {
-      ...etap,
+    const updatedStage: Stage = {
+      ...stage,
       name: data.name,
       description: data.description || "",
-      workType: data.workType,
       estimatedPrice: parseFloat(calculatedPrice.toFixed(2)), // Update price based on options
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     };
 
-    console.log("Generated updated stage:", updatedEtap);
-    onEtapUpdated(updatedEtap); // Call the callback
+    console.log("Generated updated stage:", updatedStage);
+    onStageUpdated(updatedStage); // Call the callback
   };
 
   return (
     <Form {...form} data-oid="d.0cho8">
       <form
-        id={`edit-etap-form-${etap.id}`}
+        id={`edit-stage-form-${stage.id}`}
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
         data-oid="2_kk43k"
@@ -153,44 +147,7 @@ export default function EditEtapForm({
           data-oid="5k9kcsd"
         />
 
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
-        <div data-oid="d:zckcg">
-          {" "}
-          {/* Keep work type in a single column */}
-          <FormField
-            control={form.control}
-            name="workType"
-            render={({ field }) => (
-              <FormItem data-oid="azl_j6n">
-                <FormLabel data-oid="yv0xdq9">Work Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  data-oid="dl-rcve"
-                >
-                  <FormControl data-oid="oes41:w">
-                    <SelectTrigger data-oid=":wns-.z">
-                      <SelectValue
-                        placeholder="Select work type"
-                        data-oid="ude_56r"
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent data-oid="zwj8k:o">
-                    {etapWorkTypes.map((type) => (
-                      <SelectItem key={type} value={type} data-oid=".2:ob4v">
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage data-oid="czb0oo8" />
-              </FormItem>
-            )}
-            data-oid="u8bac65"
-          />
-          {/* Removed Estimated Price Field */}
-        </div>
+
 
         <div className="flex justify-end gap-2 pt-4" data-oid="ynkr5y3">
           <Button
@@ -206,8 +163,8 @@ export default function EditEtapForm({
             type="submit"
             disabled={
               form.formState.isSubmitting ||
-              !etap.options ||
-              etap.options.length === 0
+              !stage.options ||
+              stage.options.length === 0
             }
             data-oid="z6ewu.v"
           >

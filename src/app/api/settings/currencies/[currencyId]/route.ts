@@ -7,10 +7,11 @@ const { CurrencyOS } = db;
 // GET запрос для получения конкретной валюты
 export async function GET(
   request: NextRequest,
-  { params }: { params: { currencyId: string } }
+  { params }: { params: Promise<{ currencyId: string }> }
 ) {
   try {
-    const currencyId = parseInt(params.currencyId);
+    const { currencyId: currencyIdStr } = await params;
+    const currencyId = parseInt(currencyIdStr);
     
     if (isNaN(currencyId)) {
       return NextResponse.json(
@@ -42,11 +43,12 @@ export async function GET(
 // PUT запрос для обновления валюты
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { currencyId: string } }
+  { params }: { params: Promise<{ currencyId: string }> }
 ) {
   try {
-    const currencyId = parseInt(params.currencyId);
-    
+    const { currencyId: currencyIdStr } = await params;
+    const currencyId = parseInt(currencyIdStr);
+
     if (isNaN(currencyId)) {
       return NextResponse.json(
         { error: "Некорректный ID валюты" },
@@ -98,11 +100,12 @@ export async function PUT(
 // DELETE запрос для удаления валюты
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { currencyId: string } }
+  { params }: { params: Promise<{ currencyId: string }> }
 ) {
   try {
-    const currencyId = parseInt(params.currencyId);
-    
+    const { currencyId: currencyIdStr } = await params;
+    const currencyId = parseInt(currencyIdStr);
+
     if (isNaN(currencyId)) {
       return NextResponse.json(
         { error: "Некорректный ID валюты" },
