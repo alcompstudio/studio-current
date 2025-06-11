@@ -69,10 +69,10 @@
   },
   "lint-staged": {
     "docs/**/*.md": [
-      "node ./scripts/docs/docs-validator.js"
+      "node ./scripts/docs/docs-validator.cjs"
     ],
     "project-metadata.yaml": [
-      "node ./scripts/docs/docs-validator.js"
+      "node ./scripts/docs/docs-validator.cjs"
     ],
     "src/**/*.{ts,tsx,js,jsx}": [
       "node scripts/docs/checkpoint-detector.js --interactive"
